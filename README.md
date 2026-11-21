@@ -5,11 +5,19 @@
 
 ## 開発
 
-まだコードはない。雛形ができたら、次のコマンドで動かす（Vite+）。
+Node.js 24 と pnpm は `package.json` の `devEngines` で固定している。ツールは Vite+ の `vp` コマンドにまとめている。
 
 ```sh
-vp install
-vp dev
-vp check
-vp test
+vp install            # 依存の導入
+vp dev                # 開発サーバー（apps/web で実行。/kit/ と /view/）
+vp check              # 整形、Lint、型チェック
+vp test               # 単体テスト
+vp run -r build       # 本番ビルド
+vp run ci             # check、test、build を順に実行
+```
+
+公開先のパス（Vite の `base`）は環境変数 `ANOKORO_BASE` で切り替える（既定は `/`）。
+
+```sh
+ANOKORO_BASE=/anokoro-web/ vp run -r build
 ```

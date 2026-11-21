@@ -14,7 +14,7 @@
 
 着手する前に決めること（12 章）：疑似 URL のホスト名、対象の最終年、機能年表・回線・解像度の年の裏付け。
 
-- [ ] **M1-01 モノレポの雛形**：`vp create`、pnpm workspaces、TypeScript、`vp check`、`vp test`、GitHub Actions（`setup-vp`）。`apps/web` は `kit/index.html` と `view/index.html` を出すマルチページ構成にし、`base` を切り替えられるようにする（4 章、4.1、4.2、4.4）。Cloudflare の Vite プラグインとの組み合わせ確認は M3 の着手時に回す
+- [x] **M1-01 モノレポの雛形**：`vp create`、pnpm workspaces、TypeScript、`vp check`、`vp test`、GitHub Actions（`setup-vp`）。`apps/web` は `kit/index.html` と `view/index.html` を出すマルチページ構成にし、`base` を切り替えられるようにする（4 章、4.1、4.2、4.4）。Cloudflare の Vite プラグインとの組み合わせ確認は M3 の着手時に回す
 - [ ] **M1-02 素材とデータ**：`packages/assets` に素材 SVG とマニフェスト（名前、疑似バイト数、作者、ライセンス）を置く。`packages/era-data` に機能年表、回線と解像度の年表を置く（3.5、7.9、8.1、8.5）
 - [ ] **M1-03 時代チェッカー**：`packages/era-checker` に `checkEra` を実装し、ゴールデンテストを書く。1996、2003、2008、2012 年で同じ入力を検査する（7 章、11.2）
 - [ ] **M1-04 回線シミュレーター**：`packages/netsim` に読み込みスケジューラと、差し替え可能な時計を実装する。同時接続 2 件、帯域の等分、CGI の待ち、中止をテストする（8.4）
