@@ -84,6 +84,27 @@ export const FEATURES = {
       caniuse("srcset", "Srcset and sizes attributes"),
     ],
   },
+  "html5.other-elements": {
+    label: "HTML5 のその他のタグ（details・dialog・template・progress など）",
+    availableFrom: null,
+    sources: [
+      caniuse("details", "Details & Summary elements"),
+      caniuse("dialog", "Dialog element"),
+      caniuse("template", "HTML templates"),
+      caniuse("progress", "Progress & Meter"),
+    ],
+  },
+  "html5.global-attributes": {
+    label: "data-*・aria-*・hidden・download・loading 属性",
+    availableFrom: null,
+    sources: [
+      caniuse("dataset", "dataset & data-* attributes"),
+      caniuse("hidden", "hidden attribute"),
+      caniuse("download", "Download attribute"),
+      caniuse("loading-lazy-attr", "Lazy loading via attribute for images & iframes"),
+      caniuse("wai-aria", "WAI-ARIA Accessibility features"),
+    ],
+  },
   "html5.form-attributes": {
     label: "placeholder・required・autofocus・pattern などのフォーム属性",
     availableFrom: 2012,

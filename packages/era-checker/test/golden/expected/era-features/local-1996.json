@@ -1,0 +1,235 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.basic",
+      "level": "future",
+      "message": "「基本的な CSS（文字色、大きさ、余白、背景）」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 5,
+          "col": 8
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.header",
+      "level": "future",
+      "message": "<header> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 36,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.nav",
+      "level": "future",
+      "message": "<nav> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 36,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.details",
+      "level": "future",
+      "message": "<details> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 37,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.summary",
+      "level": "future",
+      "message": "<summary> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 37,
+          "col": 10
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.video",
+      "level": "future",
+      "message": "<video> は表示できません（HTML5の機能です。当時ならFlashかプラグインの出番）",
+      "topic": "js",
+      "count": 1,
+      "locations": [
+        {
+          "line": 38,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.canvas",
+      "level": "future",
+      "message": "<canvas> は表示できません（HTML5の機能です。当時ならFlashかプラグインの出番）",
+      "topic": "js",
+      "count": 1,
+      "locations": [
+        {
+          "line": 38,
+          "col": 33
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.svg",
+      "level": "future",
+      "message": "<svg> は表示できません（HTML5の機能です。当時ならFlashかプラグインの出番）",
+      "topic": "js",
+      "count": 1,
+      "locations": [
+        {
+          "line": 38,
+          "col": 51
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「placeholder」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 41,
+          "col": 21
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「required」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 41,
+          "col": 39
+        }
+      ]
+    },
+    {
+      "ruleId": "html.input-type",
+      "level": "future",
+      "message": "input type=\"email\" はHTML5の機能です。ただのテキスト欄になります",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 41,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「data-id」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 6
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「aria-label」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 18
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「hidden」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 33
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.iframe",
+      "level": "note",
+      "message": "<iframe> は表示できません（外部コンテンツは読み込めません）",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 39,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.password",
+      "level": "note",
+      "message": "パスワード欄はこのキットでは使えません（偽のログイン画面を作れないようにしています）",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 42,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.link",
+      "level": "note",
+      "message": "外部CSSファイルはこのキットでは未対応です（<style> に書いてね）",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 49,
+          "col": 1
+        }
+      ]
+    }
+  ],
+  "score": 0,
+  "title": "年ごとの 違いの確認",
+  "assets": [
+    {
+      "name": "bgm.mid",
+      "resolved": "♪ BGM再生中：bgm.mid",
+      "fakeBytes": 18000,
+      "kind": "bgm"
+    }
+  ]
+}

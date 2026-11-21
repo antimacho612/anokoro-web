@@ -1,0 +1,33 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.flex",
+      "level": "future",
+      "message": "「flex（display: flex と justify-content・align-items）」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 17
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「gap」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 31
+        }
+      ]
+    }
+  ],
+  "score": 84,
+  "title": "無題",
+  "assets": []
+}

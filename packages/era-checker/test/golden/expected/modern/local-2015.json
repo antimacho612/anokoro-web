@@ -1,0 +1,20 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「gap」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 31
+        }
+      ]
+    }
+  ],
+  "score": 92,
+  "title": "無題",
+  "assets": []
+}

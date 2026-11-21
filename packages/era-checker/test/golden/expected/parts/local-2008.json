@@ -1,0 +1,141 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.display",
+      "level": "future",
+      "message": "display:flex / grid はまだ存在しません（2009年以降）。レイアウトはtableで組みましょう",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 20,
+          "col": 17
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「gap」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 20,
+          "col": 31
+        }
+      ]
+    },
+    {
+      "ruleId": "css.border-radius",
+      "level": "future",
+      "message": "「border-radius」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 20,
+          "col": 41
+        }
+      ]
+    },
+    {
+      "ruleId": "css.box-shadow",
+      "level": "future",
+      "message": "「box-shadow」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 20,
+          "col": 61
+        }
+      ]
+    },
+    {
+      "ruleId": "html5.semantic",
+      "level": "future",
+      "message": "「HTML5 の構造タグ（section・article・nav など）」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "html",
+      "count": 2,
+      "locations": [
+        {
+          "line": 20,
+          "col": 1
+        },
+        {
+          "line": 21,
+          "col": 3
+        }
+      ]
+    },
+    {
+      "ruleId": "css.transition",
+      "level": "future",
+      "message": "「transition」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 24,
+          "col": 15
+        }
+      ]
+    },
+    {
+      "ruleId": "css.media",
+      "level": "future",
+      "message": "メディアクエリ @media (…) はまだありません。画面は800×600決め打ちの時代です",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 25,
+          "col": 3
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.marquee",
+      "level": "note",
+      "message": "<marquee> はこの頃にはもう古い書き方です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.blink",
+      "level": "note",
+      "message": "<blink> はこの頃にはもう古い書き方です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 7,
+          "col": 1
+        }
+      ]
+    }
+  ],
+  "score": 38,
+  "title": "無題",
+  "assets": [
+    {
+      "name": "cgi-bin/count.cgi",
+      "resolved": "000774",
+      "fakeBytes": 2400,
+      "kind": "counter"
+    },
+    {
+      "name": "new.gif",
+      "resolved": "[asset:new.gif]",
+      "fakeBytes": 1100,
+      "kind": "img"
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.selector.pseudo-class",
+      "level": "future",
+      "message": "この擬似クラスはIE6では使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 16,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.display",
+      "level": "future",
+      "message": "display:flex / grid はまだ存在しません（2009年以降）。レイアウトはtableで組みましょう",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 23,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「gap」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 23,
+          "col": 24
+        }
+      ]
+    },
+    {
+      "ruleId": "css.variables",
+      "level": "future",
+      "message": "CSS変数はまだありません",
+      "topic": "css",
+      "count": 2,
+      "locations": [
+        {
+          "line": 23,
+          "col": 34
+        },
+        {
+          "line": 23,
+          "col": 47
+        }
+      ]
+    },
+    {
+      "ruleId": "css.at-rule.supports",
+      "level": "future",
+      "message": "「@supports」はまだ存在しません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 28,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.at-rule",
+      "level": "future",
+      "message": "「@page」はまだ存在しません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 29,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.details",
+      "level": "future",
+      "message": "<details> はHTML5（2008年〜）のタグです。2015年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 37,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.summary",
+      "level": "future",
+      "message": "<summary> はHTML5（2008年〜）のタグです。2015年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 37,
+          "col": 10
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「data-id」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 6
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「aria-label」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 18
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「hidden」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 33
+        }
+      ]
+    },
+    {
+      "ruleId": "image.missing",
+      "level": "note",
+      "message": "画像「hoge.woff」が見つかりません（素材集のファイル名を使ってください）",
+      "topic": "image",
+      "count": 1,
+      "locations": [
+        {
+          "line": 26,
+          "col": 35
+        }
+      ]
+    },
+    {
+      "ruleId": "css.import",
+      "level": "note",
+      "message": "@import など外部CSSの読み込みはこのキットでは未対応です",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 30,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.marquee",
+      "level": "note",
+      "message": "<marquee> はこの頃にはもう古い書き方です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 34,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.blink",
+      "level": "note",
+      "message": "<blink> はこの頃にはもう古い書き方です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 34,
+          "col": 26
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.iframe",
+      "level": "note",
+      "message": "<iframe> は表示できません（外部コンテンツは読み込めません）",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 39,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.password",
+      "level": "note",
+      "message": "パスワード欄はこのキットでは使えません（偽のログイン画面を作れないようにしています）",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 42,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.link",
+      "level": "note",
+      "message": "外部CSSファイルはこのキットでは未対応です（<style> に書いてね）",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 49,
+          "col": 1
+        }
+      ]
+    }
+  ],
+  "score": 0,
+  "title": "年ごとの 違いの確認",
+  "assets": [
+    {
+      "name": "bgm.mid",
+      "resolved": "♪ BGM再生中：bgm.mid",
+      "fakeBytes": 18000,
+      "kind": "bgm"
+    }
+  ]
+}

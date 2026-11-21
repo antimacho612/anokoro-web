@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>  年ごとの
+  違いの確認  </title>
+<style>
+body { color: #333333; background: url(kabe2.gif); }
+ul > li { color: red; }
+input[type="text"] { border: 1px solid #999999; }
+h1 + p { margin-top: 0; }
+li:first-child { font-weight: bold; }
+td:hover { background: #FFFFCC; }
+a:focus { outline: 1px dotted; }
+p:before { content: "★"; }
+p::after { content: "☆"; }
+li:nth-child(2n) { color: blue; }
+div:has(p) { color: green; }
+.box { max-width: 600px; position: fixed; box-sizing: border-box; }
+.deco { opacity: 0.5; text-shadow: 1px 1px #000; background: rgba(0, 0, 0, 0.5); }
+.size { width: calc(100% - 10px); font-size: 1.2rem; height: 50vh; }
+.move { transform: rotate(5deg); transition: color 1s; }
+.grad { background: linear-gradient(#fff, #000); }
+.layout { display: flex; justify-content: center; column-count: 2; }
+.grid { display: grid; gap: 8px; --main: red; color: var(--main); }
+@media print { .noprint { display: none; } }
+@media screen and (max-width: 800px) { body { font-size: 14px; } }
+@font-face { font-family: "Hoge"; src: url(hoge.woff); }
+@keyframes blink { 50% { color: red; } }
+@supports (display: grid) { .grid { color: red; } }
+@page { margin: 1cm; }
+@import "other.css";
+</style>
+</head>
+<body>
+<marquee>流れる文字</marquee> <blink>点滅</blink>
+<table bgcolor="#FFFFEE"><tr><td bgcolor="#CCEEFF">表</td></tr></table>
+<header><nav>ナビ</nav></header>
+<details><summary>詳細</summary>中身</details>
+<video src="movie.mp4"></video> <canvas></canvas> <svg><circle r="5"></circle></svg>
+<iframe src="http://www.example.com/"></iframe>
+<form action="http://www.example.com/cgi-bin/post.cgi" method="post">
+<input type="email" placeholder="メール" required>
+<input type="password" name="pw">
+<input type="submit" value="送信">
+</form>
+<div data-id="1" aria-label="箱" hidden>属性</div>
+<p>文章</p>
+<embed src="sound/bgm.mid">
+<frameset><frame src="menu.html"></frameset>
+<link rel="stylesheet" href="style.css">
+</body>
+</html>

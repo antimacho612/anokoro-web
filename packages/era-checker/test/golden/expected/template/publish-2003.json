@@ -1,0 +1,43 @@
+{
+  "warnings": [],
+  "score": 100,
+  "title": "☆★たろうのお部屋★☆",
+  "assets": [
+    {
+      "name": "kabe1.gif",
+      "resolved": "/assets/kabe1.gif",
+      "fakeBytes": 3800,
+      "kind": "background"
+    },
+    {
+      "name": "line.gif",
+      "resolved": "/assets/line.gif",
+      "fakeBytes": 2300,
+      "kind": "img"
+    },
+    {
+      "name": "cgi-bin/count.cgi",
+      "resolved": "",
+      "fakeBytes": 2400,
+      "kind": "counter"
+    },
+    {
+      "name": "new.gif",
+      "resolved": "/assets/new.gif",
+      "fakeBytes": 1100,
+      "kind": "img"
+    },
+    {
+      "name": "koji.gif",
+      "resolved": "/assets/koji.gif",
+      "fakeBytes": 6200,
+      "kind": "img"
+    },
+    {
+      "name": "mail.gif",
+      "resolved": "/assets/mail.gif",
+      "fakeBytes": 2000,
+      "kind": "img"
+    }
+  ]
+}

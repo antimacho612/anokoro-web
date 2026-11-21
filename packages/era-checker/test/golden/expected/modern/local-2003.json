@@ -1,0 +1,111 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.display",
+      "level": "future",
+      "message": "display:flex / grid はまだ存在しません（2009年以降）。レイアウトはtableで組みましょう",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 17
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「gap」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 31
+        }
+      ]
+    },
+    {
+      "ruleId": "css.border-radius",
+      "level": "future",
+      "message": "角丸（border-radius）はIE6では使えません。四隅に角丸画像を置くのが定番です",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 41
+        }
+      ]
+    },
+    {
+      "ruleId": "css.box-shadow",
+      "level": "future",
+      "message": "box-shadow は使えません。影は画像で作る時代です",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 61
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.section",
+      "level": "future",
+      "message": "<section> はHTML5（2008年〜）のタグです。2003年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.article",
+      "level": "future",
+      "message": "<article> はHTML5（2008年〜）のタグです。2003年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 7,
+          "col": 3
+        }
+      ]
+    },
+    {
+      "ruleId": "css.selector.child",
+      "level": "future",
+      "message": "子セレクタ「>」はIE6では使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 10,
+          "col": 3
+        }
+      ]
+    },
+    {
+      "ruleId": "css.media",
+      "level": "future",
+      "message": "メディアクエリ @media (…) はまだありません。画面は800×600決め打ちの時代です",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 11,
+          "col": 3
+        }
+      ]
+    }
+  ],
+  "score": 36,
+  "title": "無題",
+  "assets": []
+}

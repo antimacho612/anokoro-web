@@ -1,0 +1,63 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.basic",
+      "level": "future",
+      "message": "「基本的な CSS（文字色、大きさ、余白、背景）」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "css",
+      "count": 2,
+      "locations": [
+        {
+          "line": 20,
+          "col": 17
+        },
+        {
+          "line": 23,
+          "col": 8
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.section",
+      "level": "future",
+      "message": "<section> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 20,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.article",
+      "level": "future",
+      "message": "<article> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 21,
+          "col": 3
+        }
+      ]
+    }
+  ],
+  "score": 76,
+  "title": "無題",
+  "assets": [
+    {
+      "name": "cgi-bin/count.cgi",
+      "resolved": "000774",
+      "fakeBytes": 2400,
+      "kind": "counter"
+    },
+    {
+      "name": "new.gif",
+      "resolved": "[asset:new.gif]",
+      "fakeBytes": 1100,
+      "kind": "img"
+    }
+  ]
+}

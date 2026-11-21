@@ -1,0 +1,59 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「gap」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 20,
+          "col": 31
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.marquee",
+      "level": "note",
+      "message": "<marquee> はこの頃にはもう古い書き方です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.blink",
+      "level": "note",
+      "message": "<blink> はこの頃にはもう古い書き方です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 7,
+          "col": 1
+        }
+      ]
+    }
+  ],
+  "score": 86,
+  "title": "無題",
+  "assets": [
+    {
+      "name": "cgi-bin/count.cgi",
+      "resolved": "000774",
+      "fakeBytes": 2400,
+      "kind": "counter"
+    },
+    {
+      "name": "new.gif",
+      "resolved": "[asset:new.gif]",
+      "fakeBytes": 1100,
+      "kind": "img"
+    }
+  ]
+}

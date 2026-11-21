@@ -1,0 +1,605 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.selector.child",
+      "level": "future",
+      "message": "子セレクタ「>」はIE6では使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 7,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.selector.attribute",
+      "level": "future",
+      "message": "属性セレクタ [ ] はIE6では使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 8,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.selector.sibling",
+      "level": "future",
+      "message": "隣接・兄弟セレクタ（+ ~）はIE6では使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 9,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.selector.pseudo-class",
+      "level": "future",
+      "message": "この擬似クラスはIE6では使えません",
+      "topic": "css",
+      "count": 5,
+      "locations": [
+        {
+          "line": 10,
+          "col": 1
+        },
+        {
+          "line": 12,
+          "col": 1
+        },
+        {
+          "line": 13,
+          "col": 1
+        },
+        {
+          "line": 15,
+          "col": 1
+        },
+        {
+          "line": 16,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.selector.hover",
+      "level": "future",
+      "message": ":hover はIE6ではaタグにしか効きません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 11,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.selector.pseudo-element",
+      "level": "future",
+      "message": "::before などの擬似要素はIE6では使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 14,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.max-min",
+      "level": "future",
+      "message": "max-width / min-height などはIE6では効きません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 17,
+          "col": 8
+        }
+      ]
+    },
+    {
+      "ruleId": "css.position",
+      "level": "future",
+      "message": "position:fixed / sticky はIE6では効きません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 17,
+          "col": 26
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「box-sizing」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 17,
+          "col": 43
+        }
+      ]
+    },
+    {
+      "ruleId": "css.opacity",
+      "level": "future",
+      "message": "opacity はIE6では使えません（filter:alpha(opacity=50) の時代です）",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 18,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "css.text-shadow",
+      "level": "future",
+      "message": "text-shadow はIE6では表示されません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 18,
+          "col": 23
+        }
+      ]
+    },
+    {
+      "ruleId": "css.rgba",
+      "level": "future",
+      "message": "半透明色（rgba / hsl）はまだ使えません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 18,
+          "col": 50
+        }
+      ]
+    },
+    {
+      "ruleId": "css.calc",
+      "level": "future",
+      "message": "calc() はまだありません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 19,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "css.units",
+      "level": "future",
+      "message": "vw / vh / rem 単位はまだありません。px か % で指定しましょう",
+      "topic": "css",
+      "count": 2,
+      "locations": [
+        {
+          "line": 19,
+          "col": 35
+        },
+        {
+          "line": 19,
+          "col": 54
+        }
+      ]
+    },
+    {
+      "ruleId": "css.transform",
+      "level": "future",
+      "message": "transform はまだありません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 20,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "css.motion",
+      "level": "future",
+      "message": "CSSアニメーションはまだありません。動かすならGIFアニメかmarqueeで",
+      "topic": "css",
+      "count": 2,
+      "locations": [
+        {
+          "line": 20,
+          "col": 34
+        },
+        {
+          "line": 27,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.gradient",
+      "level": "future",
+      "message": "CSSグラデーションはまだありません。グラデーションは画像で作りましょう",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 21,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "css.display",
+      "level": "future",
+      "message": "display:flex / grid はまだ存在しません（2009年以降）。レイアウトはtableで組みましょう",
+      "topic": "css",
+      "count": 2,
+      "locations": [
+        {
+          "line": 22,
+          "col": 11
+        },
+        {
+          "line": 23,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「justify-content」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 22,
+          "col": 26
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「column-count」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 22,
+          "col": 51
+        }
+      ]
+    },
+    {
+      "ruleId": "css.property",
+      "level": "future",
+      "message": "「gap」はまだ使えないプロパティです",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 23,
+          "col": 24
+        }
+      ]
+    },
+    {
+      "ruleId": "css.variables",
+      "level": "future",
+      "message": "CSS変数はまだありません",
+      "topic": "css",
+      "count": 2,
+      "locations": [
+        {
+          "line": 23,
+          "col": 34
+        },
+        {
+          "line": 23,
+          "col": 47
+        }
+      ]
+    },
+    {
+      "ruleId": "css.media",
+      "level": "future",
+      "message": "メディアクエリ @media (…) はまだありません。画面は800×600決め打ちの時代です",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 25,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.font-face",
+      "level": "future",
+      "message": "Webフォントは事実上使えません。MS Pゴシックで勝負しましょう",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 26,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.at-rule.supports",
+      "level": "future",
+      "message": "「@supports」はまだ存在しません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 28,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "css.at-rule",
+      "level": "future",
+      "message": "「@page」はまだ存在しません",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 29,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.header",
+      "level": "future",
+      "message": "<header> はHTML5（2008年〜）のタグです。2003年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 36,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.nav",
+      "level": "future",
+      "message": "<nav> はHTML5（2008年〜）のタグです。2003年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 36,
+          "col": 9
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.details",
+      "level": "future",
+      "message": "<details> はHTML5（2008年〜）のタグです。2003年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 37,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.summary",
+      "level": "future",
+      "message": "<summary> はHTML5（2008年〜）のタグです。2003年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 37,
+          "col": 10
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.video",
+      "level": "future",
+      "message": "<video> は表示できません（HTML5の機能です。当時ならFlashかプラグインの出番）",
+      "topic": "js",
+      "count": 1,
+      "locations": [
+        {
+          "line": 38,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.canvas",
+      "level": "future",
+      "message": "<canvas> は表示できません（HTML5の機能です。当時ならFlashかプラグインの出番）",
+      "topic": "js",
+      "count": 1,
+      "locations": [
+        {
+          "line": 38,
+          "col": 33
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.svg",
+      "level": "future",
+      "message": "<svg> は表示できません（HTML5の機能です。当時ならFlashかプラグインの出番）",
+      "topic": "js",
+      "count": 1,
+      "locations": [
+        {
+          "line": 38,
+          "col": 51
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「placeholder」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 41,
+          "col": 21
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「required」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 41,
+          "col": 39
+        }
+      ]
+    },
+    {
+      "ruleId": "html.input-type",
+      "level": "future",
+      "message": "input type=\"email\" はHTML5の機能です。ただのテキスト欄になります",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 41,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「data-id」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 6
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「aria-label」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 18
+        }
+      ]
+    },
+    {
+      "ruleId": "html.attr.html5",
+      "level": "future",
+      "message": "属性「hidden」はHTML5（2008年〜）以降の機能です",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 45,
+          "col": 33
+        }
+      ]
+    },
+    {
+      "ruleId": "css.import",
+      "level": "note",
+      "message": "@import など外部CSSの読み込みはこのキットでは未対応です",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 30,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.iframe",
+      "level": "note",
+      "message": "<iframe> は表示できません（外部コンテンツは読み込めません）",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 39,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.password",
+      "level": "note",
+      "message": "パスワード欄はこのキットでは使えません（偽のログイン画面を作れないようにしています）",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 42,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.link",
+      "level": "note",
+      "message": "外部CSSファイルはこのキットでは未対応です（<style> に書いてね）",
+      "topic": "css",
+      "count": 1,
+      "locations": [
+        {
+          "line": 49,
+          "col": 1
+        }
+      ]
+    }
+  ],
+  "score": 0,
+  "title": "年ごとの 違いの確認",
+  "assets": [
+    {
+      "name": "bgm.mid",
+      "resolved": "♪ BGM再生中：bgm.mid",
+      "fakeBytes": 18000,
+      "kind": "bgm"
+    }
+  ]
+}

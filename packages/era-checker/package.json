@@ -1,0 +1,24 @@
+{
+  "name": "@anokoro/era-checker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vp test"
+  },
+  "dependencies": {
+    "@anokoro/assets": "workspace:*",
+    "@anokoro/era-data": "workspace:*",
+    "css-tree": "catalog:",
+    "parse5": "catalog:"
+  },
+  "devDependencies": {
+    "@types/css-tree": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

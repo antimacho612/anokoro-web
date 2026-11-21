@@ -1,0 +1,50 @@
+{
+  "warnings": [
+    {
+      "ruleId": "css.basic",
+      "level": "future",
+      "message": "「基本的な CSS（文字色、大きさ、余白、背景）」は一部のブラウザでは使えましたが、主流のIEではまだ使えません",
+      "topic": "css",
+      "count": 2,
+      "locations": [
+        {
+          "line": 6,
+          "col": 17
+        },
+        {
+          "line": 9,
+          "col": 8
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.section",
+      "level": "future",
+      "message": "<section> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 6,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "ruleId": "html.element.article",
+      "level": "future",
+      "message": "<article> はHTML5（2008年〜）のタグです。1996年のブラウザは無視して中身だけ表示します",
+      "topic": "html",
+      "count": 1,
+      "locations": [
+        {
+          "line": 7,
+          "col": 3
+        }
+      ]
+    }
+  ],
+  "score": 76,
+  "title": "無題",
+  "assets": []
+}
