@@ -1,6 +1,12 @@
+import { checkEra } from "@anokoro/era-checker";
+import { useRef } from "react";
 import { Window } from "../ui/Window/Window.tsx";
+import { BrowserWindow } from "./browser/BrowserWindow.tsx";
+import { CheckerWindow } from "./checker/CheckerWindow.tsx";
 import styles from "./KitApp.module.css";
 import { KitLayout, slotClass } from "./layout/KitLayout.tsx";
+import { Notepad, insertIntoNotepad } from "./notepad/Notepad.tsx";
+import { PartsBox } from "./parts/PartsBox.tsx";
 import { useKit } from "./store.ts";
 import { TimeMachineBar } from "./time-machine/TimeMachineBar.tsx";
 
@@ -10,29 +16,31 @@ function Pending() {
 
 export function KitApp() {
   const year = useKit((s) => s.year);
+  const shownSource = useKit((s) => s.shownSource);
+  const counter = useKit((s) => s.counter);
+  const replace = useKit((s) => s.replace);
+  const notepadRef = useRef<HTMLTextAreaElement>(null);
+
+  const view = checkEra(shownSource, { year, mode: "local", counter });
+
+  const handleInsert = (text: string): void => {
+    if (notepadRef.current) insertIntoNotepad(notepadRef.current, text, replace);
+  };
 
   const left = (
     <>
-      <Window title="index.html - メモ帳" controls={["_", "□", "×"]} className={slotClass.notepad}>
-        <Pending />
-      </Window>
-      <Window title="素材・パーツ箱" className={slotClass.parts}>
-        <Pending />
-      </Window>
+      <Notepad textareaRef={notepadRef} />
+      <PartsBox onInsert={handleInsert} />
     </>
   );
 
   const right = (
     <>
-      <Window title="ネットサーファー" controls={["_", "□", "×"]} className={slotClass.browser}>
-        <Pending />
-      </Window>
+      <BrowserWindow html={view.html} pageTitle={view.title} />
       <Window title="回線とダイヤルアップ接続" className={slotClass.line}>
         <Pending />
       </Window>
-      <Window title={`時代チェッカー - ${year}年モード`} className={slotClass.checker}>
-        <Pending />
-      </Window>
+      <CheckerWindow score={view.score} warnings={view.warnings} />
       <Window title="ヘルプ - あのころのWeb解説" controls={["?", "×"]} className={slotClass.help}>
         <Pending />
       </Window>

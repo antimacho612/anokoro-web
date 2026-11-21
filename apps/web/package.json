@@ -9,6 +9,8 @@
     "test": "vp test"
   },
   "dependencies": {
+    "@anokoro/assets": "workspace:*",
+    "@anokoro/era-checker": "workspace:*",
     "@anokoro/era-data": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -1,0 +1,41 @@
+.parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.assets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 6px;
+}
+
+.asset {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--lo);
+  padding: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-family: "MS Gothic", monospace;
+  font-size: 11px;
+  color: #000;
+}
+
+.asset:hover,
+.asset:focus-visible {
+  outline: 1px dotted #000;
+}
+
+.thumb {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3px;
+}
+
+.thumb img {
+  max-width: 84px;
+  max-height: 38px;
+}

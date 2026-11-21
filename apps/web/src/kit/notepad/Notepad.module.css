@@ -1,0 +1,41 @@
+.src {
+  display: block;
+  width: 100%;
+  height: 420px;
+  resize: vertical;
+  font-family: "MS Gothic", "Osaka-Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 4px 6px;
+  outline: none;
+  color: #000;
+  tab-size: 2;
+}
+
+@media (max-width: 860px) {
+  .src {
+    height: 300px;
+  }
+}
+
+.toolrow {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+
+.size {
+  margin-left: auto;
+  align-self: center;
+  font-size: 12px;
+}
+
+.confirmMessage {
+  margin: 0 0 6px;
+}
+
+.confirmButtons {
+  display: flex;
+  gap: 4px;
+}

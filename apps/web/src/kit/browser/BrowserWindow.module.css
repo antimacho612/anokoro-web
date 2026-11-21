@@ -1,0 +1,108 @@
+.navrow {
+  display: flex;
+  gap: 3px;
+  padding: 3px 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.res {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.res select {
+  font: inherit;
+  font-size: 12px;
+  background: #fff;
+}
+
+.addr {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  font-size: 12px;
+}
+
+.addrBox {
+  flex: 1;
+  padding: 2px 4px;
+  font-family: "MS Gothic", monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.viewport {
+  background: #808080;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.stage {
+  transform-origin: 0 0;
+  background: #fff;
+  position: absolute;
+  top: 0;
+}
+
+.adbar {
+  height: 46px;
+  background: #ffffcc;
+  border-bottom: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: "MS PGothic", "MS UI Gothic", sans-serif;
+  font-size: 13px;
+  color: #000;
+}
+
+.adLogo {
+  background: #ff6600;
+  color: #fff;
+  font-weight: bold;
+  padding: 4px 10px;
+  font-size: 15px;
+  border: 2px outset #ff9933;
+}
+
+.adLink {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+.frame {
+  display: block;
+  border: 0;
+  background: #fff;
+}
+
+.statusbar {
+  display: flex;
+  gap: 3px;
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.statusbar > div {
+  padding: 2px 6px;
+  border: 1px solid;
+  border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statusbar > .statusMain {
+  flex: 1;
+  min-width: 0;
+}

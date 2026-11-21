@@ -229,6 +229,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@anokoro/assets':
+        specifier: workspace:*
+        version: link:../../packages/assets
+      '@anokoro/era-checker':
+        specifier: workspace:*
+        version: link:../../packages/era-checker
       '@anokoro/era-data':
         specifier: workspace:*
         version: link:../../packages/era-data

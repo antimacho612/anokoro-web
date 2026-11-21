@@ -96,3 +96,24 @@ body {
   margin: 6px 2px 0;
   line-height: 1.5;
 }
+
+.menubar {
+  display: flex;
+  gap: 2px;
+  padding: 2px 0;
+  font-size: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.menubar > span {
+  padding: 1px 6px;
+}
+
+.menubar > label {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding-right: 4px;
+}
