@@ -246,6 +246,30 @@ importers:
         specifier: 'catalog:'
         version: 1.7.0(@types/node@24.19.2)(@vitest/ui@5.1.0)(typescript@7.0.2)
 
+  packages/assets:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.2
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vite-plus:
+        specifier: 'catalog:'
+        version: 1.7.0(@types/node@24.19.2)(@vitest/ui@5.1.0)(typescript@7.0.2)
+
+  packages/era-data:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.2
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vite-plus:
+        specifier: 'catalog:'
+        version: 1.7.0(@types/node@24.19.2)(@vitest/ui@5.1.0)(typescript@7.0.2)
+
 packages:
 
   '@babel/code-frame@7.29.7':
