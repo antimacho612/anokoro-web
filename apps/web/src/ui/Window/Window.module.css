@@ -1,0 +1,51 @@
+.win {
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+  box-shadow:
+    inset 1px 1px #dfdfdf,
+    inset -1px -1px var(--lo);
+  padding: 3px;
+  min-width: 0;
+}
+
+.titlebar {
+  background: linear-gradient(90deg, var(--navy), #1084d0);
+  color: #fff;
+  font-weight: bold;
+  padding: 3px 3px 3px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 13px;
+  user-select: none;
+}
+
+.title {
+  margin: 0;
+  font: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.controls {
+  display: flex;
+  gap: 2px;
+  flex: none;
+}
+
+.controls i {
+  font-style: normal;
+  width: 16px;
+  height: 14px;
+  background: var(--face);
+  color: #000;
+  border: 1px solid;
+  border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+  font-size: 10px;
+  line-height: 11px;
+  text-align: center;
+  font-weight: bold;
+}

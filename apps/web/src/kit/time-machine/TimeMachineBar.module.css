@@ -1,0 +1,32 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+  box-shadow: inset -1px -1px var(--lo);
+  padding: 4px 6px;
+  margin-bottom: 10px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--navy);
+  user-select: none;
+}
+
+.slider {
+  flex: 1;
+  min-width: 140px;
+  accent-color: var(--navy);
+}
+
+.year {
+  min-width: 72px;
+  padding: 2px 8px;
+  text-align: center;
+  font-size: 16px;
+}

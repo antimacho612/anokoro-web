@@ -9,8 +9,10 @@
     "test": "vp test"
   },
   "dependencies": {
+    "@anokoro/era-data": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "zustand": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

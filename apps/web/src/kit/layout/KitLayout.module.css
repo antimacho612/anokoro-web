@@ -1,0 +1,49 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .col {
+    display: contents;
+  }
+
+  .notepad {
+    order: 1;
+  }
+
+  .browser {
+    order: 2;
+  }
+
+  .line {
+    order: 3;
+  }
+
+  .checker {
+    order: 4;
+  }
+
+  .help {
+    order: 5;
+  }
+
+  .parts {
+    order: 6;
+  }
+}
