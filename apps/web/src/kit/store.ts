@@ -22,6 +22,9 @@ export type DialupConnection = "offline" | "dialing" | "online";
 
 export type Display = "local" | "net";
 
+/** タスクバーのメニューから開く、ヘルプ以外の重ねて出すウィンドウ */
+export type InfoDialog = "usage" | "news" | "about";
+
 export interface LastLoad {
   elapsedMs: number;
   totalBytes: number;
@@ -53,6 +56,10 @@ export interface KitState {
   lastLoad: LastLoad | null;
   wantedHelpTopic: TopicId | null;
   helpOpen: boolean;
+  /** ヘルプと同じ場所に重ねるので、ヘルプとは同時に出さない */
+  infoDialog: InfoDialog | null;
+  /** 最後に読んだお知らせの日付 */
+  newsSeen: string | null;
   setYear: (year: number) => void;
   stepYear: (delta: number) => void;
   /** メモ帳での入力。表示はまだ更新しない */
@@ -67,6 +74,9 @@ export interface KitState {
   openHelp: (topic?: TopicId) => void;
   closeHelp: () => void;
   toggleHelp: () => void;
+  openInfo: (dialog: InfoDialog) => void;
+  closeInfo: () => void;
+  markNewsSeen: (date: string) => void;
 }
 
 function clampYear(year: number): Year {
@@ -120,6 +130,8 @@ export function createKitStore({
       lastLoad: null,
       wantedHelpTopic: null,
       helpOpen: false,
+      infoDialog: null,
+      newsSeen: null,
       setYear: moveTo,
       stepYear: (delta) => moveTo(get().year + delta),
       edit: (next) => set({ source: next, status: STATUS_EDITING }),
@@ -132,9 +144,17 @@ export function createKitStore({
         set(({ wantedHelpTopic }) => ({
           wantedHelpTopic: topic ?? wantedHelpTopic,
           helpOpen: true,
+          infoDialog: null,
         })),
       closeHelp: () => set({ helpOpen: false }),
-      toggleHelp: () => set(({ helpOpen }) => ({ helpOpen: !helpOpen })),
+      toggleHelp: () =>
+        set(({ helpOpen, infoDialog }) => ({
+          helpOpen: !helpOpen,
+          infoDialog: helpOpen ? infoDialog : null,
+        })),
+      openInfo: (infoDialog) => set({ infoDialog, helpOpen: false }),
+      closeInfo: () => set({ infoDialog: null }),
+      markNewsSeen: (newsSeen) => set({ newsSeen }),
     };
   });
 }

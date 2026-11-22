@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/themes.css";
 import "../ui/base.css";
+import { persistNewsSeen, restoreNewsSeen } from "./info/news-seen.ts";
 import { KitApp } from "./KitApp.tsx";
 import { netController, storage } from "./line/net.ts";
 import { persistNetSettings, restoreNetSettings } from "./line/net-settings.ts";
@@ -17,6 +18,8 @@ if (draft !== undefined) kitStore.getState().replace(draft);
 persistDraft(kitStore, storage);
 restoreNetSettings(kitStore, storage);
 persistNetSettings(kitStore, storage);
+restoreNewsSeen(kitStore, storage);
+persistNewsSeen(kitStore, storage);
 netController.stopOnEditOrYearChange();
 
 const container = document.getElementById("root");

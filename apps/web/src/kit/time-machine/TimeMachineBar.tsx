@@ -3,6 +3,9 @@ import { HelpToggle } from "../help/HelpToggle.tsx";
 import { useKit } from "../store.ts";
 import styles from "./TimeMachineBar.module.css";
 
+/** タスクバーの年の表示から移動するときの目印 */
+export const YEAR_SLIDER_ID = "kit-year-slider";
+
 export function TimeMachineBar() {
   const year = useKit((s) => s.year);
   const setYear = useKit((s) => s.setYear);
@@ -21,6 +24,7 @@ export function TimeMachineBar() {
         ◀
       </button>
       <input
+        id={YEAR_SLIDER_ID}
         type="range"
         className={styles.slider}
         min={MIN_YEAR}

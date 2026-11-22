@@ -2,6 +2,7 @@ import { resolveTopic, topicHtml, topicsForYear } from "@anokoro/help";
 import { useEffect, useRef } from "react";
 import { topics } from "virtual:anokoro-help";
 import { Window } from "../../ui/Window/Window.tsx";
+import { useDialogFocus } from "../../ui/Window/useDialogFocus.ts";
 import { useKit } from "../store.ts";
 import styles from "./HelpWindow.module.css";
 
@@ -21,19 +22,7 @@ function HelpDialog() {
   const shown = topicsForYear(topics, year);
   const topic = resolveTopic(topics, year, wantedHelpTopic);
 
-  useEffect(() => {
-    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    dialogRef.current?.focus();
-    return () => opener?.focus();
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") closeHelp();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [closeHelp]);
+  useDialogFocus(dialogRef, closeHelp);
 
   useEffect(() => {
     if (bodyRef.current) bodyRef.current.scrollTop = 0;

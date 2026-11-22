@@ -1,3 +1,7 @@
+html {
+  --taskbar-height: 36px;
+}
+
 *,
 *::before,
 *::after {

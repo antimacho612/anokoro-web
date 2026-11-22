@@ -9,10 +9,3 @@
   letter-spacing: 1px;
   text-shadow: var(--desktop-text-shadow);
 }
-
-.top p {
-  margin: 0;
-  font-size: 14px;
-  opacity: 0.92;
-  line-height: 1.6;
-}

@@ -6,6 +6,7 @@ import line from "./svg/line.svg?raw";
 import mail from "./svg/mail.svg?raw";
 import newMark from "./svg/new.svg?raw";
 import pending from "./svg/pending.svg?raw";
+import siteIcon from "./svg/site-icon.svg?raw";
 
 /** 素材の権利情報。素材はすべて自作か CC0 に限る */
 export interface AssetRights {
@@ -46,6 +47,9 @@ export const BROKEN_IMAGE: SystemImage = { svg: broken, ...rights };
 
 /** 回線経由表示で、読み込み中の画像の代わりに出す付箋 */
 export const PENDING_IMAGE: SystemImage = { svg: pending, ...rights };
+
+/** タスクバーの左端に出すサイトのアイコン。年によって変えない */
+export const SITE_ICON: SystemImage = { svg: siteIcon, ...rights };
 
 /** 素材以外のものの疑似バイト数 */
 export const FAKE_BYTES = {

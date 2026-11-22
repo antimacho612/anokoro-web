@@ -3,6 +3,7 @@ export {
   BROKEN_IMAGE,
   FAKE_BYTES,
   PENDING_IMAGE,
+  SITE_ICON,
   type AssetEntry,
   type AssetRights,
   type SystemImage,

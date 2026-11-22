@@ -1,10 +1,10 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vite-plus/test";
-import { ASSETS, BROKEN_IMAGE, FAKE_BYTES, PENDING_IMAGE } from "./manifest.ts";
+import { ASSETS, BROKEN_IMAGE, FAKE_BYTES, PENDING_IMAGE, SITE_ICON } from "./manifest.ts";
 import { assetBaseName, findAsset, toDataUri } from "./resolve.ts";
 
 const svgDir = new URL("./svg/", import.meta.url);
-const all = [...ASSETS, BROKEN_IMAGE, PENDING_IMAGE];
+const all = [...ASSETS, BROKEN_IMAGE, PENDING_IMAGE, SITE_ICON];
 
 describe("素材マニフェスト", () => {
   it("ファイル名は小文字で重複しない", () => {
@@ -21,6 +21,7 @@ describe("素材マニフェスト", () => {
       ...ASSETS.map((a) => a.name.replace(/\.gif$/, ".svg")),
       "broken.svg",
       "pending.svg",
+      "site-icon.svg",
     ].sort();
     expect(files).toEqual(expected);
     for (const asset of ASSETS) {

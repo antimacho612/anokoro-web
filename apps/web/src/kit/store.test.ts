@@ -99,3 +99,28 @@ describe("ヘルプ", () => {
     expect(store.getState().helpOpen).toBe(false);
   });
 });
+
+describe("タスクバーから開くウィンドウ", () => {
+  it("ヘルプと同時には出さない", () => {
+    const store = createKitStore();
+    store.getState().openHelp();
+    store.getState().openInfo("news");
+    expect(store.getState()).toMatchObject({ helpOpen: false, infoDialog: "news" });
+    store.getState().openHelp("js");
+    expect(store.getState()).toMatchObject({ helpOpen: true, infoDialog: null });
+    store.getState().openInfo("usage");
+    store.getState().toggleHelp();
+    expect(store.getState()).toMatchObject({ helpOpen: true, infoDialog: null });
+  });
+
+  it("ヘルプを閉じる切り替えでは、ほかのウィンドウに触れない", () => {
+    const store = createKitStore();
+    store.getState().toggleHelp();
+    store.getState().toggleHelp();
+    store.getState().openInfo("about");
+    store.getState().closeHelp();
+    expect(store.getState().infoDialog).toBe("about");
+    store.getState().closeInfo();
+    expect(store.getState().infoDialog).toBeNull();
+  });
+});
