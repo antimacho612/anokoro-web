@@ -23,11 +23,13 @@ export function Window({ title, controls = ["_", "×"], className, children }: W
         </h2>
         <span className={styles.controls} aria-hidden="true">
           {controls.map((control) => (
-            <i key={control}>{control}</i>
+            <i key={control} className={control === "×" ? styles.close : undefined}>
+              {control}
+            </i>
           ))}
         </span>
       </div>
-      {children}
+      <div className={styles.body}>{children}</div>
     </section>
   );
 }

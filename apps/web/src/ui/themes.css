@@ -1,0 +1,342 @@
+/* data-ui-theme の値は @anokoro/era-data の UiThemeId */
+
+:root,
+:root[data-ui-theme="gray-bevel"] {
+  --font-ui: "MS UI Gothic", "Meiryo", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  --desktop-bg: #008080;
+  --desktop-text-shadow: 2px 2px 0 #004040;
+  --face: #c0c0c0;
+  --hi: #ffffff;
+  --lo: #808080;
+  --dk: #404040;
+  --accent: #000080;
+  --disabled-fg: #808080;
+  --disabled-shadow: 1px 1px #fff;
+
+  --panel-border-width: 2px;
+  --panel-border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+  --panel-radius: 0;
+  --panel-shadow: inset -1px -1px var(--lo);
+
+  --win-bg: var(--face);
+  --win-border-width: 2px;
+  --win-border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+  --win-radius: 0;
+  --win-shadow: inset 1px 1px #dfdfdf, inset -1px -1px var(--lo);
+  --win-backdrop: none;
+  --win-pad: 3px;
+
+  --title-bg: #000080;
+  --title-fg: #fff;
+  --title-weight: bold;
+  --title-text-shadow: none;
+  --title-radius: 0;
+  --title-pad: 3px 3px 3px 6px;
+  --title-height: 0;
+  --title-align: left;
+
+  --ctl-align: center;
+  --ctl-gap: 2px;
+  --ctl-w: 16px;
+  --ctl-h: 14px;
+  --ctl-bg: var(--face);
+  --ctl-fg: #000;
+  --ctl-border-width: 1px;
+  --ctl-border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+  --ctl-radius: 0;
+  --ctl-shadow: none;
+  --ctl-font-size: 10px;
+  --ctl-weight: bold;
+  --ctl-close-w: var(--ctl-w);
+  --ctl-close-bg: var(--ctl-bg);
+  --ctl-close-fg: var(--ctl-fg);
+  --ctl-close-hover-bg: var(--ctl-close-bg);
+  --ctl-close-hover-fg: var(--ctl-close-fg);
+
+  --client-bg: transparent;
+  --client-border: 0 none;
+  --client-margin: 0;
+  --client-pad: 0;
+
+  --btn-bg: var(--face);
+  --btn-border-width: 2px;
+  --btn-border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+  --btn-radius: 0;
+  --btn-shadow: inset -1px -1px var(--lo);
+  --btn-hover-bg: var(--btn-bg);
+  --btn-hover-border-color: var(--btn-border-color);
+  --btn-hover-shadow: var(--btn-shadow);
+  --btn-active-bg: #d8d8d8;
+  --btn-active-border-color: var(--dk) var(--hi) var(--hi) var(--dk);
+  --btn-active-shadow: inset 1px 1px var(--lo);
+
+  --field-border-width: 2px;
+  --field-border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+  --field-radius: 0;
+  --field-shadow: inset 1px 1px var(--dk);
+  --status-border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+
+  --group-border: 2px groove #fff;
+  --group-radius: 0;
+}
+
+:root[data-ui-theme="gray-gradient"] {
+  --title-bg: linear-gradient(90deg, #000080, #1084d0);
+}
+
+:root[data-ui-theme="blue-round"] {
+  --desktop-bg: linear-gradient(180deg, #3d7bd9, #1c4fa8);
+  --desktop-text-shadow: 2px 2px 0 #0a2a6b;
+  --face: #ece9d8;
+  --accent: #316ac5;
+  --disabled-fg: #aca899;
+  --disabled-shadow: none;
+
+  --panel-border-width: 1px;
+  --panel-border-color: #0831d9;
+  --panel-radius: 6px;
+  --panel-shadow: none;
+
+  --win-bg: linear-gradient(90deg, #0831d9, #0a4bea 50%, #0831d9);
+  --win-border-width: 1px;
+  --win-border-color: #001ea0;
+  --win-radius: 8px 8px 0 0;
+  --win-shadow: 2px 2px 6px rgb(0 0 0 / 35%);
+  --win-pad: 0;
+
+  --title-bg: linear-gradient(
+    180deg,
+    #0997ff 0%,
+    #0053ee 8%,
+    #0050ee 40%,
+    #0066ff 88%,
+    #0066ff 93%,
+    #005bff 95%,
+    #003dd7 96%,
+    #003dd7 100%
+  );
+  --title-text-shadow: 1px 1px #0f1089;
+  --title-radius: 7px 7px 0 0;
+  --title-pad: 4px 5px 4px 8px;
+  --title-height: 29px;
+
+  --ctl-w: 21px;
+  --ctl-h: 21px;
+  --ctl-bg: linear-gradient(180deg, #6aa0f8, #2663e0 60%, #1d55d0);
+  --ctl-fg: #fff;
+  --ctl-border-color: #fff;
+  --ctl-radius: 3px;
+  --ctl-font-size: 12px;
+  --ctl-close-bg: linear-gradient(180deg, #f0a08a, #e0502e 55%, #c33a17);
+  --ctl-close-fg: #fff;
+
+  --client-bg: var(--face);
+  --client-margin: 0 3px 3px;
+  --client-pad: 3px;
+
+  --btn-bg: linear-gradient(180deg, #fff, #ecebe6 80%, #d6d0c5);
+  --btn-border-width: 1px;
+  --btn-border-color: #003c74;
+  --btn-radius: 3px;
+  --btn-shadow: none;
+  --btn-hover-bg: var(--btn-bg);
+  --btn-hover-border-color: var(--btn-border-color);
+  --btn-hover-shadow: inset 0 2px #ffd88a, inset 0 -2px #f5b33a;
+  --btn-active-bg: linear-gradient(180deg, #e3e2da, #e5e4de);
+  --btn-active-border-color: #003c74;
+  --btn-active-shadow: inset 1px 1px 2px rgb(0 0 0 / 20%);
+
+  --field-border-width: 1px;
+  --field-border-color: #7f9db9;
+  --field-shadow: none;
+  --status-border-color: #d0ceb8;
+
+  --group-border: 1px solid #d0d0bf;
+  --group-radius: 4px;
+}
+
+:root[data-ui-theme="glass"] {
+  --font-ui: "Meiryo UI", "Meiryo", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  --desktop-bg: radial-gradient(ellipse at 30% 15%, #2f6a8f, #0b2236 70%);
+  --desktop-text-shadow: 0 1px 6px rgb(0 0 0 / 80%);
+  --face: #f0f0f0;
+  --accent: #1e66b4;
+  --disabled-fg: #838383;
+  --disabled-shadow: none;
+
+  --panel-border-width: 1px;
+  --panel-border-color: rgb(0 0 0 / 55%);
+  --panel-radius: 6px;
+  --panel-shadow: inset 0 0 0 1px rgb(255 255 255 / 60%), 0 2px 8px rgb(0 0 0 / 40%);
+
+  --win-bg:
+    linear-gradient(180deg, rgb(255 255 255 / 45%), rgb(255 255 255 / 0%) 40px),
+    rgb(170 198 226 / 78%);
+  --win-border-width: 1px;
+  --win-border-color: rgb(0 0 0 / 60%);
+  --win-radius: 6px;
+  --win-shadow: inset 0 0 0 1px rgb(255 255 255 / 50%), 0 4px 16px rgb(0 0 0 / 55%);
+  --win-backdrop: blur(6px);
+  --win-pad: 0 7px 7px;
+
+  --title-bg: transparent;
+  --title-fg: #000;
+  --title-weight: normal;
+  --title-text-shadow: 0 0 6px #fff, 0 0 10px #fff;
+  --title-pad: 0 0 0 2px;
+  --title-height: 28px;
+
+  --ctl-align: flex-start;
+  --ctl-gap: 0;
+  --ctl-w: 26px;
+  --ctl-h: 19px;
+  --ctl-bg: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 70%),
+    rgb(255 255 255 / 25%) 50%,
+    rgb(0 0 0 / 8%) 51%,
+    rgb(255 255 255 / 35%)
+  );
+  --ctl-fg: #222;
+  --ctl-border-color: rgb(0 0 0 / 45%);
+  --ctl-radius: 0 0 4px 4px;
+  --ctl-shadow: inset 0 0 0 1px rgb(255 255 255 / 45%);
+  --ctl-font-size: 11px;
+  --ctl-close-w: 43px;
+  --ctl-close-bg: linear-gradient(180deg, #e8a493, #d1462f 50%, #c0280f 51%, #d8734f);
+  --ctl-close-fg: #fff;
+
+  --client-bg: var(--face);
+  --client-border: 1px solid rgb(0 0 0 / 45%);
+  --client-pad: 4px;
+
+  --btn-bg: linear-gradient(180deg, #f2f2f2 0 50%, #dddddd 51%, #cfcfcf);
+  --btn-border-width: 1px;
+  --btn-border-color: #707070;
+  --btn-radius: 3px;
+  --btn-shadow: inset 0 0 0 1px #fcfcfc;
+  --btn-hover-bg: linear-gradient(180deg, #eaf6fd 0 50%, #bee6fd 51%, #a7d9f5);
+  --btn-hover-border-color: #3c7fb1;
+  --btn-hover-shadow: var(--btn-shadow);
+  --btn-active-bg: linear-gradient(180deg, #e5f4fc 0 50%, #c4e5f6 51%, #98d1ef);
+  --btn-active-border-color: #2c628b;
+  --btn-active-shadow: inset 1px 1px 2px rgb(0 0 0 / 25%);
+
+  --field-border-width: 1px;
+  --field-border-color: #abadb3 #e3e9ef #e3e9ef #abadb3;
+  --field-radius: 2px;
+  --field-shadow: none;
+  --status-border-color: #d5d5d5;
+
+  --group-border: 1px solid #d5dfe5;
+  --group-radius: 3px;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-ui-theme="glass"] {
+    --win-bg: #b9d1ea;
+    --win-backdrop: none;
+  }
+}
+
+:root[data-ui-theme="flat-bold"],
+:root[data-ui-theme="flat-thin"] {
+  --font-ui: "Meiryo UI", "Meiryo", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  --desktop-bg: #1d4e89;
+  --desktop-text-shadow: none;
+  --face: #f0f0f0;
+  --accent: #1979ca;
+  --disabled-fg: #838383;
+  --disabled-shadow: none;
+
+  --panel-border-width: 1px;
+  --panel-border-color: #3c6ea8;
+  --panel-radius: 0;
+  --panel-shadow: none;
+
+  --win-bg: #6a9fd8;
+  --win-border-width: 1px;
+  --win-border-color: #3c6ea8;
+  --win-radius: 0;
+  --win-shadow: 0 0 8px rgb(0 0 0 / 35%);
+  --win-pad: 0 7px 7px;
+
+  --title-bg: transparent;
+  --title-fg: #000;
+  --title-weight: normal;
+  --title-text-shadow: none;
+  --title-pad: 0;
+  --title-height: 30px;
+  --title-align: center;
+
+  --ctl-align: flex-start;
+  --ctl-gap: 0;
+  --ctl-w: 28px;
+  --ctl-h: 21px;
+  --ctl-bg: transparent;
+  --ctl-fg: #000;
+  --ctl-border-width: 0;
+  --ctl-border-color: transparent;
+  --ctl-radius: 0;
+  --ctl-shadow: none;
+  --ctl-font-size: 12px;
+  --ctl-weight: normal;
+  --ctl-close-w: 46px;
+  --ctl-close-bg: #c75050;
+  --ctl-close-fg: #fff;
+  --ctl-close-hover-bg: #e04343;
+  --ctl-close-hover-fg: #fff;
+
+  --client-bg: var(--face);
+  --client-border: 1px solid #3c6ea8;
+  --client-pad: 4px;
+
+  --btn-bg: #e1e1e1;
+  --btn-border-width: 1px;
+  --btn-border-color: #adadad;
+  --btn-radius: 0;
+  --btn-shadow: none;
+  --btn-hover-bg: #e5f1fb;
+  --btn-hover-border-color: #0078d7;
+  --btn-hover-shadow: none;
+  --btn-active-bg: #cce4f7;
+  --btn-active-border-color: #005499;
+  --btn-active-shadow: none;
+
+  --field-border-width: 1px;
+  --field-border-color: #abadb3;
+  --field-radius: 0;
+  --field-shadow: none;
+  --status-border-color: #d7d7d7;
+
+  --group-border: 1px solid #dcdcdc;
+  --group-radius: 0;
+}
+
+:root[data-ui-theme="flat-thin"] {
+  --font-ui: "Yu Gothic UI", "Meiryo UI", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  --desktop-bg: linear-gradient(135deg, #0a2a4a, #0c4f8a);
+  --accent: #0078d7;
+
+  --panel-border-color: #0078d7;
+
+  --win-bg: #fff;
+  --win-border-color: #0078d7;
+  --win-shadow: 0 6px 20px rgb(0 0 0 / 40%);
+  --win-pad: 0;
+
+  --title-pad: 0 0 0 10px;
+  --title-align: left;
+
+  --ctl-w: 46px;
+  --ctl-h: 30px;
+  --ctl-font-size: 11px;
+  --ctl-close-bg: transparent;
+  --ctl-close-fg: #000;
+  --ctl-close-hover-bg: #e81123;
+  --ctl-close-hover-fg: #fff;
+
+  --client-border: 0 none;
+
+  --field-border-color: #7a7a7a;
+}

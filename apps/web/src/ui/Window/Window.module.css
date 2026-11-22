@@ -1,30 +1,34 @@
 .win {
-  background: var(--face);
-  border: 2px solid;
-  border-color: var(--hi) var(--dk) var(--dk) var(--hi);
-  box-shadow:
-    inset 1px 1px #dfdfdf,
-    inset -1px -1px var(--lo);
-  padding: 3px;
+  background: var(--win-bg);
+  border: var(--win-border-width) solid;
+  border-color: var(--win-border-color);
+  border-radius: var(--win-radius);
+  box-shadow: var(--win-shadow);
+  backdrop-filter: var(--win-backdrop);
+  padding: var(--win-pad);
   min-width: 0;
 }
 
 .titlebar {
-  background: linear-gradient(90deg, var(--navy), #1084d0);
-  color: #fff;
-  font-weight: bold;
-  padding: 3px 3px 3px 6px;
+  background: var(--title-bg);
+  color: var(--title-fg);
+  font-weight: var(--title-weight);
+  text-shadow: var(--title-text-shadow);
+  border-radius: var(--title-radius);
+  padding: var(--title-pad);
+  min-height: var(--title-height);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 6px;
   font-size: 13px;
   user-select: none;
 }
 
 .title {
+  flex: 1;
   margin: 0;
   font: inherit;
+  text-align: var(--title-align);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -32,20 +36,43 @@
 
 .controls {
   display: flex;
-  gap: 2px;
+  align-self: var(--ctl-align);
+  gap: var(--ctl-gap);
   flex: none;
 }
 
 .controls i {
   font-style: normal;
-  width: 16px;
-  height: 14px;
-  background: var(--face);
-  color: #000;
-  border: 1px solid;
-  border-color: var(--hi) var(--dk) var(--dk) var(--hi);
-  font-size: 10px;
-  line-height: 11px;
-  text-align: center;
-  font-weight: bold;
+  width: var(--ctl-w);
+  height: var(--ctl-h);
+  display: grid;
+  place-items: center;
+  background: var(--ctl-bg);
+  color: var(--ctl-fg);
+  border: var(--ctl-border-width) solid;
+  border-color: var(--ctl-border-color);
+  border-radius: var(--ctl-radius);
+  box-shadow: var(--ctl-shadow);
+  font-size: var(--ctl-font-size);
+  font-weight: var(--ctl-weight);
+  line-height: 1;
+  text-shadow: none;
+}
+
+.controls i.close {
+  width: var(--ctl-close-w);
+  background: var(--ctl-close-bg);
+  color: var(--ctl-close-fg);
+}
+
+.controls i.close:hover {
+  background: var(--ctl-close-hover-bg);
+  color: var(--ctl-close-hover-fg);
+}
+
+.body {
+  background: var(--client-bg);
+  border: var(--client-border);
+  margin: var(--client-margin);
+  padding: var(--client-pad);
 }

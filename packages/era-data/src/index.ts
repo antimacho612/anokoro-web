@@ -22,6 +22,7 @@ export {
   type Resolution,
   type ResolutionPeriod,
 } from "./resolutions.ts";
+export { UI_THEMES, uiThemeForYear, type UiThemeEntry, type UiThemeId } from "./ui-themes.ts";
 export {
   MAX_YEAR,
   MIN_YEAR,

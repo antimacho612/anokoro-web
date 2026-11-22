@@ -7,7 +7,7 @@
   font-size: 26px;
   margin: 0 0 6px;
   letter-spacing: 1px;
-  text-shadow: 2px 2px 0 #004040;
+  text-shadow: var(--desktop-text-shadow);
 }
 
 .top p {

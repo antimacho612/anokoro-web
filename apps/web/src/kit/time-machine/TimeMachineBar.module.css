@@ -4,9 +4,10 @@
   gap: 6px;
   flex-wrap: wrap;
   background: var(--face);
-  border: 2px solid;
-  border-color: var(--hi) var(--dk) var(--dk) var(--hi);
-  box-shadow: inset -1px -1px var(--lo);
+  border: var(--panel-border-width) solid;
+  border-color: var(--panel-border-color);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow);
   padding: 4px 6px;
   margin-bottom: 10px;
 }
@@ -14,14 +15,13 @@
 .label {
   font-size: 14px;
   font-weight: bold;
-  color: var(--navy);
+  color: var(--accent);
   user-select: none;
 }
 
 .slider {
   flex: 1;
   min-width: 140px;
-  accent-color: var(--navy);
 }
 
 .year {

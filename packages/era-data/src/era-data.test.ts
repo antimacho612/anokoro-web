@@ -14,6 +14,8 @@ import {
   isYear,
   linesForYear,
   resolutionPeriodForYear,
+  UI_THEMES,
+  uiThemeForYear,
   type FeatureEntry,
   type Source,
 } from "./index.ts";
@@ -160,5 +162,31 @@ describe("解像度", () => {
     expect(formatResolution(p2003.default)).toBe("800×600");
     expect(formatResolution(resolutionPeriodForYear(1995).default)).toBe("640×480");
     expect(() => resolutionPeriodForYear(2016)).toThrow();
+  });
+});
+
+describe("作成キットの外観", () => {
+  it("最初の行が最初の年から始まり、古い順に並ぶ", () => {
+    expect(UI_THEMES[0]?.from).toBe(MIN_YEAR);
+    const froms = UI_THEMES.map((t) => t.from);
+    expect(froms).toEqual([...new Set(froms)].sort((a, b) => a - b));
+    expect(froms.every(inYears)).toBe(true);
+  });
+
+  it.each(UI_THEMES.map((t) => [t.id, t] as const))("%s: 根拠がある", (_id, theme) => {
+    expectSources(theme.sources);
+  });
+
+  it("年から外観を引ける", () => {
+    expect(uiThemeForYear(1995).id).toBe("gray-bevel");
+    expect(uiThemeForYear(1997).id).toBe("gray-bevel");
+    expect(uiThemeForYear(1998).id).toBe("gray-gradient");
+    expect(uiThemeForYear(2001).id).toBe("blue-round");
+    expect(uiThemeForYear(2006).id).toBe("blue-round");
+    expect(uiThemeForYear(2007).id).toBe("glass");
+    expect(uiThemeForYear(2011).id).toBe("glass");
+    expect(uiThemeForYear(2012).id).toBe("flat-bold");
+    expect(uiThemeForYear(2015).id).toBe("flat-thin");
+    expect(() => uiThemeForYear(1994)).toThrow();
   });
 });

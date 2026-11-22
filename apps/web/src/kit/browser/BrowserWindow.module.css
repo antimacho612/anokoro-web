@@ -96,7 +96,7 @@
 .statusbar > div {
   padding: 2px 6px;
   border: 1px solid;
-  border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+  border-color: var(--status-border-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

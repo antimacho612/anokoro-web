@@ -49,4 +49,29 @@ export const SRC = {
     title: "StatCounter: Desktop Screen Resolution Stats Japan",
     url: "https://gs.statcounter.com/screen-resolution-stats/desktop/japan/#yearly-2009-2015",
   },
+  // 作成キットの外観（日本での発売日）
+  win95: {
+    title: "Wikipedia: Microsoft Windows 95",
+    url: "https://ja.wikipedia.org/wiki/Microsoft_Windows_95",
+  },
+  win98: {
+    title: "Wikipedia: Microsoft Windows 98",
+    url: "https://ja.wikipedia.org/wiki/Microsoft_Windows_98",
+  },
+  winXp: {
+    title: "Wikipedia: Microsoft Windows XP",
+    url: "https://ja.wikipedia.org/wiki/Microsoft_Windows_XP",
+  },
+  winVista: {
+    title: "Wikipedia: Microsoft Windows Vista",
+    url: "https://ja.wikipedia.org/wiki/Microsoft_Windows_Vista",
+  },
+  win8: {
+    title: "Wikipedia: Microsoft Windows 8",
+    url: "https://ja.wikipedia.org/wiki/Microsoft_Windows_8",
+  },
+  win10: {
+    title: "Wikipedia: Microsoft Windows 10",
+    url: "https://ja.wikipedia.org/wiki/Microsoft_Windows_10",
+  },
 } as const satisfies Record<string, Source>;
