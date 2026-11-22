@@ -1,4 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import { expect, test } from "./fixtures.ts";
 
 const taskbar = (page: Page) => page.getByRole("navigation", { name: "タスクバー" });
 const taskbarButton = (page: Page, name: string | RegExp) =>
@@ -32,6 +33,19 @@ test("使い方、お知らせ、このサイトについてを開き、閉じ�
 
   await newsButton(page).click();
   await expect(dialog(page, "お知らせ・更新情報")).toContainText("タスクバーを追加しました");
+});
+
+test("「起動をもう一度見る」で起動の画面を出し、とばすと押したボタンへフォーカスを戻す", async ({
+  page,
+}) => {
+  await page.goto("/kit/?year=2003");
+  const bootScreen = dialog(page, "あのころ Web の起動");
+
+  await taskbarButton(page, "起動をもう一度見る").click();
+  await expect(bootScreen.getByRole("button", { name: "電源を入れる" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(bootScreen).toHaveCount(0);
+  await expect(taskbarButton(page, "起動をもう一度見る")).toBeFocused();
 });
 
 test("「解説」はヘルプを開閉し、ほかのウィンドウとは同時に出さない", async ({ page }) => {

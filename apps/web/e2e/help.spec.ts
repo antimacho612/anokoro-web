@@ -1,4 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import { expect, test } from "./fixtures.ts";
 
 const helpDialog = (page: Page) => page.getByRole("dialog", { name: "ヘルプ - あのころのWeb解説" });
 const checker = (page: Page) => page.getByRole("region", { name: /^時代チェッカー/ });

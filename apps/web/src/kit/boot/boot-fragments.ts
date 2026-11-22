@@ -1,0 +1,171 @@
+import {
+  FEATURES,
+  LINES,
+  MAX_YEAR,
+  RESOLUTION_PERIODS,
+  featureStatus,
+  formatResolution,
+  inRange,
+  resolutionPeriodForYear,
+  type FeatureId,
+  type LineKey,
+  type Year,
+} from "@anokoro/era-data";
+import { createRandom } from "@anokoro/modem-sound";
+import { displayYear, phaseStartMs, yearAt, type BootTimeline } from "./boot-timeline.ts";
+
+/** 跳躍のトンネルを飛んでくるもの */
+export type FragmentToken =
+  | { kind: "code"; text: string; feature: FeatureId }
+  | { kind: "line"; text: string; line: LineKey }
+  | { kind: "resolution"; text: string }
+  | { kind: "counter"; text: string }
+  | { kind: "image"; asset: FragmentAsset };
+
+export type FragmentAsset = "koji.gif" | "new.gif";
+
+const IMAGE_ASSETS: readonly FragmentAsset[] = ["koji.gif", "new.gif"];
+
+const CODE_TOKENS: Partial<Record<FeatureId, readonly string[]>> = {
+  "html.basic": ["<table>", "<font color>", "<center>", "<img src>"],
+  "html.table-bgcolor": ["<td bgcolor>"],
+  "html.frameset": ["<frameset>"],
+  "html.marquee": ["<marquee>"],
+  "html.blink": ["<blink>"],
+  "html5.semantic": ["<section>", "<header>"],
+  "html5.video": ["<video>"],
+  "html5.canvas": ["<canvas>"],
+  "html5.svg": ["<svg>"],
+  "js.dhtml": ["onmouseover"],
+  "css.basic": ["<style>", "color: red;"],
+  "css.selector.hover-any": [":hover"],
+  "css.position-fixed": ["position: fixed"],
+  "css.box-sizing": ["box-sizing"],
+  "css.flex": ["display: flex"],
+  "css.border-radius": ["border-radius"],
+  "css.box-shadow": ["box-shadow"],
+  "css.text-shadow": ["text-shadow"],
+  "css.opacity": ["opacity"],
+  "css.rgba": ["rgba()"],
+  "css.gradient": ["linear-gradient"],
+  "css.calc": ["calc()"],
+  "css.transform": ["transform"],
+  "css.transition": ["transition"],
+  "css.animation": ["@keyframes"],
+  "css.media-queries": ["@media"],
+  "css.font-face": ["@font-face"],
+};
+
+const codeEntries = Object.entries(CODE_TOKENS) as [FeatureId, readonly string[]][];
+
+function codeTokens(id: FeatureId): FragmentToken[] {
+  return (CODE_TOKENS[id] ?? []).map((text) => ({ kind: "code", text, feature: id }));
+}
+
+/** その年に使われていたもの */
+export function tokensForYear(year: Year): FragmentToken[] {
+  const code = codeEntries
+    .filter(([id]) => featureStatus(id, year) === "available")
+    .flatMap(([id]) => codeTokens(id));
+  const lines: FragmentToken[] = LINES.filter((l) => inRange(year, l.availableYears)).map((l) => ({
+    kind: "line",
+    text: l.name,
+    line: l.key,
+  }));
+  const resolution: FragmentToken = {
+    kind: "resolution",
+    text: formatResolution(resolutionPeriodForYear(year).default),
+  };
+  return [...code, ...lines, resolution];
+}
+
+/** その年に新しく出てきたもの */
+export function tokensIntroducedIn(year: Year): FragmentToken[] {
+  const code = codeEntries
+    .filter(([id]) => FEATURES[id].availableFrom === year)
+    .flatMap(([id]) => codeTokens(id));
+  const lines: FragmentToken[] = LINES.filter((l) => l.availableYears[0] === year).map((l) => ({
+    kind: "line",
+    text: l.name,
+    line: l.key,
+  }));
+  const resolutions: FragmentToken[] = RESOLUTION_PERIODS.filter((p) => p.years[0] === year).map(
+    (p) => ({ kind: "resolution", text: formatResolution(p.default) }),
+  );
+  return [...code, ...lines, ...resolutions];
+}
+
+export interface PlannedFragment {
+  /** 演出の始まりからの時刻 */
+  atMs: number;
+  /** 飛び出したときに表示していた年 */
+  year: Year;
+  token: FragmentToken;
+  /** トンネルの中心から見た向き（ラジアン） */
+  angle: number;
+  /** トンネルの中心からの距離（0〜1） */
+  radius: number;
+  tilt: number;
+}
+
+export const FRAGMENT_INTERVAL_MS = 70;
+/** 跳躍の終わりのこの割合より後には出さない（到着までに飛び去らないため） */
+const PLAN_UNTIL = 0.9;
+const FILLER_CHANCE = 0.16;
+const RECENT_LIMIT = 4;
+
+function tokenKey(token: FragmentToken): string {
+  return token.kind === "image" ? token.asset : token.text;
+}
+
+function filler(random: () => number): FragmentToken {
+  if (random() < 0.5) {
+    return { kind: "image", asset: IMAGE_ASSETS[Math.floor(random() * IMAGE_ASSETS.length)]! };
+  }
+  const count = String(Math.floor(random() * 99_999)).padStart(7, "0");
+  return { kind: "counter", text: count };
+}
+
+/** 跳躍中に飛んでくるものの予定。通り過ぎている年に使われていたものだけを選ぶ */
+export function planFragments(timeline: BootTimeline, seed: number): PlannedFragment[] {
+  const start = phaseStartMs(timeline, "warp");
+  const warp = timeline.phases.find((p) => p.id === "warp");
+  if (start === undefined || !warp) return [];
+
+  const random = createRandom(seed);
+  const planned: PlannedFragment[] = [];
+  const recent: string[] = [];
+  let queue: FragmentToken[] = [];
+  let queuedYear: number | null = null;
+
+  for (let t = start; t < start + warp.ms * PLAN_UNTIL; t += FRAGMENT_INTERVAL_MS) {
+    const year = Math.min(displayYear(yearAt(timeline, t)), MAX_YEAR);
+    if (year !== queuedYear) {
+      queue = tokensIntroducedIn(year);
+      queuedYear = year;
+    }
+
+    let token = queue.shift();
+    if (!token) {
+      if (random() < FILLER_CHANCE) {
+        token = filler(random);
+      } else {
+        const candidates = tokensForYear(year).filter((c) => !recent.includes(tokenKey(c)));
+        token = candidates[Math.floor(random() * candidates.length)];
+      }
+    }
+    if (!token) continue;
+
+    recent.push(tokenKey(token));
+    if (recent.length > RECENT_LIMIT) recent.shift();
+    planned.push({
+      atMs: t,
+      year,
+      token,
+      angle: random() * Math.PI * 2,
+      radius: 0.35 + random() * 0.65,
+      tilt: (random() - 0.5) * 0.5,
+    });
+  }
+  return planned;
+}

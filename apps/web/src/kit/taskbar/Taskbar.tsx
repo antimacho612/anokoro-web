@@ -1,5 +1,6 @@
 import { SITE_ICON, toDataUri } from "@anokoro/assets";
 import { useEffect, useRef, useState } from "react";
+import { openBootScreen } from "../boot/boot-store.ts";
 import { HelpToggle } from "../help/HelpToggle.tsx";
 import { hasUnreadNews } from "../info/news-seen.ts";
 import { NEWS } from "../info/news.ts";
@@ -66,6 +67,9 @@ export function Taskbar() {
         </button>
         <button type="button" className={buttonClass} onClick={() => openInfo("about")}>
           このサイトについて
+        </button>
+        <button type="button" className={buttonClass} onClick={openBootScreen}>
+          起動をもう一度見る
         </button>
         <button type="button" className={buttonClass} onClick={() => void handleCopyUrl()}>
           この年の URL をコピー

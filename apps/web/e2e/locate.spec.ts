@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.ts";
 
 test("警告の文言をクリックすると、メモ帳の該当行にカーソルが移る", async ({ page }) => {
   await page.goto("/kit/?year=2003");
