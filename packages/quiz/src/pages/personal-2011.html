@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>はなこのイラスト帳</title>
+<style>
+body { margin: 0; background-color: #FAF7F2; color: #333333; font-size: 14px; }
+header { background-color: #FFFFFF; border-bottom: 1px solid #E0D8CC; padding: 16px; }
+header h1 { margin: 0; font-size: 24px; color: #AA5577; }
+nav { padding: 8px 16px; background-color: #F3ECE2; }
+nav a { margin-right: 12px; color: #775544; }
+article { background-color: #FFFFFF; border-radius: 6px; box-shadow: 0 1px 3px #CCCCCC; margin: 16px; padding: 16px; }
+footer { text-align: center; font-size: 12px; color: #888888; padding: 16px; }
+</style>
+</head>
+<body>
+<header>
+<h1>はなこのイラスト帳</h1>
+<p>ゆるいイラストと日々のこと</p>
+</header>
+<nav>
+<a href="index.html">ホーム</a>
+<a href="gallery.html">ギャラリー</a>
+<a{{quiz:attr:a}} href="about.html">プロフィール</a>
+</nav>
+<article>
+<h2{{quiz:style}}>新しいイラストを描きました</h2>
+<p>秋らしい色合いを目指しました。{{quiz:inline}}感想をいただけるとうれしいです。</p>
+<img{{quiz:attr:img}} src="line.gif" width="400" height="8">
+</article>
+{{quiz:block}}
+<article>
+<h2>お知らせ</h2>
+<p{{quiz:style}}>イラストの無断転載はご遠慮ください。リンクはご自由にどうぞ。</p>
+</article>
+<footer>はなこのイラスト帳</footer>
+</body>
+</html>

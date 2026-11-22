@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>ほげほげ掲示板</title>
+</head>
+<body bgcolor="#EFEFEF" text="#000000" link="#0000FF" vlink="#800080">
+<h2>ほげほげ掲示板</h2>
+<font size="2">どなたでもお気軽に書き込んでください。荒らしはご遠慮ください。</font>
+<hr>
+<form>
+おなまえ <input{{quiz:attr:input}} name="name" size="20"><br>
+メッセージ<br>
+<textarea name="body" cols="50" rows="4"></textarea><br>
+<input type="submit" value="書き込む">
+</form>
+<hr>
+{{quiz:block}}
+<table{{quiz:attr:table}} border="1" cellpadding="4" width="500">
+<tr><td><b>名無しさん</b> 10/12(土) 21:03<br>はじめまして。{{quiz:inline}}よろしくお願いします。</td></tr>
+<tr><td><b>管理人</b> 10/12(土) 22:40<br>書き込みありがとうございます！</td></tr>
+</table>
+<p>
+<a{{quiz:attr:a}} href="index.html">ホームへ戻る</a>
+<img{{quiz:attr:img}} src="line.gif" width="300" height="8">
+</p>
+</body>
+</html>

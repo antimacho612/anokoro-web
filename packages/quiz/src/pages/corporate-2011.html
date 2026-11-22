@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ほげほげ製菓株式会社</title>
+<style>
+body { margin: 0; background-color: #F7F3EE; color: #333333; font-size: 14px; }
+header { background-color: #7A3A12; color: #FFFFFF; padding: 16px 24px; }
+nav { background-color: #FFFFFF; border-bottom: 1px solid #DDD0C0; padding: 10px 24px; }
+nav a { color: #5A2A08; margin-right: 16px; }
+main { display: block; max-width: 880px; margin: 0 auto; padding: 16px; }
+section { background-color: #FFFFFF; border-radius: 4px; box-shadow: 0 1px 2px #CCBBAA; padding: 16px; margin-bottom: 16px; }
+footer { text-align: center; color: #888888; font-size: 12px; padding: 16px; }
+</style>
+</head>
+<body>
+<header><b>ほげほげ製菓株式会社</b></header>
+<nav>
+<a href="index.html">ホーム</a>
+<a href="products.html">商品紹介</a>
+<a{{quiz:attr:a}} href="company.html">会社概要</a>
+<a href="contact.html">お問い合わせ</a>
+</nav>
+<main>
+<section>
+<h2{{quiz:style}}>新着情報</h2>
+<p>秋の新商品「くりおかき」を発売しました。{{quiz:inline}}</p>
+<p>工場見学は事前のご予約が必要です。</p>
+</section>
+{{quiz:block}}
+<section>
+<h2>おすすめ商品</h2>
+<img{{quiz:attr:img}} src="line.gif" width="400" height="8">
+<p{{quiz:style}}>厳選したもち米を使った「ほげおかき」は、創業当時からの人気商品です。</p>
+</section>
+<form>
+<p>サイト内検索：<input{{quiz:attr:input}} name="q" size="20"> <input type="submit" value="検索"></p>
+</form>
+</main>
+<footer>Copyright ほげほげ製菓株式会社</footer>
+</body>
+</html>

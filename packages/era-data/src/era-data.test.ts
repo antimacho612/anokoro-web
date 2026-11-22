@@ -14,9 +14,13 @@ import {
   isYear,
   linesForYear,
   resolutionPeriodForYear,
+  SITE_KINDS,
+  SITE_KIND_IDS,
+  siteKindYears,
   UI_THEMES,
   uiThemeForYear,
   type FeatureEntry,
+  type SiteKindEntry,
   type Source,
 } from "./index.ts";
 
@@ -194,5 +198,26 @@ describe("作成キットの外観", () => {
     expect(uiThemeForYear(2012).id).toBe("flat-bold");
     expect(uiThemeForYear(2015).id).toBe("flat-thin");
     expect(() => uiThemeForYear(1994)).toThrow();
+  });
+});
+
+describe("サイトの種類", () => {
+  it("一覧がすべての種類を 1 回ずつ持つ", () => {
+    expect([...SITE_KIND_IDS].sort()).toEqual(Object.keys(SITE_KINDS).sort());
+  });
+
+  it.each(SITE_KIND_IDS)("%s: 年の範囲が対象の年に収まり、根拠がある", (id) => {
+    const kind: SiteKindEntry = SITE_KINDS[id];
+    const [from, to] = siteKindYears(id);
+    expect(from).toBe(kind.availableFrom);
+    expect(inYears(from)).toBe(true);
+    expect(inYears(to)).toBe(true);
+    expect(from).toBeLessThanOrEqual(to);
+    expectSources(kind.sources);
+  });
+
+  it("ディレクトリ型ポータルは 2005 年まで、ほかは 2015 年まで", () => {
+    expect(siteKindYears("portal")).toEqual([1996, 2005]);
+    expect(siteKindYears("blog")).toEqual([2003, 2015]);
   });
 });

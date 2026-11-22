@@ -33,3 +33,10 @@ export {
   type Year,
   type YearRange,
 } from "./years.ts";
+export {
+  SITE_KINDS,
+  SITE_KIND_IDS,
+  siteKindYears,
+  type SiteKindEntry,
+  type SiteKindId,
+} from "./site-kinds.ts";

@@ -2,8 +2,13 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   fmt: {
-    // ゴールデンテストの入力と期待値は手を加えずに比べる
-    ignorePatterns: ["packages/era-checker/test/golden/**", ".claude/**"],
+    // ゴールデンテストの入力と期待値は手を加えずに比べる。
+    // お題の HTML は差し込み口の目印を開始タグの中に書くため、HTML として整形できない
+    ignorePatterns: [
+      "packages/era-checker/test/golden/**",
+      "packages/quiz/src/pages/**",
+      ".claude/**",
+    ],
   },
   lint: {
     jsPlugins: [
