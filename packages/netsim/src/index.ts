@@ -14,3 +14,12 @@ export {
   type LoadOutcome,
   type LoadTarget,
 } from "./load-page.ts";
+export {
+  DIAL_SCHEDULES,
+  dial,
+  type DialHandle,
+  type DialOptions,
+  type DialSchedule,
+  type DialStep,
+  type DialupKind,
+} from "./dial.ts";

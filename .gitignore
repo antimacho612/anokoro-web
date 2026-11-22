@@ -35,3 +35,7 @@ dist-ssr
 # 非公開ドキュメント
 docs/spec
 CLAUDE.local.md
+
+# Playwright
+test-results
+playwright-report

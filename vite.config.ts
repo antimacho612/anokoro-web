@@ -10,6 +10,10 @@ export default defineConfig({
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },
     options: { typeAware: true, typeCheck: true },
   },
+  test: {
+    // E2E は Playwright で別に動かす
+    exclude: ["**/node_modules/**", "**/dist/**", "apps/web/e2e/**"],
+  },
   run: {
     cache: true,
   },

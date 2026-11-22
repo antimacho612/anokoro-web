@@ -6,17 +6,22 @@
   "scripts": {
     "dev": "vp dev",
     "preview": "vp preview",
-    "test": "vp test"
+    "test": "vp test",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@anokoro/assets": "workspace:*",
     "@anokoro/era-checker": "workspace:*",
     "@anokoro/era-data": "workspace:*",
+    "@anokoro/modem-sound": "workspace:*",
+    "@anokoro/netsim": "workspace:*",
+    "@anokoro/shared": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

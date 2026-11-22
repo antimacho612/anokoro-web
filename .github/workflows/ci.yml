@@ -22,3 +22,18 @@ jobs:
       - run: vp check
       - run: vp test
       - run: vp run -r build
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: voidzero-dev/setup-vp@v1.22.0
+        with:
+          node-version: "24"
+          cache: true
+
+      - run: vp exec playwright install --with-deps chromium
+        working-directory: apps/web
+      - run: vp exec playwright test
+        working-directory: apps/web

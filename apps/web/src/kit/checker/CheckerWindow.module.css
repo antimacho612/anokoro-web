@@ -85,3 +85,27 @@
   color: #666;
   flex: none;
 }
+
+.kiri {
+  margin: 4px;
+  padding: 6px;
+  text-align: center;
+  color: #f00;
+  font-weight: bold;
+  background: #ffffcc;
+  border: 2px dashed #f00;
+  animation: kiri 1s steps(1) infinite;
+}
+
+@keyframes kiri {
+  50% {
+    color: #00f;
+    border-color: #00f;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kiri {
+    animation: none;
+  }
+}

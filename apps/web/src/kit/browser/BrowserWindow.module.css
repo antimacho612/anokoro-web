@@ -106,3 +106,18 @@
   flex: 1;
   min-width: 0;
 }
+
+.adLoading {
+  color: #888;
+}
+
+.statusbar > .pbar {
+  width: 110px;
+  padding: 1px;
+}
+
+.pbar i {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 7px, transparent 7px 9px);
+}

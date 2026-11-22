@@ -2,6 +2,8 @@ import { formatResolution, resolutionPeriodForYear } from "@anokoro/era-data";
 import { useEffect, useState, type RefCallback } from "react";
 import { Window } from "../../ui/Window/Window.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
+import { BLANK_PAGE } from "../line/frame-page.ts";
+import { frameSlot, netController } from "../line/net.ts";
 import { useKit } from "../store.ts";
 import styles from "./BrowserWindow.module.css";
 import { SITE_ROOT } from "./pseudo-url.ts";
@@ -26,20 +28,43 @@ function useElementWidth(): [RefCallback<HTMLElement>, number] {
   return [setElement, width];
 }
 
+function AdBanner({ isLoading }: { isLoading: boolean }) {
+  if (isLoading) return <span className={styles.adLoading}>広告を読み込んでいます...</span>;
+  return (
+    <>
+      <span className={styles.adLogo}>ほげスペース</span>
+      <span>
+        無料で<b>50MB</b>！ホームページを作ろう♪
+      </span>
+      <span className={styles.adLink}>今すぐ登録</span>
+    </>
+  );
+}
+
 export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
   const year = useKit((s) => s.year);
   const status = useKit((s) => s.status);
   const resolution = useKit((s) => s.resolution);
   const setResolution = useKit((s) => s.setResolution);
+  const display = useKit((s) => s.display);
+  const netGeneration = useKit((s) => s.netGeneration);
+  const isLoading = useKit((s) => s.loading);
+  const progress = useKit((s) => s.progress);
+  const isAdLoading = useKit((s) => s.adLoading);
   const [viewportRef, viewportWidth] = useElementWidth();
 
   const candidates = resolutionPeriodForYear(year).candidates;
   const layout = stageLayout(resolution, viewportWidth);
   const title = `${pageTitle || "無題"} - ネットサーファー`;
+  const isNet = display === "net";
 
   const handleResolutionChange = (value: string): void => {
     const next = findResolution(year, value);
     if (next) setResolution(next);
+  };
+
+  const handleReload = (): void => {
+    void netController.reload();
   };
 
   return (
@@ -59,10 +84,15 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
         <button type="button" className="btn" disabled>
           進む →
         </button>
-        <button type="button" className="btn" disabled>
+        <button
+          type="button"
+          className="btn"
+          disabled={!isLoading}
+          onClick={() => netController.stop()}
+        >
           中止
         </button>
-        <button type="button" className="btn" disabled>
+        <button type="button" className="btn" onClick={handleReload}>
           更新
         </button>
         <button type="button" className="btn" disabled>
@@ -85,7 +115,7 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
       <div className={styles.addr}>
         アドレス(D)
         <div className={`${styles.addrBox} sunken`}>{`${SITE_ROOT}index.html`}</div>
-        <button type="button" className="btn" disabled>
+        <button type="button" className="btn" onClick={handleReload}>
           移動
         </button>
       </div>
@@ -104,17 +134,15 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
           }}
         >
           <div className={styles.adbar}>
-            <span className={styles.adLogo}>ほげスペース</span>
-            <span>
-              無料で<b>50MB</b>！ホームページを作ろう♪
-            </span>
-            <span className={styles.adLink}>今すぐ登録</span>
+            <AdBanner isLoading={isAdLoading} />
           </div>
           <iframe
+            key={isNet ? `net-${netGeneration}` : "local"}
+            ref={frameSlot.attach}
             className={styles.frame}
             sandbox="allow-same-origin"
             title="プレビュー"
-            srcDoc={html}
+            srcDoc={isNet ? BLANK_PAGE : html}
             style={{ width: layout.stageWidth, height: layout.frameHeight }}
           />
         </div>
@@ -123,6 +151,18 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
         <div className={styles.statusMain} role="status">
           {status}
         </div>
+        {isLoading && (
+          <div
+            className={`${styles.pbar} sunken`}
+            role="progressbar"
+            aria-label="読み込みの進み具合"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress * 100)}
+          >
+            <i style={{ width: `${progress * 100}%` }} />
+          </div>
+        )}
         <div>🌐 インターネット</div>
       </div>
     </Window>

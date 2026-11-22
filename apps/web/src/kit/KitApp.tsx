@@ -5,6 +5,7 @@ import { BrowserWindow } from "./browser/BrowserWindow.tsx";
 import { CheckerWindow } from "./checker/CheckerWindow.tsx";
 import styles from "./KitApp.module.css";
 import { KitLayout, slotClass } from "./layout/KitLayout.tsx";
+import { LineWindow } from "./line/LineWindow.tsx";
 import { Notepad, insertIntoNotepad } from "./notepad/Notepad.tsx";
 import { PartsBox } from "./parts/PartsBox.tsx";
 import { useKit } from "./store.ts";
@@ -37,9 +38,7 @@ export function KitApp() {
   const right = (
     <>
       <BrowserWindow html={view.html} pageTitle={view.title} />
-      <Window title="回線とダイヤルアップ接続" className={slotClass.line}>
-        <Pending />
-      </Window>
+      <LineWindow />
       <CheckerWindow score={view.score} warnings={view.warnings} />
       <Window title="ヘルプ - あのころのWeb解説" controls={["?", "×"]} className={slotClass.help}>
         <Pending />
