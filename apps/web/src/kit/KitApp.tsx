@@ -1,4 +1,4 @@
-import { checkEra } from "@anokoro/era-checker";
+import { checkEra, type SourceLocation } from "@anokoro/era-checker";
 import { useRef } from "react";
 import { BrowserWindow } from "./browser/BrowserWindow.tsx";
 import { CheckerWindow } from "./checker/CheckerWindow.tsx";
@@ -6,7 +6,7 @@ import { HelpWindow } from "./help/HelpWindow.tsx";
 import styles from "./KitApp.module.css";
 import { KitLayout } from "./layout/KitLayout.tsx";
 import { LineWindow } from "./line/LineWindow.tsx";
-import { Notepad, insertIntoNotepad } from "./notepad/Notepad.tsx";
+import { Notepad, insertIntoNotepad, moveNotepadCaret } from "./notepad/Notepad.tsx";
 import { PartsBox } from "./parts/PartsBox.tsx";
 import { useKit } from "./store.ts";
 import { TimeMachineBar } from "./time-machine/TimeMachineBar.tsx";
@@ -24,6 +24,10 @@ export function KitApp() {
     if (notepadRef.current) insertIntoNotepad(notepadRef.current, text, replace);
   };
 
+  const handleLocate = ({ line, col }: SourceLocation): void => {
+    if (notepadRef.current) moveNotepadCaret(notepadRef.current, line, col);
+  };
+
   const left = (
     <>
       <Notepad textareaRef={notepadRef} />
@@ -35,7 +39,7 @@ export function KitApp() {
     <>
       <BrowserWindow html={view.html} pageTitle={view.title} />
       <LineWindow />
-      <CheckerWindow score={view.score} warnings={view.warnings} />
+      <CheckerWindow score={view.score} warnings={view.warnings} onLocate={handleLocate} />
       <HelpWindow />
     </>
   );

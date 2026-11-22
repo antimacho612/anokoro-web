@@ -1,4 +1,4 @@
-import type { Warning } from "@anokoro/era-checker";
+import type { SourceLocation, Warning } from "@anokoro/era-checker";
 import { Window } from "../../ui/Window/Window.tsx";
 import { HelpButton } from "../help/HelpButton.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
@@ -8,14 +8,35 @@ import styles from "./CheckerWindow.module.css";
 type CheckerWindowProps = {
   score: number;
   warnings: readonly Warning[];
+  /** 警告が出た場所へメモ帳のカーソルを移す */
+  onLocate: (location: SourceLocation) => void;
 };
+
+type WarningMessageProps = Pick<CheckerWindowProps, "onLocate"> & {
+  warning: Warning;
+};
+
+function WarningMessage({ warning, onLocate }: WarningMessageProps) {
+  const [first] = warning.locations;
+  if (!first) return <span className={styles.message}>{warning.message}</span>;
+  return (
+    <button
+      type="button"
+      className={`${styles.message} ${styles.locate}`}
+      title={`${first.line}行目へ移動`}
+      onClick={() => onLocate(first)}
+    >
+      {warning.message}
+    </button>
+  );
+}
 
 const LEVEL_LABEL: Record<Warning["level"], string> = {
   future: "未来の技術",
   note: "注意",
 };
 
-export function CheckerWindow({ score, warnings }: CheckerWindowProps) {
+export function CheckerWindow({ score, warnings, onLocate }: CheckerWindowProps) {
   const year = useKit((s) => s.year);
   const lastKiriban = useKit((s) => s.lastKiriban);
 
@@ -49,7 +70,7 @@ export function CheckerWindow({ score, warnings }: CheckerWindowProps) {
           warnings.map((w) => (
             <li key={`${w.ruleId}:${w.message}`}>
               <span className={`${styles.tag} ${styles[w.level]}`}>{LEVEL_LABEL[w.level]}</span>
-              <span className={styles.message}>{w.message}</span>
+              <WarningMessage warning={w} onLocate={onLocate} />
               <HelpButton topic={w.topic} />
               {w.count > 1 && <span className={styles.count}>×{w.count}</span>}
             </li>

@@ -6,7 +6,7 @@ import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import styles from "./Notepad.module.css";
 import { BLANK, TEMPLATE } from "./templates.ts";
-import { byteLength, formatUsage, insertText } from "./text-edit.ts";
+import { byteLength, formatUsage, insertText, offsetOf } from "./text-edit.ts";
 
 /** 入力が止まってからローカル表示を更新するまでの時間 */
 const SHOW_DELAY_MS = 350;
@@ -40,6 +40,14 @@ export function insertIntoNotepad(
   flushSync(() => apply(value));
   textarea.focus();
   textarea.setSelectionRange(caret, caret);
+}
+
+/** メモ帳の line 行 col 桁にカーソルを置き、その行が見えるようにする */
+export function moveNotepadCaret(textarea: HTMLTextAreaElement, line: number, col: number): void {
+  const offset = offsetOf(textarea.value, line, col);
+  textarea.blur();
+  textarea.setSelectionRange(offset, offset);
+  textarea.focus();
 }
 
 type NotepadProps = {
