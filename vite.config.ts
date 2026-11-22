@@ -3,7 +3,7 @@ import { defineConfig } from "vite-plus";
 export default defineConfig({
   fmt: {
     // ゴールデンテストの入力と期待値は手を加えずに比べる
-    ignorePatterns: ["packages/era-checker/test/golden/**"],
+    ignorePatterns: ["packages/era-checker/test/golden/**", ".claude/**"],
   },
   lint: {
     jsPlugins: [
