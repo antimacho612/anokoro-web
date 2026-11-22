@@ -8,7 +8,6 @@ import styles from "./CheckerWindow.module.css";
 type CheckerWindowProps = {
   score: number;
   warnings: readonly Warning[];
-  /** 警告が出た場所へメモ帳のカーソルを移す */
   onLocate: (location: SourceLocation) => void;
 };
 

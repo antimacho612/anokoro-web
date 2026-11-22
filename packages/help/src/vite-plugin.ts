@@ -6,11 +6,9 @@ export const HELP_MODULE_ID = "virtual:anokoro-help";
 const RESOLVED_ID = `\0${HELP_MODULE_ID}`;
 
 export interface HelpContentOptions {
-  /** 解説の Markdown を置いたディレクトリ */
   dir: string;
 }
 
-/** 解説の Markdown をビルド時に HTML の断片へ変換し、`virtual:anokoro-help` として出す */
 export function helpContent({ dir }: HelpContentOptions): Plugin {
   const root = resolve(dir);
   const isHelpFile = (file: string): boolean => {

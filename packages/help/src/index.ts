@@ -4,7 +4,6 @@ import type { HelpTopic } from "./types.ts";
 
 export type { HelpSegment, HelpTopic } from "./types.ts";
 
-/** どのトピックも開いていないときに出すトピック */
 export const DEFAULT_TOPIC: TopicId = "timeline";
 
 export function topicsForYear(topics: readonly HelpTopic[], year: Year): HelpTopic[] {
@@ -15,10 +14,6 @@ export function topicsForYear(topics: readonly HelpTopic[], year: Year): HelpTop
   );
 }
 
-/**
- * 開くトピックを決める。wanted がその年に出せなければ既定のトピック、
- * それも出せなければ最初のトピックにする
- */
 export function resolveTopic(
   topics: readonly HelpTopic[],
   year: Year,
@@ -32,7 +27,6 @@ export function resolveTopic(
   );
 }
 
-/** その年までの内容だけを残した本文 */
 export function topicHtml(topic: HelpTopic, year: Year): string {
   return topic.segments
     .filter((segment) => inRange(year, segment.years))

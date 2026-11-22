@@ -22,7 +22,6 @@ export function formatUsage(bytes: number): string {
   return `使用容量 ${(bytes / 1024).toFixed(1)}KB / 50MB`;
 }
 
-/** 1 始まりの行と桁を、value の中の位置に直す。範囲外は行末や末尾に寄せる */
 export function offsetOf(value: string, line: number, col: number): number {
   let lineStart = 0;
   for (let n = 1; n < line; n++) {

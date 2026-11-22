@@ -51,8 +51,7 @@ export interface KitState {
   progressRatio: number;
   adLoading: boolean;
   lastLoad: LastLoad | null;
-  /** ヘルプで開いているトピック。null は既定のトピック */
-  helpTopic: TopicId | null;
+  wantedHelpTopic: TopicId | null;
   helpOpen: boolean;
   setYear: (year: number) => void;
   stepYear: (delta: number) => void;
@@ -64,9 +63,7 @@ export interface KitState {
   replace: (source: string) => void;
   setResolution: (resolution: Resolution) => void;
   setSound: (sound: boolean) => void;
-  /** ヘルプのタブを切り替える */
   selectHelpTopic: (topic: TopicId) => void;
-  /** ヘルプを開く。topic を渡すとそのトピックにする */
   openHelp: (topic?: TopicId) => void;
   closeHelp: () => void;
   toggleHelp: () => void;
@@ -121,7 +118,7 @@ export function createKitStore({
       progressRatio: 0,
       adLoading: false,
       lastLoad: null,
-      helpTopic: null,
+      wantedHelpTopic: null,
       helpOpen: false,
       setYear: moveTo,
       stepYear: (delta) => moveTo(get().year + delta),
@@ -130,9 +127,12 @@ export function createKitStore({
       replace: (next) => set({ source: next, shownSource: next, display: "local" }),
       setResolution: (resolution) => set({ resolution }),
       setSound: (sound) => set({ sound }),
-      selectHelpTopic: (helpTopic) => set({ helpTopic }),
+      selectHelpTopic: (wantedHelpTopic) => set({ wantedHelpTopic }),
       openHelp: (topic) =>
-        set(({ helpTopic }) => ({ helpTopic: topic ?? helpTopic, helpOpen: true })),
+        set(({ wantedHelpTopic }) => ({
+          wantedHelpTopic: topic ?? wantedHelpTopic,
+          helpOpen: true,
+        })),
       closeHelp: () => set({ helpOpen: false }),
       toggleHelp: () => set(({ helpOpen }) => ({ helpOpen: !helpOpen })),
     };

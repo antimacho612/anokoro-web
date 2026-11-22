@@ -5,7 +5,6 @@ import { Window } from "../../ui/Window/Window.tsx";
 import { useKit } from "../store.ts";
 import styles from "./HelpWindow.module.css";
 
-/** 開いている間だけ、画面に重ねて出すヘルプ */
 export function HelpWindow() {
   const helpOpen = useKit((s) => s.helpOpen);
   return helpOpen ? <HelpDialog /> : null;
@@ -13,14 +12,14 @@ export function HelpWindow() {
 
 function HelpDialog() {
   const year = useKit((s) => s.year);
-  const helpTopic = useKit((s) => s.helpTopic);
+  const wantedHelpTopic = useKit((s) => s.wantedHelpTopic);
   const selectHelpTopic = useKit((s) => s.selectHelpTopic);
   const closeHelp = useKit((s) => s.closeHelp);
   const dialogRef = useRef<HTMLElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
 
   const shown = topicsForYear(topics, year);
-  const topic = resolveTopic(topics, year, helpTopic);
+  const topic = resolveTopic(topics, year, wantedHelpTopic);
 
   useEffect(() => {
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -73,7 +72,6 @@ function HelpDialog() {
           tabIndex={0}
         >
           <h3>{topic.title}</h3>
-          {/* content/help の Markdown をビルド時に変換した HTML だけを入れる */}
           <div dangerouslySetInnerHTML={{ __html: topicHtml(topic, year) }} />
         </div>
       )}

@@ -42,9 +42,11 @@ export function insertIntoNotepad(
   textarea.setSelectionRange(caret, caret);
 }
 
-/** メモ帳の line 行 col 桁にカーソルを置き、その行が見えるようにする */
 export function moveNotepadCaret(textarea: HTMLTextAreaElement, line: number, col: number): void {
-  const offset = offsetOf(textarea.value, line, col);
+  placeCaretAndScrollByRefocus(textarea, offsetOf(textarea.value, line, col));
+}
+
+function placeCaretAndScrollByRefocus(textarea: HTMLTextAreaElement, offset: number): void {
   textarea.blur();
   textarea.setSelectionRange(offset, offset);
   textarea.focus();

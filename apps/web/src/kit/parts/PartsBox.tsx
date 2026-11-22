@@ -67,7 +67,7 @@ export function PartsBox({ onInsert }: PartsBoxProps) {
         {lastPart && (
           <p className={`hint ${styles.tip}`}>
             <span>豆知識：{lastPart.tip}</span>
-            <HelpButton topic={lastPart.topic} />
+            <HelpButton topic={lastPart.tipTopic} />
           </p>
         )}
         <p className="hint">

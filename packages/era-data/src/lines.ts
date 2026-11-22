@@ -17,7 +17,6 @@ export interface LineEntry {
   dial: DialKind;
   /** 接続後に表示する速度。常時接続では null */
   connectedLabel: string | null;
-  /** 選べる年の範囲。終わりは新しく選ぶ人がほとんどいなくなった年 */
   availableYears: YearRange;
   /** 既定の回線になる年の範囲 */
   defaultYears: YearRange | null;

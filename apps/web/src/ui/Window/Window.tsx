@@ -8,7 +8,6 @@ export type WindowProps = {
   controls?: readonly TitleControl[];
   className?: string;
   children?: ReactNode;
-  /** 渡すと × を閉じるボタンにする */
   onClose?: () => void;
   role?: "dialog";
   ref?: Ref<HTMLElement>;

@@ -10,10 +10,6 @@ export class HelpParseError extends Error {
   override name = "HelpParseError";
 }
 
-/**
- * `2003-2012`、`2001-`（以降）、`-2005`（まで）、`2003`（その年だけ）を読む。
- * 範囲の外側は within で切り詰める
- */
 export function parseYearRange(text: string, within: YearRange = [MIN_YEAR, MAX_YEAR]): YearRange {
   const match = /^(\d{4})?\s*(-)?\s*(\d{4})?$/.exec(text.trim());
   if (!match || (match[1] === undefined && match[3] === undefined)) {
@@ -40,6 +36,7 @@ function yearsCommentOf(text: string): { range: string; comment: string } | unde
 /**
  * 先頭に年の範囲のコメントがある項目は、Markdown では HTML ブロックとして読まれるため、
  * コメントを外して項目だけを読み直す
+ * 出典: CommonMark 0.31.2「4.6 HTML blocks」の開始条件 2 https://spec.commonmark.org/0.31.2/#html-blocks
  */
 function relexListItem(item: Tokens.ListItem, comment: string): Tokens.ListItem {
   const rest = item.text.trim().slice(comment.length).trimStart();
@@ -49,7 +46,6 @@ function relexListItem(item: Tokens.ListItem, comment: string): Tokens.ListItem 
   return { ...relexed, loose: item.loose };
 }
 
-/** 見出しに添える「2001年ごろ〜」。年は表示を絞るための目安なので「ごろ」を付ける */
 export function eraLabel([from, to]: YearRange): string {
   const text =
     to >= MAX_YEAR
@@ -73,11 +69,6 @@ interface Section {
   years: YearRange;
 }
 
-/**
- * 本文を断片に分ける。
- * 見出しの直前の `<!-- years: … -->` は、次の同じ階層以上の見出しまでに効く。
- * リスト項目の先頭に書いたものは、その項目だけに効く
- */
 function bodySegments(body: string, topicYears: YearRange): HelpSegment[] {
   const parser = new Parser();
   const segments: HelpSegment[] = [];
@@ -147,53 +138,52 @@ function sourcesSegment(sources: readonly Source[], years: YearRange): HelpSegme
   return { html: `<h4>参考</h4>\n<ul>\n${items}</ul>\n`, years, reference: true };
 }
 
-function readString(data: Record<string, unknown>, key: string, file: string): string {
+function readString(data: Record<string, unknown>, key: string, label: string): string {
   const value = data[key];
   if (typeof value !== "string" || value === "") {
-    throw new HelpParseError(`${file}: ${key} は空でない文字列にします`);
+    throw new HelpParseError(`${label}: ${key} は空でない文字列にします`);
   }
   return value;
 }
 
-function readYears(data: Record<string, unknown>, file: string): YearRange {
+function readYears(data: Record<string, unknown>, label: string): YearRange {
   const value = data["years"];
   if (!Array.isArray(value) || value.length !== 2 || !value.every(isYear) || value[0] > value[1]) {
-    throw new HelpParseError(`${file}: years は [${MIN_YEAR} 〜 ${MAX_YEAR} の年, 年] にします`);
+    throw new HelpParseError(`${label}: years は [${MIN_YEAR} 〜 ${MAX_YEAR} の年, 年] にします`);
   }
   return [value[0], value[1]];
 }
 
-function readSources(data: Record<string, unknown>, file: string): Source[] {
+function readSources(data: Record<string, unknown>, label: string): Source[] {
   const value = data["sources"] ?? [];
-  if (!Array.isArray(value)) throw new HelpParseError(`${file}: sources は配列にします`);
+  if (!Array.isArray(value)) throw new HelpParseError(`${label}: sources は配列にします`);
   return value.map((entry: unknown) => {
     if (typeof entry !== "object" || entry === null) {
-      throw new HelpParseError(`${file}: sources の各項目は title と url を持ちます`);
+      throw new HelpParseError(`${label}: sources の各項目は title と url を持ちます`);
     }
     const record = entry as Record<string, unknown>;
-    const title = readString(record, "title", file);
-    const url = readString(record, "url", file);
-    if (!/^https?:\/\//.test(url)) throw new HelpParseError(`${file}: url は http(s) にします`);
+    const title = readString(record, "title", label);
+    const url = readString(record, "url", label);
+    if (!/^https?:\/\//.test(url)) throw new HelpParseError(`${label}: url は http(s) にします`);
     return { title, url };
   });
 }
 
-/** 解説の Markdown（frontmatter 付き）を読む。file はエラーの表示にだけ使う */
-export function parseHelpMarkdown(source: string, file = "解説"): HelpTopic<string> {
+export function parseHelpMarkdown(source: string, label = "解説"): HelpTopic<string> {
   const front = FRONT_MATTER.exec(source);
-  if (!front) throw new HelpParseError(`${file}: 先頭に frontmatter がありません`);
+  if (!front) throw new HelpParseError(`${label}: 先頭に frontmatter がありません`);
   const data: unknown = parseYaml(front[1] ?? "");
   if (typeof data !== "object" || data === null) {
-    throw new HelpParseError(`${file}: frontmatter が読めません`);
+    throw new HelpParseError(`${label}: frontmatter が読めません`);
   }
   const record = data as Record<string, unknown>;
-  const years = readYears(record, file);
-  const sources = readSources(record, file);
+  const years = readYears(record, label);
+  const sources = readSources(record, label);
   const segments = bodySegments(source.slice(front[0].length), years);
   const references = sourcesSegment(sources, years);
   return {
-    id: readString(record, "id", file),
-    title: readString(record, "title", file),
+    id: readString(record, "id", label),
+    title: readString(record, "title", label),
     years,
     sources,
     segments: references ? [...segments, references] : segments,

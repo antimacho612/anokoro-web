@@ -6,7 +6,6 @@ type HelpButtonProps = {
   topic: TopicId;
 };
 
-/** 関連する解説をヘルプウィンドウで開く小さなボタン */
 export function HelpButton({ topic }: HelpButtonProps) {
   const openHelp = useKit((s) => s.openHelp);
   return (

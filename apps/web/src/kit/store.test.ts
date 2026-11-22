@@ -74,21 +74,21 @@ describe("ヘルプ", () => {
   it("トピックを指定して開くと、そのトピックで開く", () => {
     const store = createKitStore();
     store.getState().openHelp("js");
-    expect(store.getState()).toMatchObject({ helpTopic: "js", helpOpen: true });
+    expect(store.getState()).toMatchObject({ wantedHelpTopic: "js", helpOpen: true });
   });
 
   it("トピックを指定せずに開くと、前のトピックのまま開く", () => {
     const store = createKitStore();
     store.getState().selectHelpTopic("css");
     store.getState().openHelp();
-    expect(store.getState()).toMatchObject({ helpTopic: "css", helpOpen: true });
+    expect(store.getState()).toMatchObject({ wantedHelpTopic: "css", helpOpen: true });
   });
 
   it("閉じても、次に開くときのためにトピックを覚えておく", () => {
     const store = createKitStore();
     store.getState().openHelp("js");
     store.getState().closeHelp();
-    expect(store.getState()).toMatchObject({ helpTopic: "js", helpOpen: false });
+    expect(store.getState()).toMatchObject({ wantedHelpTopic: "js", helpOpen: false });
   });
 
   it("切り替えるたびに開閉する", () => {

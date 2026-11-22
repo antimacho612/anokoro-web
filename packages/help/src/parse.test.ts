@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { HelpParseError, parseHelpMarkdown, parseYearRange } from "./parse.ts";
+import { HelpParseError, eraLabel, parseHelpMarkdown, parseYearRange } from "./parse.ts";
 
 const doc = (body: string, front = "id: line\ntitle: 回線事情\nyears: [1995, 2015]") =>
   `---\n${front}\n---\n\n${body}`;
@@ -20,6 +20,16 @@ describe("parseYearRange", () => {
 
   test.each(["", "-", "1990-2000", "2010-2005", "abc"])("読めない範囲 %j は拒否する", (text) => {
     expect(() => parseYearRange(text)).toThrow(HelpParseError);
+  });
+});
+
+describe("eraLabel", () => {
+  test.each([
+    [[2001, 2015], "2001年ごろ〜"],
+    [[1995, 2005], "〜2005年ごろ"],
+    [[2003, 2012], "2003〜2012年ごろ"],
+  ] as const)("%j は「ごろ」を付けて表す", (range, text) => {
+    expect(eraLabel(range)).toBe(` <span data-era>${text}</span>`);
   });
 });
 

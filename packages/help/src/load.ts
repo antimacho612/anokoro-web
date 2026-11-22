@@ -8,7 +8,6 @@ export interface LoadedHelp {
   files: string[];
 }
 
-/** dir の *.md をファイル名の順に読む。タブの並びはこの順になる */
 export function loadHelpTopics(dir: string): LoadedHelp {
   const files = readdirSync(dir)
     .filter((name) => name.endsWith(".md"))

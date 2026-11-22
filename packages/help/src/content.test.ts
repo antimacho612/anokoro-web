@@ -20,4 +20,13 @@ describe("content/help", () => {
       expect(item.html).toContain(`<strong>${item.years[0]}`);
     }
   });
+
+  test("本文にスクリプトを動かせる HTML を含まない", () => {
+    const unsafe = /<(script|iframe|object|embed|style|form)\b|\son[a-z]+\s*=|javascript:/i;
+    for (const topic of topics) {
+      for (const segment of topic.segments) {
+        expect(segment.html, topic.id).not.toMatch(unsafe);
+      }
+    }
+  });
 });
