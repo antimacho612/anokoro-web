@@ -6,12 +6,9 @@ import type { OutlineFrame } from "./reveal-plan.ts";
 export interface WarpFrame {
   elapsedMs: number;
   dtMs: number;
-  /** トンネルの流れの速さの目安。急に変わってもなめらかに追う */
   speed: number;
-  /** 年カウンターの値 */
   year: number;
-  /** 到着の場面の進み具合。到着前は 0 */
-  arrival: number;
+  arrivalProgressRatio: number;
 }
 
 const STAR_COUNT = 260;
@@ -121,7 +118,6 @@ export class WarpRenderer {
     ctx.fillRect(0, 0, width, height);
   }
 
-  /** 年ごとの外観のウィンドウ枠が連なるトンネル */
   private drawFrames(palette: EraPalette, speed: number): void {
     if (speed <= 0.01) return;
     const { ctx } = this;
@@ -180,9 +176,9 @@ export class WarpRenderer {
     const cy = this.height / 2;
     const scale = this.halfDiagonal * 0.28;
     const unit = Math.max(12, Math.min(this.width, this.height) / 40);
-    const leave = 1 - smoothstep(0, 0.5, frame.arrival);
+    const leave = 1 - smoothstep(0, 0.5, frame.arrivalProgressRatio);
     this.fragments.forEach((fragment, index) => {
-      if (fragment.atMs > frame.elapsedMs) return;
+      if (fragment.atMsFromBoot > frame.elapsedMs) return;
       let spawned = this.spawnedAt.get(index);
       if (spawned === undefined) {
         spawned = this.travel;
@@ -192,11 +188,14 @@ export class WarpRenderer {
       if (depth < 0.12) return;
       const alpha = smoothstep(1, 0.86, depth) * smoothstep(0.12, 0.3, depth) * leave;
       if (alpha <= 0) return;
-      const offset = ((0.55 + fragment.radius * 0.6) * scale) / depth;
+      const offset = ((0.55 + fragment.radiusRatio * 0.6) * scale) / depth;
       const size = Math.min(unit * 4, (unit * 0.9) / depth);
       ctx.save();
       ctx.globalAlpha = alpha;
-      ctx.translate(cx + Math.cos(fragment.angle) * offset, cy + Math.sin(fragment.angle) * offset);
+      ctx.translate(
+        cx + Math.cos(fragment.angleRad) * offset,
+        cy + Math.sin(fragment.angleRad) * offset,
+      );
       ctx.rotate(fragment.tilt);
       this.drawToken(fragment.token, size, palette);
       ctx.restore();

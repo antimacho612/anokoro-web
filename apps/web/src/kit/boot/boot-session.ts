@@ -4,7 +4,6 @@ export const BOOTED_KEY = "anokoro:booted";
 
 export const browserSession: StorageAccess = () => window.sessionStorage;
 
-/** このセッションで起動の演出を見終えたか、とばしたか */
 export function hasBooted(storage: StorageAccess): boolean {
   try {
     return storage().getItem(BOOTED_KEY) === "1";

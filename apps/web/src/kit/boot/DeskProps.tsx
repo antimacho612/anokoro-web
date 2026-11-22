@@ -25,13 +25,12 @@ type SlabProps = {
   shaded: string;
 };
 
-/** 厚みのある板の、手前に見える側面。明かりに向いた面ほど明るい */
 function Slab({ outline, depth, lit, shaded }: SlabProps) {
   return (
     <g>
       <polygon points={toPoints(outline.map(shift(0, depth)))} fill={mixColor(shaded, lit, 0.5)} />
       {visibleSides(outline, depth).map((side) => {
-        const fill = mixColor(shaded, lit, (side.light + 1) / 2);
+        const fill = mixColor(shaded, lit, (side.lightCosine + 1) / 2);
         const points = toPoints(side.points);
         return (
           <polygon
@@ -57,8 +56,6 @@ function starPoints(cx: number, cy: number, outer: number, inner: number, spikes
     }),
   );
 }
-
-/* ---------- 卓上ライト ---------- */
 
 const LAMP_PIVOT: Point = [-300, 540];
 const LAMP_ELBOW: Point = [-336, 330];
@@ -102,7 +99,6 @@ function Rods({ from, to, gap }: { from: Point; to: Point; gap: number }) {
   );
 }
 
-/** 腕に沿わせたばね。横から見た巻き線を、斜めの線の並びで描く */
 function Spring({
   from,
   to,
@@ -340,7 +336,6 @@ export function Lamp() {
   );
 }
 
-/** 傘から机へ落ちる光。周りの物の上に重ねる */
 export function LampBeam() {
   const { id, paint } = useSvgIds();
   return (
@@ -371,9 +366,7 @@ export function LampBeam() {
   );
 }
 
-/* ---------- 素材集の CD ---------- */
-
-const CD_PLANE = deskPlane({ x: -50, y: 555, angle: 8, squash: SQUASH });
+const CD_PLANE = deskPlane({ x: -50, y: 555, angleDeg: 8, squash: SQUASH });
 const CD_CASE: readonly Point[] = roundedRect(176, 154, 2.5, 2);
 
 type TileProps = { x: number; y: number; paint: Paint };
@@ -554,7 +547,7 @@ function CdInsert({ paint }: { paint: Paint }) {
 
 export function CdCase() {
   const { id, paint } = useSvgIds();
-  const outline = CD_CASE.map(([u, v]) => CD_PLANE.at(u, v));
+  const outline = CD_CASE.map(([u, v]) => CD_PLANE.toScene(u, v));
   return (
     <g>
       <defs>
@@ -625,15 +618,13 @@ export function CdCase() {
   );
 }
 
-/* ---------- CD の盤面 ---------- */
-
-const DISC_PLANE = deskPlane({ x: -178, y: 630, angle: 0, squash: SQUASH });
+const DISC_PLANE = deskPlane({ x: -178, y: 630, angleDeg: 0, squash: SQUASH });
 const DISC_R = 70;
 
 export function Disc() {
   const { id, paint } = useSvgIds();
   const wedges = 24;
-  const outline = circle(DISC_R, 64).map(([u, v]) => DISC_PLANE.at(u, v));
+  const outline = circle(DISC_R, 64).map(([u, v]) => DISC_PLANE.toScene(u, v));
   return (
     <g>
       <defs>
@@ -693,8 +684,8 @@ export function Disc() {
         <circle r={DISC_R - 0.6} fill="none" stroke="#fff" strokeOpacity="0.8" strokeWidth="0.9" />
       </g>
       <ellipse
-        cx={DISC_PLANE.at(0, 0)[0]}
-        cy={DISC_PLANE.at(0, 0)[1]}
+        cx={DISC_PLANE.toScene(0, 0)[0]}
+        cy={DISC_PLANE.toScene(0, 0)[1]}
         rx="7.5"
         ry={7.5 * SQUASH}
         fill="none"
@@ -705,8 +696,6 @@ export function Disc() {
     </g>
   );
 }
-
-/* ---------- フロッピー ---------- */
 
 const FLOPPY_W = 120;
 const FLOPPY_H = 125;
@@ -728,7 +717,7 @@ type FloppyProps = {
 };
 
 function Floppy({ plane, body, label, accent, paint }: FloppyProps) {
-  const outline = FLOPPY_OUTLINE.map(([u, v]) => plane.at(u, v));
+  const outline = FLOPPY_OUTLINE.map(([u, v]) => plane.toScene(u, v));
   const top = -FLOPPY_H / 2;
   return (
     <g>
@@ -847,7 +836,7 @@ export function FloppyStack() {
       {FLOPPIES.map(({ x, y, angle, body, label, accent }) => (
         <Floppy
           key={label}
-          plane={deskPlane({ x, y, angle, squash: SQUASH })}
+          plane={deskPlane({ x, y, angleDeg: angle, squash: SQUASH })}
           body={body}
           label={label}
           accent={accent}
@@ -857,8 +846,6 @@ export function FloppyStack() {
     </g>
   );
 }
-
-/* ---------- マグカップ ---------- */
 
 const MUG = { cx: 752, rimY: 470, rx: 34, ry: 9.5, height: 78 } as const;
 
@@ -1041,13 +1028,10 @@ export function Mug() {
   );
 }
 
-/* ---------- マウスとマウスパッド ---------- */
-
-const PAD_PLANE = deskPlane({ x: 842, y: 648, angle: -5, squash: SQUASH });
+const PAD_PLANE = deskPlane({ x: 842, y: 648, angleDeg: -5, squash: SQUASH });
 const PAD: readonly Point[] = roundedRect(250, 214, 12, 4);
 const MOUSE = { x: 848, y: 630, angle: -7 } as const;
 
-/** 上から見たマウスの殻の輪郭。奥（ボタン側）が少し細い */
 const MOUSE_SHELL: readonly Point[] = Array.from({ length: 72 }, (_, i): Point => {
   const t = (i / 72) * Math.PI * 2;
   const c = Math.cos(t);
@@ -1084,7 +1068,7 @@ const STARS: readonly (readonly [number, number, number])[] = [
 ];
 
 function MousePad({ paint }: { paint: Paint }) {
-  const outline = PAD.map(([u, v]) => PAD_PLANE.at(u, v));
+  const outline = PAD.map(([u, v]) => PAD_PLANE.toScene(u, v));
   return (
     <g>
       <polygon

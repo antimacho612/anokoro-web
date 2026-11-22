@@ -9,18 +9,18 @@ import {
   type Rect,
 } from "./reveal-plan.ts";
 
-const revealMs = PHASE_MS.reveal;
+const revealMs = PHASE_MS.revealDesktop;
 
 describe("revealSchedule", () => {
   test.each([1, 3, 7, 20])("%i 枚のウィンドウでも、デスクトップの場面の中で出し終える", (n) => {
     const last = revealSchedule(n).at(-1)!;
-    expect(last.showMs + REVEAL_TIMING.showMs).toBeLessThanOrEqual(revealMs);
+    expect(last.showMsInReveal + REVEAL_TIMING.showMs).toBeLessThanOrEqual(revealMs);
   });
 
   test("順に少しずつ遅らせて開く", () => {
     const [a, b] = revealSchedule(2);
-    expect(b!.startMs).toBeGreaterThan(a!.startMs);
-    expect(a!.showMs).toBe(a!.startMs + REVEAL_TIMING.growMs);
+    expect(b!.startMsInReveal).toBeGreaterThan(a!.startMsInReveal);
+    expect(a!.showMsInReveal).toBe(a!.startMsInReveal + REVEAL_TIMING.growMs);
   });
 });
 
@@ -46,11 +46,11 @@ describe("outlinesAt", () => {
 
   test("始まる前と広がりきったあとは枠線を描かない", () => {
     expect(outlinesAt([target], [step!], origin, 0)).toEqual([]);
-    expect(outlinesAt([target], [step!], origin, step!.showMs + 200)).toEqual([]);
+    expect(outlinesAt([target], [step!], origin, step!.showMsInReveal + 200)).toEqual([]);
   });
 
   test("origin から目的のウィンドウへ向かって広がり、残像が続く", () => {
-    const frames = outlinesAt([target], [step!], origin, step!.startMs + 90);
+    const frames = outlinesAt([target], [step!], origin, step!.startMsInReveal + 90);
     expect(frames.length).toBe(REVEAL_TIMING.trail);
     const [head, tail] = frames;
     expect(head!.rect.width).toBeGreaterThan(tail!.rect.width);

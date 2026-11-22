@@ -13,7 +13,6 @@ export interface RevealRun {
   cancel(): void;
 }
 
-/** 作成キットの直下の帯と、main の中のウィンドウ */
 function revealTargets(root: HTMLElement): HTMLElement[] {
   const blocks = [...root.children].flatMap((child) =>
     child.tagName === "MAIN" ? [...child.querySelectorAll("section")] : [child],
@@ -38,7 +37,7 @@ export function startReveal(root: HTMLElement): RevealRun {
     typeof el.animate === "function"
       ? [
           el.animate([{ opacity: 0 }, { opacity: 1 }], {
-            delay: schedule[i]!.showMs,
+            delay: schedule[i]!.showMsInReveal,
             duration: REVEAL_TIMING.showMs,
             easing: "ease-out",
             fill: "backwards",

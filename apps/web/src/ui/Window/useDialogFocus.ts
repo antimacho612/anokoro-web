@@ -1,6 +1,5 @@
 import { useEffect, type RefObject } from "react";
 
-/** 開いたらダイアログへフォーカスを移し、閉じたら開く前の要素へ戻す。Esc で閉じる */
 export function useDialogFocus(
   dialogRef: RefObject<HTMLElement | null>,
   onClose: () => void,

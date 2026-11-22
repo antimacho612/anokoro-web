@@ -25,7 +25,6 @@ export interface EnvironmentItem {
   value: string;
 }
 
-/** その年の既定の環境 */
 export function environmentItems(year: Year): EnvironmentItem[] {
   return [
     { label: "回線", value: defaultLineForYear(year).name },

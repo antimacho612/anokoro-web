@@ -278,6 +278,9 @@ importers:
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.65.1
+      '@types/css-tree':
+        specifier: 'catalog:'
+        version: 3.2.0
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -290,6 +293,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.3.0(@voidzero-dev/vite-plus-core@8.3.8000(@types/node@24.19.2)(typescript@7.0.2)(yaml@2.9.1))
+      css-tree:
+        specifier: 'catalog:'
+        version: 3.2.1
       typescript:
         specifier: 'catalog:'
         version: 7.0.2

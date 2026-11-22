@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vite-plus/test";
 import { BOOT_SAMPLE_RATE, synthesizeBootSound } from "./boot-sound.ts";
 import {
-  calmTimeline,
+  reducedMotionTimeline,
   fullTimeline,
   journeyFor,
   phaseStartMs,
@@ -36,7 +36,7 @@ describe("synthesizeBootSound", () => {
   });
 
   test("跳躍の間は、自己診断の間より音が大きい", () => {
-    const post = phaseStartMs(timeline, "post")!;
+    const post = phaseStartMs(timeline, "selfTest")!;
     const warp = phaseStartMs(timeline, "warp")!;
     const arrive = phaseStartMs(timeline, "arrive")!;
     const samples = full(1);
@@ -45,15 +45,15 @@ describe("synthesizeBootSound", () => {
 
   test("止まる年に入った瞬間は、止まっている間より音が大きい", () => {
     const samples = full(1);
-    for (const accent of warpAccents(timeline).filter((a) => a.kind === "checkpoint")) {
-      expect(rms(samples, accent.atMs, accent.atMs + 80)).toBeGreaterThan(
-        rms(samples, accent.atMs + 200, accent.atMs + 280),
+    for (const accent of warpAccents(timeline).filter((a) => a.kind === "themeCheckpoint")) {
+      expect(rms(samples, accent.atMsFromBoot, accent.atMsFromBoot + 80)).toBeGreaterThan(
+        rms(samples, accent.atMsFromBoot + 200, accent.atMsFromBoot + 280),
       );
     }
   });
 
   test("動きを減らす設定では、その短い流れに合わせた長さになる", () => {
-    const calm = calmTimeline(journeyFor(2003, 2026));
+    const calm = reducedMotionTimeline(journeyFor(2003, 2026));
     const samples = synthesizeBootSound({ timeline: calm, seed: 1 });
     expect(samples.length).toBe(Math.ceil((totalMs(calm) / 1000) * BOOT_SAMPLE_RATE));
     expect(samples.some((v) => v !== 0)).toBe(true);

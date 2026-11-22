@@ -5,7 +5,7 @@ import { browserSession, markBooted } from "./boot-session.ts";
 import { BOOT_SAMPLE_RATE, synthesizeBootSound } from "./boot-sound.ts";
 import { bootStore } from "./boot-store.ts";
 import {
-  calmTimeline,
+  reducedMotionTimeline,
   durationSeconds,
   fullTimeline,
   journeyFor,
@@ -53,7 +53,7 @@ function prefersCalm(): boolean {
 
 function planTimeline(year: number, isCalm: boolean): BootTimeline {
   const journey = journeyFor(year, new Date().getFullYear());
-  return isCalm ? calmTimeline(journey) : fullTimeline(journey);
+  return isCalm ? reducedMotionTimeline(journey) : fullTimeline(journey);
 }
 
 export function BootScreen({ kitRoot }: BootScreenProps) {
@@ -132,10 +132,13 @@ export function BootScreen({ kitRoot }: BootScreenProps) {
           destination={year}
           durationSec={durationSeconds(planTimeline(year, isCalm))}
           soundOn={soundOn}
-          controls={{
-            onPower: handlePower,
-            onSkip: handleSkipBeforePower,
-            onSoundChange: setSoundOn,
+          power={{
+            kind: "standby",
+            controls: {
+              onPower: handlePower,
+              onSkip: handleSkipBeforePower,
+              onSoundChange: setSoundOn,
+            },
           }}
         />
       )}

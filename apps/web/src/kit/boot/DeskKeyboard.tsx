@@ -8,7 +8,6 @@ import {
 } from "./keyboard-layout.ts";
 import { useSvgIds, type Paint } from "./use-svg-ids.ts";
 
-/** キーの並ぶ面。奥ほど狭く見える台形 */
 const KEY_AREA = {
   farY: 619,
   nearY: 681,
@@ -18,7 +17,6 @@ const KEY_AREA = {
   nearRight: 666,
 };
 
-/** 刻印の奥行きの縮み方 */
 const LEGEND_SQUASH = 0.52;
 
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
@@ -40,7 +38,6 @@ interface Inset {
   near: number;
 }
 
-/** キーの根元。隣のキーとのすき間を残す */
 const FOOTPRINT: Inset = { left: 0.045, right: 0.045, far: 0.05, near: 0.03 };
 /** キーの頭。手前ほど側面が見えるので、手前を大きく削る */
 const TOP_FACE: Inset = { left: 0.17, right: 0.17, far: 0.1, near: 0.36 };
@@ -61,13 +58,13 @@ function rectCorners({ x, y, w, h }: KeySpec, inset: Inset): Quad {
 }
 
 function keyOutline(spec: KeySpec, inset: Inset): Point[] {
-  const { x, y, w, h, notch } = spec;
-  if (notch === undefined) return rectCorners(spec, inset);
+  const { x, y, w, h, notchWidth } = spec;
+  if (notchWidth === undefined) return rectCorners(spec, inset);
   const x0 = x + inset.left;
   const x1 = x + w - inset.right;
   const y0 = y + inset.far;
   const y1 = y + h - inset.near;
-  const xn = x + notch + inset.left;
+  const xn = x + notchWidth + inset.left;
   const ym = y + 1 - inset.near;
   return [
     [x0, y0],
@@ -128,7 +125,6 @@ function Legends({ spec }: { spec: KeySpec }) {
   );
 }
 
-/** 長方形のキーの、左右の側面。左は明かりを受ける */
 function skirtSides(spec: KeySpec): { lit: Quad; dark: Quad } {
   const [b0, b1, b2, b3] = rectCorners(spec, FOOTPRINT);
   const [t0, t1, t2, t3] = rectCorners(spec, TOP_FACE);
@@ -138,7 +134,7 @@ function skirtSides(spec: KeySpec): { lit: Quad; dark: Quad } {
 function Key({ spec, paint }: { spec: KeySpec; paint: Paint }) {
   const isMod = spec.tone === "mod";
   const top = keyOutline(spec, TOP_FACE);
-  const sides = spec.notch === undefined ? skirtSides(spec) : null;
+  const sides = spec.notchWidth === undefined ? skirtSides(spec) : null;
   const rim = [top[top.length - 1], top[0], top[1]].filter((p) => p !== undefined);
   return (
     <g>
@@ -174,7 +170,6 @@ const CASE_TOP =
 const CASE_FRONT =
   "M74 684L72 694Q71 700 80 700H680Q689 700 688 694L686 684Q688 691 679 691H81Q72 691 74 684Z";
 
-/** 起動前の机に置くキーボード。電源が入ると Num Lock の灯がつく */
 export function DeskKeyboard({ isPoweredOn }: { isPoweredOn: boolean }) {
   const { id, paint } = useSvgIds();
   return (

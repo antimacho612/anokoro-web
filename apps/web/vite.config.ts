@@ -28,5 +28,6 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.{ts,tsx}", "config/**/*.test.ts"],
+    css: { include: [/themes\.css/] },
   },
 });

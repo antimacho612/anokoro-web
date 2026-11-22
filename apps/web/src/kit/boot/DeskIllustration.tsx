@@ -3,11 +3,8 @@ import { DeskKeyboard } from "./DeskKeyboard.tsx";
 import { CdCase, Disc, FloppyStack, Lamp, LampBeam, MouseArea, Mug } from "./DeskProps.tsx";
 import { useSvgIds, type Paint } from "./use-svg-ids.ts";
 
-/** 絵の座標系。モニターとキーボードがこの枠に収まり、壁、机、小物は枠の外まで描く */
-export const SCENE = { width: 760, height: 700 } as const;
-/** ブラウン管のガラス面 */
+export const SCENE_VIEWBOX = { width: 760, height: 700 } as const;
 export const GLASS = { x: 140, y: 90, width: 480, height: 360, radius: 14 } as const;
-/** 電源ボタンの中心と、ボタンの頭の半径 */
 export const POWER = { cx: 612, cy: 503, r: 20 } as const;
 
 const DESK_TOP = 480;
@@ -155,45 +152,51 @@ function Room({ paint }: { paint: Paint }) {
       <rect
         x={-FAR}
         y={-FAR}
-        width={FAR * 2 + SCENE.width}
+        width={FAR * 2 + SCENE_VIEWBOX.width}
         height={FAR + DESK_TOP}
         fill={paint("wall")}
       />
       <rect
         x={-FAR}
         y={-FAR}
-        width={FAR * 2 + SCENE.width}
+        width={FAR * 2 + SCENE_VIEWBOX.width}
         height={FAR + DESK_TOP}
         fill={paint("wallLamp")}
       />
       <rect
         x={-FAR}
         y={DESK_TOP - 34}
-        width={FAR * 2 + SCENE.width}
+        width={FAR * 2 + SCENE_VIEWBOX.width}
         height="34"
         fill="#000"
         opacity="0.22"
         filter={paint("soft")}
       />
-      <rect x={-FAR} y={DESK_TOP} width={FAR * 2 + SCENE.width} height={FAR} fill={paint("desk")} />
       <rect
         x={-FAR}
         y={DESK_TOP}
-        width={FAR * 2 + SCENE.width}
+        width={FAR * 2 + SCENE_VIEWBOX.width}
+        height={FAR}
+        fill={paint("desk")}
+      />
+      <rect
+        x={-FAR}
+        y={DESK_TOP}
+        width={FAR * 2 + SCENE_VIEWBOX.width}
         height={FAR}
         fill={paint("grain")}
       />
       <rect
         x={-FAR}
         y={DESK_TOP}
-        width={FAR * 2 + SCENE.width}
+        width={FAR * 2 + SCENE_VIEWBOX.width}
         height={FAR}
         fill={paint("deskLamp")}
       />
       <rect
         x={-FAR}
         y={DESK_TOP}
-        width={FAR * 2 + SCENE.width}
+        width={FAR * 2 + SCENE_VIEWBOX.width}
         height="1.5"
         fill="#b08660"
         opacity="0.7"
@@ -211,7 +214,6 @@ function KeyboardCable() {
   );
 }
 
-/** モニターが壁と机に落とす影。小物より奥にある */
 function MonitorShadow({ paint }: { paint: Paint }) {
   return (
     <g>
@@ -396,13 +398,12 @@ function Monitor({ paint, isPoweredOn }: { paint: Paint; isPoweredOn: boolean })
   );
 }
 
-/** 起動前の机。モニター、キーボード、マウス、小物 */
 export function DeskIllustration({ isPoweredOn }: { isPoweredOn: boolean }) {
   const { id, paint } = useSvgIds();
   return (
     <svg
       className={styles.illustration}
-      viewBox={`0 0 ${SCENE.width} ${SCENE.height}`}
+      viewBox={`0 0 ${SCENE_VIEWBOX.width} ${SCENE_VIEWBOX.height}`}
       preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       focusable="false"

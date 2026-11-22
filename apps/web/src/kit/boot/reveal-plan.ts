@@ -6,10 +6,8 @@ export interface Rect {
 }
 
 export interface RevealStep {
-  /** 枠線が広がり始める時刻（デスクトップが現れる場面の始まりから） */
-  startMs: number;
-  /** ウィンドウを見せ始める時刻 */
-  showMs: number;
+  startMsInReveal: number;
+  showMsInReveal: number;
 }
 
 export interface OutlineFrame {
@@ -31,12 +29,11 @@ export function revealSchedule(count: number): RevealStep[] {
   const { firstMs, staggerMaxMs, spreadMs, growMs } = REVEAL_TIMING;
   const stagger = count > 1 ? Math.min(staggerMaxMs, spreadMs / (count - 1)) : 0;
   return Array.from({ length: count }, (_, i) => {
-    const startMs = firstMs + i * stagger;
-    return { startMs, showMs: startMs + growMs };
+    const startMsInReveal = firstMs + i * stagger;
+    return { startMsInReveal, showMsInReveal: startMsInReveal + growMs };
   });
 }
 
-/** 画面の上から順、同じ高さなら左から順 */
 export function readingOrder(rects: readonly Rect[]): number[] {
   return rects
     .map((rect, index) => ({ rect, index }))
@@ -67,7 +64,6 @@ function between(from: Rect, to: Rect, t: number): Rect {
   };
 }
 
-/** 古い OS のウィンドウを開くときのように、origin から各ウィンドウへ広がる枠線 */
 export function outlinesAt(
   targets: readonly Rect[],
   schedule: readonly RevealStep[],
@@ -80,7 +76,7 @@ export function outlinesAt(
     const step = schedule[i];
     if (!step) return;
     for (let k = 0; k < trail; k++) {
-      const t = (elapsedMs - step.startMs - k * trailGapMs) / growMs;
+      const t = (elapsedMs - step.startMsInReveal - k * trailGapMs) / growMs;
       if (t <= 0 || t >= 1) continue;
       frames.push({ rect: between(origin, target, easeOut(t)), alpha: 0.9 - k * 0.28 });
     }

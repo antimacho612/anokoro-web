@@ -141,7 +141,6 @@ function degauss(track: Track, atMs: number): void {
   });
 }
 
-/** 跳躍装置が力を溜める、上がっていく音 */
 function chargeUp(track: Track, atMs: number, durationMs: number): void {
   let phase = 0;
   const dt = 1 / track.sampleRate;
@@ -169,21 +168,20 @@ function boom(track: Track, random: Random, atMs: number, gain: number): void {
 
 const ACCENT_SOUNDS: Record<WarpAccentKind, (track: Track, random: Random, atMs: number) => void> =
   {
-    entry: (track, random, atMs) => {
+    enterSupportedRange: (track, random, atMs) => {
       click(track, random, atMs, 0.26, 600);
       thump(track, atMs, 90, 140, 0.24);
     },
-    checkpoint: (track, random, atMs) => {
+    themeCheckpoint: (track, random, atMs) => {
       click(track, random, atMs, 0.22, 600);
       thump(track, atMs, 110, 80, 0.18);
     },
-    tick: (track, random, atMs) => {
+    finalStep: (track, random, atMs) => {
       click(track, random, atMs, 0.2, 1400);
       thump(track, atMs, 140, 70, 0.12);
     },
   };
 
-/** 年が定まる「ガチャン」 */
 function lock(track: Track, random: Random, atMs: number): void {
   thump(track, atMs, 90, 220, 0.5);
   click(track, random, atMs, 0.55, 700);
@@ -191,12 +189,12 @@ function lock(track: Track, random: Random, atMs: number): void {
   degauss(track, atMs + 40);
 }
 
-/** 時刻の順に呼ばれる前提で、急な変化をなめらかにする */
 function smoothed(target: (ms: number) => number, tauMs: number): (ms: number) => number {
   let value = 0;
   let last: number | undefined;
   return (ms) => {
     const dt = last === undefined ? 0 : ms - last;
+    if (dt < 0) throw new RangeError(`smoothed は時刻の順に呼ぶ（${last} の後に ${ms}）`);
     last = ms;
     value += (target(ms) - value) * (1 - Math.exp(-dt / tauMs));
     return value;
@@ -207,7 +205,6 @@ function softClip(samples: Float32Array<ArrayBuffer>): void {
   for (let i = 0; i < samples.length; i++) samples[i] = Math.tanh(samples[i]! * 1.1) * 0.9;
 }
 
-/** 起動の効果音。場面の流れに合わせて、機械の音だけで組み立てる */
 export function synthesizeBootSound({
   timeline,
   seed,
@@ -216,8 +213,8 @@ export function synthesizeBootSound({
   const random = createRandom(seed);
   const end = totalMs(timeline);
   const track = new Track(sampleRate, end);
-  const post = phaseStartMs(timeline, "post");
-  const launch = phaseStartMs(timeline, "launch");
+  const post = phaseStartMs(timeline, "selfTest");
+  const launch = phaseStartMs(timeline, "diveIn");
   const warp = phaseStartMs(timeline, "warp");
   const arrive = phaseStartMs(timeline, "arrive");
 
@@ -260,7 +257,7 @@ export function synthesizeBootSound({
   warpDrone(track, warp, length, droneSpeed);
   for (const { atMs } of yearChangeTimes(timeline)) click(track, random, atMs, 0.09, 2600);
   for (const accent of warpAccents(timeline))
-    ACCENT_SOUNDS[accent.kind](track, random, accent.atMs);
+    ACCENT_SOUNDS[accent.kind](track, random, accent.atMsFromBoot);
 
   if (arrive !== undefined) lock(track, random, arrive);
 

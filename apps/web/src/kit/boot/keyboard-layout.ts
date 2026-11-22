@@ -1,23 +1,21 @@
-/** キーボードの 1 キー。位置と大きさはキー 1 個分を 1 とする単位 */
+export type KeyUnits = number;
+
 export interface KeySpec {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+  x: KeyUnits;
+  y: KeyUnits;
+  w: KeyUnits;
+  h: KeyUnits;
   label: string;
-  /** かな刻印 */
   kana?: string;
   tone: "alpha" | "mod";
-  /** 下の段だけ左が欠けた形（日本語配列の Enter）での、欠けの幅 */
-  notch?: number;
+  notchWidth?: KeyUnits;
 }
 
-/** キーの形を、段ごとの長方形に分けたもの */
 export interface KeyPart {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+  x: KeyUnits;
+  y: KeyUnits;
+  w: KeyUnits;
+  h: KeyUnits;
 }
 
 type KeyDef = readonly [label: string, width: number, tone?: "mod", kana?: string];
@@ -177,10 +175,9 @@ const ENTER: KeySpec = {
   h: 2,
   label: "Enter",
   tone: "mod",
-  notch: ENTER_NOTCH,
+  notchWidth: ENTER_NOTCH,
 };
 
-/** 日本語配列のフルサイズのキーボード。奥の段から順 */
 export const KEYS: readonly KeySpec[] = [
   ...functionRow(),
   ...MAIN_ROWS.flatMap((defs, r) => row(MAIN_ROW_TOP + r, defs)),
@@ -189,16 +186,15 @@ export const KEYS: readonly KeySpec[] = [
   ...numpad(),
 ].toSorted((a, b) => a.y - b.y);
 
-/** Num Lock などの表示灯。テンキーの上 */
 export const KEYBOARD_LAMPS: readonly { x: number; y: number }[] = [0, 1, 2].map((i) => ({
   x: NUMPAD_LEFT + 0.5 + i * 1.2,
   y: FUNCTION_ROW_HEIGHT / 2,
 }));
 
-export function keyParts({ x, y, w, h, notch }: KeySpec): KeyPart[] {
-  if (notch === undefined) return [{ x, y, w, h }];
+export function keyParts({ x, y, w, h, notchWidth }: KeySpec): KeyPart[] {
+  if (notchWidth === undefined) return [{ x, y, w, h }];
   return [
     { x, y, w, h: 1 },
-    { x: x + notch, y: y + 1, w: w - notch, h: h - 1 },
+    { x: x + notchWidth, y: y + 1, w: w - notchWidth, h: h - 1 },
   ];
 }

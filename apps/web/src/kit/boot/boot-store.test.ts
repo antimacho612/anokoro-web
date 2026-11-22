@@ -7,7 +7,7 @@ describe("bootStore", () => {
     const store = createBootStore();
     expect(store.getState().mode).toBe("hidden");
     store.getState().open();
-    expect(store.getState().mode).toBe("power");
+    expect(store.getState().mode).toBe("awaitingPower");
     store.getState().start();
     expect(store.getState().mode).toBe("running");
     store.getState().close();

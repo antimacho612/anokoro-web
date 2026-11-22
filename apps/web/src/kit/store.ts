@@ -22,7 +22,6 @@ export type DialupConnection = "offline" | "dialing" | "online";
 
 export type Display = "local" | "net";
 
-/** タスクバーのメニューから開く、ヘルプ以外の重ねて出すウィンドウ */
 export type InfoDialog = "usage" | "news" | "about";
 
 export interface LastLoad {
@@ -56,9 +55,7 @@ export interface KitState {
   lastLoad: LastLoad | null;
   wantedHelpTopic: TopicId | null;
   helpOpen: boolean;
-  /** ヘルプと同じ場所に重ねるので、ヘルプとは同時に出さない */
   infoDialog: InfoDialog | null;
-  /** 最後に読んだお知らせの日付 */
   newsSeen: string | null;
   setYear: (year: number) => void;
   stepYear: (delta: number) => void;

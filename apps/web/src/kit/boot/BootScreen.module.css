@@ -27,8 +27,6 @@
   letter-spacing: normal;
 }
 
-/* ---------- 部屋と机 ---------- */
-
 .room {
   position: absolute;
   inset: 0;
@@ -137,8 +135,6 @@
   text-anchor: middle;
 }
 
-/* ---------- ブラウン管 ---------- */
-
 .screen {
   position: absolute;
   overflow: hidden;
@@ -171,8 +167,6 @@
   pointer-events: none;
   background: repeating-linear-gradient(to bottom, transparent 0 2px, rgb(0 0 0 / 30%) 2px 3px);
 }
-
-/* ---------- 電源ボタンと付箋 ---------- */
 
 .powerButton {
   position: absolute;
@@ -279,8 +273,6 @@
 .poweredOn .stickyArrow {
   animation: fade-out 200ms ease-out forwards;
 }
-
-/* ---------- 案内 ---------- */
 
 .guide {
   position: relative;
@@ -411,8 +403,6 @@
   }
 }
 
-/* ---------- 演出の共通部分 ---------- */
-
 .sequence {
   --era-glow: 150 170 205;
   position: absolute;
@@ -495,8 +485,6 @@
   z-index: 2;
 }
 
-/* ---------- ブラウン管が点く ---------- */
-
 .crtOn {
   position: absolute;
   inset: 0;
@@ -506,8 +494,6 @@
   opacity: 0;
   animation: crt-on 460ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
 }
-
-/* ---------- 自己診断 ---------- */
 
 .post {
   position: absolute;
@@ -559,16 +545,16 @@
   animation: appear 1ms step-start forwards;
 }
 
-.dest {
+.highlightedDestination {
   color: rgb(var(--amber));
   font-weight: 700;
 }
 
-.dest .value {
+.highlightedDestination .value {
   color: rgb(var(--amber));
 }
 
-.go {
+.warpCue {
   color: #fff;
 }
 
@@ -585,8 +571,6 @@
   filter: drop-shadow(0 0 0.8cqw rgb(var(--amber) / 60%));
   animation: flip 280ms ease-in-out 1000ms forwards;
 }
-
-/* ---------- 跳躍 ---------- */
 
 .launchFlash {
   position: absolute;
@@ -726,13 +710,9 @@
   text-shadow: 0 0 8px rgb(0 0 0 / 90%);
 }
 
-/* ---------- 到着 ---------- */
-
 .degauss {
   animation: degauss 560ms ease-out;
 }
-
-/* ---------- デスクトップが現れる ---------- */
 
 .revealing {
   background-color: transparent;
@@ -746,8 +726,6 @@
 .revealing .vignette {
   opacity: 0;
 }
-
-/* ---------- 動きを減らす設定 ---------- */
 
 .calm .stage {
   transform: none;

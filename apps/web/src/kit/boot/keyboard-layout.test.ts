@@ -7,6 +7,11 @@ import {
   keyParts,
 } from "./keyboard-layout.ts";
 
+test("奥の段から順に並ぶ", () => {
+  const ys = KEYS.map((key) => key.y);
+  expect(ys).toEqual(ys.toSorted((a, b) => a - b));
+});
+
 const PARTS = KEYS.flatMap((key) => keyParts(key).map((part) => ({ key, part })));
 
 test("文字キーの段は、どの段も同じ幅にそろう", () => {

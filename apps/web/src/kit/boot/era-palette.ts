@@ -2,17 +2,14 @@ import { MAX_YEAR, MIN_YEAR, uiThemeForYear, type UiThemeId } from "@anokoro/era
 
 export type Rgb = readonly [number, number, number];
 
-/** 跳躍のトンネルの色。作成キットの年ごとの外観（themes.css）に合わせる */
 export interface EraPalette {
   glow: Rgb;
-  /** トンネルを形作るウィンドウ枠 */
   frame: Rgb;
   title: Rgb;
   text: Rgb;
   rounded: boolean;
 }
 
-/** 対象の年より後（出発直後） */
 const PRESENT: EraPalette = {
   glow: [150, 170, 205],
   frame: [96, 108, 130],
@@ -21,11 +18,11 @@ const PRESENT: EraPalette = {
   rounded: false,
 };
 
-const THEMES: Record<UiThemeId, EraPalette> = {
+export const THEMES: Record<UiThemeId, EraPalette> = {
   "gray-bevel": {
     glow: [0, 190, 190],
     frame: [192, 192, 192],
-    title: [0, 0, 160],
+    title: [0, 0, 128],
     text: [220, 255, 250],
     rounded: false,
   },
@@ -66,6 +63,20 @@ const THEMES: Record<UiThemeId, EraPalette> = {
   },
 };
 
+export interface CssColorRef {
+  prop: `--${string}`;
+  stop?: number;
+}
+
+export const THEME_CSS_ORIGIN: Record<UiThemeId, { frame: CssColorRef; title: CssColorRef }> = {
+  "gray-bevel": { frame: { prop: "--face" }, title: { prop: "--title-bg" } },
+  "gray-gradient": { frame: { prop: "--face" }, title: { prop: "--title-bg", stop: 1 } },
+  "blue-round": { frame: { prop: "--face" }, title: { prop: "--title-bg", stop: 1 } },
+  glass: { frame: { prop: "--win-bg", stop: 2 }, title: { prop: "--desktop-bg" } },
+  "flat-bold": { frame: { prop: "--win-bg" }, title: { prop: "--desktop-bg" } },
+  "flat-thin": { frame: { prop: "--win-border-color" }, title: { prop: "--desktop-bg", stop: 1 } },
+};
+
 function paletteOfYear(year: number): EraPalette {
   if (year > MAX_YEAR) return PRESENT;
   return THEMES[uiThemeForYear(Math.max(MIN_YEAR, year)).id];
@@ -79,7 +90,6 @@ function mix(a: Rgb, b: Rgb, t: number): Rgb {
   ];
 }
 
-/** 年カウンターの値（連続値）の色。年の境目では前後の年の色を混ぜる */
 export function eraPalette(yearValue: number): EraPalette {
   const lower = Math.floor(yearValue);
   const t = yearValue - lower;

@@ -1,11 +1,9 @@
 export interface NewsEntry {
-  /** YYYY-MM-DD。未読の判定にも使う */
   date: string;
   title: string;
   lines: readonly string[];
 }
 
-/** 新しい順に並べる */
 export const NEWS: readonly NewsEntry[] = [
   {
     date: "2026-11-22",

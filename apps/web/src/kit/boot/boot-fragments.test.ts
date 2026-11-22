@@ -7,12 +7,12 @@ import {
   type FragmentToken,
 } from "./boot-fragments.ts";
 import {
-  calmTimeline,
+  reducedMotionTimeline,
   displayYear,
   fullTimeline,
   journeyFor,
   phaseStartMs,
-  yearAt,
+  yearValueAt,
 } from "./boot-timeline.ts";
 
 const texts = (tokens: FragmentToken[]) =>
@@ -67,14 +67,25 @@ describe("planFragments", () => {
       const warpStart = phaseStartMs(timeline, "warp")!;
       const arriveStart = phaseStartMs(timeline, "arrive")!;
       for (const f of planFragments(timeline, 7)) {
-        expect(f.atMs).toBeGreaterThanOrEqual(warpStart);
-        expect(f.atMs).toBeLessThan(arriveStart);
-        expect(f.year).toBe(Math.min(displayYear(yearAt(timeline, f.atMs)), MAX_YEAR));
+        expect(f.atMsFromBoot).toBeGreaterThanOrEqual(warpStart);
+        expect(f.atMsFromBoot).toBeLessThan(arriveStart);
+        expect(f.year).toBe(Math.min(displayYear(yearValueAt(timeline, f.atMsFromBoot)), MAX_YEAR));
         expect(f.year).toBeGreaterThanOrEqual(MIN_YEAR);
         expect(f.year).toBeLessThanOrEqual(MAX_YEAR);
         if (f.token.kind === "image" || f.token.kind === "counter") continue;
         expect(texts(tokensForYear(f.year))).toContain(f.token.text);
       }
+    },
+  );
+
+  test.each([MIN_YEAR, 2003, MAX_YEAR])(
+    "%i 年へ向かうとき、跳躍の最後の 1 割には新しく出さない",
+    (to) => {
+      const timeline = timelineTo(to);
+      const warpStart = phaseStartMs(timeline, "warp")!;
+      const arriveStart = phaseStartMs(timeline, "arrive")!;
+      const last = planFragments(timeline, 7).at(-1)!;
+      expect(last.atMsFromBoot).toBeLessThan(warpStart + (arriveStart - warpStart) * 0.9);
     },
   );
 
@@ -85,6 +96,6 @@ describe("planFragments", () => {
   });
 
   test("跳躍のない流れでは何も飛ばさない", () => {
-    expect(planFragments(calmTimeline(journeyFor(2003, 2026)), 1)).toEqual([]);
+    expect(planFragments(reducedMotionTimeline(journeyFor(2003, 2026)), 1)).toEqual([]);
   });
 });

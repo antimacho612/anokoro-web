@@ -4,13 +4,13 @@ import { useEffect, useEffectEvent, useRef, useState, type RefObject } from "rea
 import { planFragments, type FragmentAsset } from "./boot-fragments.ts";
 import {
   PHASE_MS,
-  digitPosition,
+  odometerDigitPosition,
   displayYear,
   durationSeconds,
   phaseAt,
   phaseStartMs,
   warpSpeed,
-  yearAt,
+  yearValueAt,
   type BootPhaseId,
   type BootTimeline,
 } from "./boot-timeline.ts";
@@ -62,7 +62,6 @@ function createRenderer(canvas: HTMLCanvasElement | null, run: BootRun): WarpRen
   }
 }
 
-/** 回転式カウンターの桁を年に合わせて回し、速く回る桁ほどぼかす */
 function createOdometer(strips: readonly (HTMLSpanElement | null)[]) {
   const last = DIGIT_PLACES.map(() => Number.NaN);
   const blur = DIGIT_PLACES.map(() => 0);
@@ -70,7 +69,7 @@ function createOdometer(strips: readonly (HTMLSpanElement | null)[]) {
     DIGIT_PLACES.forEach((place, i) => {
       const strip = strips[i];
       if (!strip) return;
-      const position = digitPosition(year, place);
+      const position = odometerDigitPosition(year, place);
       const moved = Number.isNaN(last[i]!) ? 0 : Math.abs(position - last[i]!);
       const speed = Math.min(moved, 10 - moved) / Math.max(1, dtMs);
       blur[i] = blur[i]! * 0.6 + Math.min(7, speed * 220) * 0.4;
@@ -81,7 +80,6 @@ function createOdometer(strips: readonly (HTMLSpanElement | null)[]) {
   };
 }
 
-/** ブラウン管の中へ飛び込むように、画面がビューポートいっぱいになるまで寄る */
 function startLaunch(scene: HTMLElement | null, screen: HTMLElement | null): Animation | null {
   if (!scene || !screen || typeof scene.animate !== "function") return null;
   const box = scene.getBoundingClientRect();
@@ -98,15 +96,15 @@ function startLaunch(scene: HTMLElement | null, screen: HTMLElement | null): Ani
         filter: "brightness(2.2) blur(3px)",
       },
     ],
-    { duration: PHASE_MS.launch, easing: "cubic-bezier(0.6, 0, 0.9, 0.3)", fill: "forwards" },
+    { duration: PHASE_MS.diveIn, easing: "cubic-bezier(0.6, 0, 0.9, 0.3)", fill: "forwards" },
   );
 }
 
 function liveMessage(phase: BootPhaseId, to: Year): string {
   switch (phase) {
-    case "power":
-    case "post":
-    case "launch":
+    case "powerOn":
+    case "selfTest":
+    case "diveIn":
       return "起動しています";
     case "warp":
       return `${to}年へ移動しています`;
@@ -136,24 +134,27 @@ function PostScreen({
         <p
           key={line.key}
           className={`${styles.postLine} ${line.tone ? styles[line.tone] : ""}`}
-          style={{ animationDelay: `${line.atMs}ms` }}
+          style={{ animationDelay: `${line.atMsInSelfTest}ms` }}
         >
           {line.label}
           {line.value !== undefined && (
             <span
               ref={line.live === "memory" ? memoryRef : undefined}
               className={styles.value}
-              style={{ animationDelay: `${line.atMs}ms` }}
+              style={{ animationDelay: `${line.atMsInSelfTest}ms` }}
             >
               {line.value}
             </span>
           )}
           {line.result && (
-            <b className={styles.result} style={{ animationDelay: `${line.result.atMs}ms` }}>
+            <b
+              className={styles.result}
+              style={{ animationDelay: `${line.result.atMsInSelfTest}ms` }}
+            >
               {line.result.text}
             </b>
           )}
-          {line.tone === "go" && <span className={styles.cursor}>_</span>}
+          {line.tone === "warpCue" && <span className={styles.cursor}>_</span>}
         </p>
       ))}
     </div>
@@ -188,7 +189,7 @@ export function BootSequence({ run, kitRoot, onDone, onSkip }: BootSequenceProps
     const handleResize = (): void => renderer?.resize();
     window.addEventListener("resize", handleResize);
 
-    const postStart = phaseStartMs(timeline, "post");
+    const postStart = phaseStartMs(timeline, "selfTest");
     let current: BootPhaseId | "done" = timeline.phases[0]!.id;
     let shownYear: Year | null = null;
     let reveal: RevealRun | null = null;
@@ -209,12 +210,13 @@ export function BootSequence({ run, kitRoot, onDone, onSkip }: BootSequenceProps
           return;
         }
         setPhase(at.id);
-        if (at.id === "launch") launch = startLaunch(sceneRef.current, screenRef.current);
-        if (at.id === "reveal" && !isCalm && kitRoot.current) reveal = startReveal(kitRoot.current);
+        if (at.id === "diveIn") launch = startLaunch(sceneRef.current, screenRef.current);
+        if (at.id === "revealDesktop" && !isCalm && kitRoot.current)
+          reveal = startReveal(kitRoot.current);
       }
       if (at.id === "done") return;
 
-      const year = yearAt(timeline, elapsed);
+      const year = yearValueAt(timeline, elapsed);
       updateOdometer(year, dtMs);
       const shown = displayYear(year);
       const inEra = isYear(shown) ? shown : null;
@@ -223,7 +225,7 @@ export function BootSequence({ run, kitRoot, onDone, onSkip }: BootSequenceProps
         setEraYear(inEra);
       }
       rootRef.current?.style.setProperty("--era-glow", eraPalette(year).glow.join(" "));
-      if (at.id === "post" && postStart !== undefined && memoryRef.current) {
+      if (at.id === "selfTest" && postStart !== undefined && memoryRef.current) {
         memoryRef.current.textContent = memoryText(elapsed - postStart);
       }
       if (renderer && (at.id === "warp" || at.id === "arrive")) {
@@ -232,7 +234,7 @@ export function BootSequence({ run, kitRoot, onDone, onSkip }: BootSequenceProps
           dtMs,
           speed: warpSpeed(timeline, elapsed),
           year,
-          arrival: at.id === "arrive" ? at.progress : 0,
+          arrivalProgressRatio: at.id === "arrive" ? at.progressRatio : 0,
         });
       } else if (renderer && reveal) {
         renderer.drawOutlines(reveal.outlinesAt(at.elapsedInPhase));
@@ -249,14 +251,14 @@ export function BootSequence({ run, kitRoot, onDone, onSkip }: BootSequenceProps
     };
   }, [run, timeline, isCalm, kitRoot]);
 
-  const showsMonitor = phase === "power" || phase === "post" || phase === "launch";
-  const hasArrived = phase === "arrive" || phase === "reveal";
+  const showsMonitor = phase === "powerOn" || phase === "selfTest" || phase === "diveIn";
+  const hasArrived = phase === "arrive" || phase === "revealDesktop";
   const showsCounter = phase === "warp" || hasArrived;
   const rootClass = [
     styles.sequence,
     isCalm && styles.calm,
     phase === "arrive" && !isCalm && styles.degauss,
-    phase === "reveal" && styles.revealing,
+    phase === "revealDesktop" && styles.revealing,
   ]
     .filter(Boolean)
     .join(" ");
@@ -270,11 +272,11 @@ export function BootSequence({ run, kitRoot, onDone, onSkip }: BootSequenceProps
           destination={to}
           durationSec={durationSeconds(timeline)}
           soundOn={run.soundOn}
-          controls={null}
+          power={{ kind: "poweredOn" }}
           sceneRef={sceneRef}
           screenRef={screenRef}
         >
-          {phase === "power" ? (
+          {phase === "powerOn" ? (
             <div className={styles.crtOn} aria-hidden="true" />
           ) : (
             <PostScreen lines={postLines(timeline.journey)} memoryRef={memoryRef} />
@@ -318,7 +320,7 @@ export function BootSequence({ run, kitRoot, onDone, onSkip }: BootSequenceProps
         {liveMessage(phase, to)}
       </p>
 
-      {phase !== "reveal" && (
+      {phase !== "revealDesktop" && (
         <button type="button" className={styles.skip} onClick={onSkip}>
           スキップ（Esc）
         </button>

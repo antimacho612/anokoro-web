@@ -2,9 +2,9 @@ import { MAX_YEAR, MIN_YEAR, YEARS } from "@anokoro/era-data";
 import { describe, expect, test } from "vite-plus/test";
 import {
   PHASE_MS,
-  calmTimeline,
+  reducedMotionTimeline,
   checkpointYears,
-  digitPosition,
+  odometerDigitPosition,
   displayYear,
   durationSeconds,
   fullTimeline,
@@ -14,7 +14,7 @@ import {
   totalMs,
   warpAccents,
   warpSpeed,
-  yearAt,
+  yearValueAt,
   yearChangeTimes,
 } from "./boot-timeline.ts";
 
@@ -30,7 +30,7 @@ describe("場面の長さ", () => {
   });
 
   test("動きを減らす設定では 2.5 秒以内に終える", () => {
-    expect(totalMs(calmTimeline(journeyFor(2003, 2026)))).toBeLessThanOrEqual(2500);
+    expect(totalMs(reducedMotionTimeline(journeyFor(2003, 2026)))).toBeLessThanOrEqual(2500);
   });
 
   test("案内に出す長さは秒に丸める", () => {
@@ -40,10 +40,10 @@ describe("場面の長さ", () => {
 
   test("経過時間から場面と進み具合を求め、最後のあとは done", () => {
     const timeline = timelineTo(2003);
-    expect(phaseAt(timeline, 0)).toEqual({ id: "power", progress: 0, elapsedInPhase: 0 });
-    expect(phaseAt(timeline, PHASE_MS.power + PHASE_MS.post / 2)).toMatchObject({
-      id: "post",
-      progress: 0.5,
+    expect(phaseAt(timeline, 0)).toEqual({ id: "powerOn", progressRatio: 0, elapsedInPhase: 0 });
+    expect(phaseAt(timeline, PHASE_MS.powerOn + PHASE_MS.selfTest / 2)).toMatchObject({
+      id: "selfTest",
+      progressRatio: 0.5,
     });
     expect(phaseAt(timeline, totalMs(timeline)).id).toBe("done");
   });
@@ -71,28 +71,28 @@ describe("止まる年", () => {
 
   test("止まっている間、年カウンターは止まる年ちょうどを指す", () => {
     const timeline = timelineTo(MIN_YEAR);
-    for (const accent of warpAccents(timeline).filter((a) => a.kind === "checkpoint")) {
-      expect(yearAt(timeline, accent.atMs + 1)).toBe(accent.year);
-      expect(yearAt(timeline, accent.atMs + 200)).toBe(accent.year);
-      expect(warpSpeed(timeline, accent.atMs + 100)).toBeLessThan(0.2);
+    for (const accent of warpAccents(timeline).filter((a) => a.kind === "themeCheckpoint")) {
+      expect(yearValueAt(timeline, accent.atMsFromBoot + 1)).toBe(accent.year);
+      expect(yearValueAt(timeline, accent.atMsFromBoot + 200)).toBe(accent.year);
+      expect(warpSpeed(timeline, accent.atMsFromBoot + 100)).toBeLessThan(0.2);
     }
   });
 
   test("区切りは、対象の年への突入、止まる年、到着前の 1 年送りの順", () => {
     const accents = warpAccents(timelineTo(2003));
     expect(accents.map((a) => [a.kind, a.year])).toEqual([
-      ["entry", MAX_YEAR],
-      ["checkpoint", 2014],
-      ["checkpoint", 2011],
-      ["tick", 2005],
-      ["tick", 2004],
+      ["enterSupportedRange", MAX_YEAR],
+      ["themeCheckpoint", 2014],
+      ["themeCheckpoint", 2011],
+      ["finalStep", 2005],
+      ["finalStep", 2004],
     ]);
   });
 
   test("行き先が対象の最終年に近いときは、1 年送りの途中で対象の年に入る", () => {
     expect(warpAccents(timelineTo(2014)).map((a) => [a.kind, a.year])).toEqual([
-      ["tick", 2016],
-      ["entry", MAX_YEAR],
+      ["finalStep", 2016],
+      ["enterSupportedRange", MAX_YEAR],
     ]);
   });
 });
@@ -103,25 +103,25 @@ describe("年カウンター", () => {
     const warpStart = phaseStartMs(timeline, "warp")!;
     const arriveStart = phaseStartMs(timeline, "arrive")!;
 
-    expect(yearAt(timeline, 0)).toBe(2026);
-    expect(yearAt(timeline, warpStart - 1)).toBe(2026);
+    expect(yearValueAt(timeline, 0)).toBe(2026);
+    expect(yearValueAt(timeline, warpStart - 1)).toBe(2026);
 
     let prev = Number.POSITIVE_INFINITY;
     for (let t = warpStart; t < arriveStart; t += 5) {
-      const value = yearAt(timeline, t);
+      const value = yearValueAt(timeline, t);
       expect(value).toBeLessThanOrEqual(prev);
       prev = value;
     }
-    expect(yearAt(timeline, arriveStart - 0.01)).toBeCloseTo(to, 1);
+    expect(yearValueAt(timeline, arriveStart - 0.01)).toBeCloseTo(to, 1);
 
     for (let t = arriveStart; t < arriveStart + PHASE_MS.arrive; t += 5) {
-      expect(displayYear(yearAt(timeline, t))).toBe(to);
+      expect(displayYear(yearValueAt(timeline, t))).toBe(to);
     }
-    expect(yearAt(timeline, totalMs(timeline))).toBe(to);
+    expect(yearValueAt(timeline, totalMs(timeline))).toBe(to);
   });
 
   test("動きを減らす設定では、はじめから行き先の年", () => {
-    expect(yearAt(calmTimeline(journeyFor(1995, 2026)), 0)).toBe(1995);
+    expect(yearValueAt(reducedMotionTimeline(journeyFor(1995, 2026)), 0)).toBe(1995);
   });
 
   test("通り過ぎる年を 1 年ずつ、ちょうど 1 回だけ数える", () => {
@@ -134,14 +134,14 @@ describe("年カウンター", () => {
 
 describe("回転式カウンターの桁", () => {
   test("一の位は連続して回る", () => {
-    expect(digitPosition(2003, 0)).toBe(3);
-    expect(digitPosition(2003.25, 0)).toBeCloseTo(3.25);
+    expect(odometerDigitPosition(2003, 0)).toBe(3);
+    expect(odometerDigitPosition(2003.25, 0)).toBeCloseTo(3.25);
   });
 
   test("上の桁は、下の桁が 9 から 0 へ回る間だけ動く", () => {
-    expect(digitPosition(2003.5, 1)).toBe(0);
-    expect(digitPosition(2009.5, 1)).toBeCloseTo(0.5);
-    expect(digitPosition(1999.5, 3)).toBeCloseTo(1.5);
-    expect(digitPosition(1999.5, 2)).toBeCloseTo(9.5);
+    expect(odometerDigitPosition(2003.5, 1)).toBe(0);
+    expect(odometerDigitPosition(2009.5, 1)).toBeCloseTo(0.5);
+    expect(odometerDigitPosition(1999.5, 3)).toBeCloseTo(1.5);
+    expect(odometerDigitPosition(1999.5, 2)).toBeCloseTo(9.5);
   });
 });

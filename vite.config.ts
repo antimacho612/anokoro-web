@@ -26,7 +26,8 @@ export default defineConfig({
     options: { typeAware: true, typeCheck: true, reportUnusedDisableDirectives: "error" },
   },
   test: {
-    exclude: ["**/node_modules/**", "**/dist/**", "apps/web/e2e/**"],
+    exclude: ["**/node_modules/**", "**/dist/**", "apps/web/e2e/**", ".claude/**"],
+    css: { include: [/themes\.css/] },
   },
   run: {
     cache: true,

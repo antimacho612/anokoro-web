@@ -7,7 +7,6 @@ type BootGateProps = {
   children: ReactNode;
 };
 
-/** 起動の演出を出している間は、後ろの作成キットを操作できないようにする */
 export function BootGate({ children }: BootGateProps) {
   const mode = useBoot((s) => s.mode);
   const kitRoot = useRef<HTMLDivElement>(null);

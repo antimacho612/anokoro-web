@@ -1,24 +1,23 @@
 import { MAX_YEAR, MIN_YEAR, type Year } from "@anokoro/era-data";
 import { useId, type CSSProperties, type ReactNode, type Ref } from "react";
 import styles from "./BootScreen.module.css";
-import { DeskIllustration, GLASS, POWER, SCENE } from "./DeskIllustration.tsx";
+import { DeskIllustration, GLASS, POWER, SCENE_VIEWBOX } from "./DeskIllustration.tsx";
 
-/** 電源を入れる前だけ操作できる */
 export interface StandbyControls {
   onPower: () => void;
   onSkip: () => void;
   onSoundChange: (soundOn: boolean) => void;
 }
 
+export type MonitorPower = { kind: "standby"; controls: StandbyControls } | { kind: "poweredOn" };
+
 type MonitorSceneProps = {
   destination: Year;
   durationSec: number;
   soundOn: boolean;
-  /** null なら電源が入ったあと */
-  controls: StandbyControls | null;
+  power: MonitorPower;
   sceneRef?: Ref<HTMLDivElement>;
   screenRef?: Ref<HTMLDivElement>;
-  /** ブラウン管に映すもの */
   children?: ReactNode;
 };
 
@@ -28,28 +27,28 @@ const NOTE_BOTTOM = 428;
 const ARROW_END = POWER.cy - POWER.r - 8;
 
 const SCREEN_STYLE: CSSProperties = {
-  left: pct(GLASS.x, SCENE.width),
-  top: pct(GLASS.y, SCENE.height),
-  width: pct(GLASS.width, SCENE.width),
-  height: pct(GLASS.height, SCENE.height),
+  left: pct(GLASS.x, SCENE_VIEWBOX.width),
+  top: pct(GLASS.y, SCENE_VIEWBOX.height),
+  width: pct(GLASS.width, SCENE_VIEWBOX.width),
+  height: pct(GLASS.height, SCENE_VIEWBOX.height),
   borderRadius: `${pct(GLASS.radius, GLASS.width)} / ${pct(GLASS.radius, GLASS.height)}`,
 };
 
 const POWER_STYLE: CSSProperties = {
-  left: pct(POWER.cx, SCENE.width),
-  top: pct(POWER.cy, SCENE.height),
-  width: pct(POWER.r * 2, SCENE.width),
+  left: pct(POWER.cx, SCENE_VIEWBOX.width),
+  top: pct(POWER.cy, SCENE_VIEWBOX.height),
+  width: pct(POWER.r * 2, SCENE_VIEWBOX.width),
 };
 
 const NOTE_STYLE: CSSProperties = {
-  left: pct(POWER.cx, SCENE.width),
-  bottom: pct(SCENE.height - NOTE_BOTTOM, SCENE.height),
+  left: pct(POWER.cx, SCENE_VIEWBOX.width),
+  bottom: pct(SCENE_VIEWBOX.height - NOTE_BOTTOM, SCENE_VIEWBOX.height),
 };
 
 const ARROW_STYLE: CSSProperties = {
-  left: pct(POWER.cx, SCENE.width),
-  top: pct(NOTE_BOTTOM + 2, SCENE.height),
-  height: pct(ARROW_END - NOTE_BOTTOM - 2, SCENE.height),
+  left: pct(POWER.cx, SCENE_VIEWBOX.width),
+  top: pct(NOTE_BOTTOM + 2, SCENE_VIEWBOX.height),
+  height: pct(ARROW_END - NOTE_BOTTOM - 2, SCENE_VIEWBOX.height),
 };
 
 function PowerSymbol() {
@@ -70,13 +69,14 @@ export function MonitorScene({
   destination,
   durationSec,
   soundOn,
-  controls,
+  power,
   sceneRef,
   screenRef,
   children,
 }: MonitorSceneProps) {
   const soundNoteId = useId();
-  const isPoweredOn = controls === null;
+  const isPoweredOn = power.kind === "poweredOn";
+  const controls = power.kind === "standby" ? power.controls : undefined;
   const rootClass = `${styles.room} ${isPoweredOn ? styles.poweredOn : ""}`;
   return (
     <div ref={sceneRef} className={rootClass} inert={isPoweredOn}>

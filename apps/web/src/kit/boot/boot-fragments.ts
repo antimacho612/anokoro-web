@@ -12,9 +12,8 @@ import {
   type Year,
 } from "@anokoro/era-data";
 import { createRandom } from "@anokoro/modem-sound";
-import { displayYear, phaseStartMs, yearAt, type BootTimeline } from "./boot-timeline.ts";
+import { displayYear, phaseStartMs, yearValueAt, type BootTimeline } from "./boot-timeline.ts";
 
-/** 跳躍のトンネルを飛んでくるもの */
 export type FragmentToken =
   | { kind: "code"; text: string; feature: FeatureId }
   | { kind: "line"; text: string; line: LineKey }
@@ -62,7 +61,6 @@ function codeTokens(id: FeatureId): FragmentToken[] {
   return (CODE_TOKENS[id] ?? []).map((text) => ({ kind: "code", text, feature: id }));
 }
 
-/** その年に使われていたもの */
 export function tokensForYear(year: Year): FragmentToken[] {
   const code = codeEntries
     .filter(([id]) => featureStatus(id, year) === "available")
@@ -79,7 +77,6 @@ export function tokensForYear(year: Year): FragmentToken[] {
   return [...code, ...lines, resolution];
 }
 
-/** その年に新しく出てきたもの */
 export function tokensIntroducedIn(year: Year): FragmentToken[] {
   const code = codeEntries
     .filter(([id]) => FEATURES[id].availableFrom === year)
@@ -96,21 +93,16 @@ export function tokensIntroducedIn(year: Year): FragmentToken[] {
 }
 
 export interface PlannedFragment {
-  /** 演出の始まりからの時刻 */
-  atMs: number;
-  /** 飛び出したときに表示していた年 */
+  atMsFromBoot: number;
   year: Year;
   token: FragmentToken;
-  /** トンネルの中心から見た向き（ラジアン） */
-  angle: number;
-  /** トンネルの中心からの距離（0〜1） */
-  radius: number;
+  angleRad: number;
+  radiusRatio: number;
   tilt: number;
 }
 
 export const FRAGMENT_INTERVAL_MS = 70;
-/** 跳躍の終わりのこの割合より後には出さない（到着までに飛び去らないため） */
-const PLAN_UNTIL = 0.9;
+const PLAN_UNTIL_WARP_RATIO = 0.9;
 const FILLER_CHANCE = 0.16;
 const RECENT_LIMIT = 4;
 
@@ -126,7 +118,6 @@ function filler(random: () => number): FragmentToken {
   return { kind: "counter", text: count };
 }
 
-/** 跳躍中に飛んでくるものの予定。通り過ぎている年に使われていたものだけを選ぶ */
 export function planFragments(timeline: BootTimeline, seed: number): PlannedFragment[] {
   const start = phaseStartMs(timeline, "warp");
   const warp = timeline.phases.find((p) => p.id === "warp");
@@ -138,8 +129,8 @@ export function planFragments(timeline: BootTimeline, seed: number): PlannedFrag
   let queue: FragmentToken[] = [];
   let queuedYear: number | null = null;
 
-  for (let t = start; t < start + warp.ms * PLAN_UNTIL; t += FRAGMENT_INTERVAL_MS) {
-    const year = Math.min(displayYear(yearAt(timeline, t)), MAX_YEAR);
+  for (let t = start; t < start + warp.ms * PLAN_UNTIL_WARP_RATIO; t += FRAGMENT_INTERVAL_MS) {
+    const year = Math.min(displayYear(yearValueAt(timeline, t)), MAX_YEAR);
     if (year !== queuedYear) {
       queue = tokensIntroducedIn(year);
       queuedYear = year;
@@ -159,11 +150,11 @@ export function planFragments(timeline: BootTimeline, seed: number): PlannedFrag
     recent.push(tokenKey(token));
     if (recent.length > RECENT_LIMIT) recent.shift();
     planned.push({
-      atMs: t,
+      atMsFromBoot: t,
       year,
       token,
-      angle: random() * Math.PI * 2,
-      radius: 0.35 + random() * 0.65,
+      angleRad: random() * Math.PI * 2,
+      radiusRatio: 0.35 + random() * 0.65,
       tilt: (random() - 0.5) * 0.5,
     });
   }

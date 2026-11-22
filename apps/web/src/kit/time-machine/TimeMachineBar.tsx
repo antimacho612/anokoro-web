@@ -3,7 +3,6 @@ import { HelpToggle } from "../help/HelpToggle.tsx";
 import { useKit } from "../store.ts";
 import styles from "./TimeMachineBar.module.css";
 
-/** タスクバーの年の表示から移動するときの目印 */
 export const YEAR_SLIDER_ID = "kit-year-slider";
 
 export function TimeMachineBar() {
