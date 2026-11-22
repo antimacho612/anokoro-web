@@ -117,6 +117,20 @@ input[type="range"] {
   padding: 1px 6px;
 }
 
+.menuLink {
+  padding: 1px 6px;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted;
+}
+
+.menuLink:focus-visible {
+  outline: 1px dotted #000;
+}
+
 .menubar > label {
   margin-left: auto;
   display: flex;

@@ -1,10 +1,11 @@
 import { ASSETS, toDataUri } from "@anokoro/assets";
 import { useState } from "react";
 import { Window } from "../../ui/Window/Window.tsx";
+import { HelpButton } from "../help/HelpButton.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import styles from "./PartsBox.module.css";
-import { PARTS, assetSnippet, partAvailability } from "./parts.ts";
+import { PARTS, assetSnippet, partAvailability, type Part } from "./parts.ts";
 
 const THUMBNAILS = ASSETS.map((asset) => ({ asset, uri: toDataUri(asset.svg) }));
 
@@ -14,7 +15,7 @@ type PartsBoxProps = {
 
 export function PartsBox({ onInsert }: PartsBoxProps) {
   const year = useKit((s) => s.year);
-  const [tip, setTip] = useState<string | null>(null);
+  const [lastPart, setLastPart] = useState<Part | null>(null);
 
   return (
     <Window title="素材・パーツ箱" className={slotClass.parts}>
@@ -31,7 +32,7 @@ export function PartsBox({ onInsert }: PartsBoxProps) {
                 disabled={!availability.usable}
                 onClick={() => {
                   onInsert(part.code);
-                  setTip(part.tip);
+                  setLastPart(part);
                 }}
               >
                 {part.label}
@@ -63,7 +64,12 @@ export function PartsBox({ onInsert }: PartsBoxProps) {
             </button>
           ))}
         </div>
-        {tip && <p className="hint">豆知識：{tip}</p>}
+        {lastPart && (
+          <p className={`hint ${styles.tip}`}>
+            <span>豆知識：{lastPart.tip}</span>
+            <HelpButton topic={lastPart.topic} />
+          </p>
+        )}
         <p className="hint">
           背景にするときは &lt;body background="kabe1.gif"&gt; のようにファイル名で指定します。
         </p>

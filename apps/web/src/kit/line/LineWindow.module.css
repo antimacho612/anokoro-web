@@ -76,3 +76,8 @@
   font-size: 22px;
   flex: none;
 }
+
+.note > span {
+  flex: 1;
+  min-width: 0;
+}

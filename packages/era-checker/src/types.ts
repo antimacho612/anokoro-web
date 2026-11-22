@@ -6,17 +6,20 @@ import type { Year } from "@anokoro/era-data";
  * js: JavaScript と Flash / image: 画像と素材 / culture: 個人サイト文化 / text: 文字コードと文字化け /
  * timeline: 年表
  */
-export type TopicId =
-  | "line"
-  | "browser"
-  | "screen"
-  | "html"
-  | "css"
-  | "js"
-  | "image"
-  | "culture"
-  | "text"
-  | "timeline";
+export const TOPIC_IDS = [
+  "line",
+  "browser",
+  "screen",
+  "html",
+  "css",
+  "js",
+  "image",
+  "culture",
+  "text",
+  "timeline",
+] as const;
+
+export type TopicId = (typeof TOPIC_IDS)[number];
 
 /** local: 即時表示 / net: 回線経由表示の準備 / publish: 保存用 */
 export type Mode = "local" | "net" | "publish";

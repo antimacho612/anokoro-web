@@ -65,3 +65,37 @@ describe("解像度", () => {
     expect(store.getState().resolution).toEqual({ width: 640, height: 480 });
   });
 });
+
+describe("ヘルプ", () => {
+  it("はじめは閉じている", () => {
+    expect(createKitStore().getState().helpOpen).toBe(false);
+  });
+
+  it("トピックを指定して開くと、そのトピックで開く", () => {
+    const store = createKitStore();
+    store.getState().openHelp("js");
+    expect(store.getState()).toMatchObject({ helpTopic: "js", helpOpen: true });
+  });
+
+  it("トピックを指定せずに開くと、前のトピックのまま開く", () => {
+    const store = createKitStore();
+    store.getState().selectHelpTopic("css");
+    store.getState().openHelp();
+    expect(store.getState()).toMatchObject({ helpTopic: "css", helpOpen: true });
+  });
+
+  it("閉じても、次に開くときのためにトピックを覚えておく", () => {
+    const store = createKitStore();
+    store.getState().openHelp("js");
+    store.getState().closeHelp();
+    expect(store.getState()).toMatchObject({ helpTopic: "js", helpOpen: false });
+  });
+
+  it("切り替えるたびに開閉する", () => {
+    const store = createKitStore();
+    store.getState().toggleHelp();
+    expect(store.getState().helpOpen).toBe(true);
+    store.getState().toggleHelp();
+    expect(store.getState().helpOpen).toBe(false);
+  });
+});

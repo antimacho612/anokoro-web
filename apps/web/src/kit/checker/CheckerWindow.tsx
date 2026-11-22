@@ -1,5 +1,6 @@
 import type { Warning } from "@anokoro/era-checker";
 import { Window } from "../../ui/Window/Window.tsx";
+import { HelpButton } from "../help/HelpButton.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import styles from "./CheckerWindow.module.css";
@@ -49,6 +50,7 @@ export function CheckerWindow({ score, warnings }: CheckerWindowProps) {
             <li key={`${w.ruleId}:${w.message}`}>
               <span className={`${styles.tag} ${styles[w.level]}`}>{LEVEL_LABEL[w.level]}</span>
               <span className={styles.message}>{w.message}</span>
+              <HelpButton topic={w.topic} />
               {w.count > 1 && <span className={styles.count}>×{w.count}</span>}
             </li>
           ))

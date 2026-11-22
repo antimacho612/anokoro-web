@@ -39,11 +39,7 @@
     order: 4;
   }
 
-  .help {
-    order: 5;
-  }
-
   .parts {
-    order: 6;
+    order: 5;
   }
 }

@@ -1,4 +1,5 @@
 import { MAX_YEAR, MIN_YEAR } from "@anokoro/era-data";
+import { HelpToggle } from "../help/HelpToggle.tsx";
 import { useKit } from "../store.ts";
 import styles from "./TimeMachineBar.module.css";
 
@@ -42,6 +43,7 @@ export function TimeMachineBar() {
       <output className={`${styles.year} sunken dot`} aria-live="polite">
         {year}年
       </output>
+      <HelpToggle className={`btn ${styles.help}`}>この年の解説</HelpToggle>
     </div>
   );
 }

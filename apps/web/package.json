@@ -13,6 +13,7 @@
     "@anokoro/assets": "workspace:*",
     "@anokoro/era-checker": "workspace:*",
     "@anokoro/era-data": "workspace:*",
+    "@anokoro/help": "workspace:*",
     "@anokoro/modem-sound": "workspace:*",
     "@anokoro/netsim": "workspace:*",
     "@anokoro/shared": "workspace:*",

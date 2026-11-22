@@ -1,0 +1,7 @@
+.button {
+  flex: none;
+  font-size: 11px;
+  padding: 0 6px;
+  min-height: 18px;
+  border-width: 1px;
+}

@@ -1,19 +1,15 @@
 import { checkEra } from "@anokoro/era-checker";
 import { useRef } from "react";
-import { Window } from "../ui/Window/Window.tsx";
 import { BrowserWindow } from "./browser/BrowserWindow.tsx";
 import { CheckerWindow } from "./checker/CheckerWindow.tsx";
+import { HelpWindow } from "./help/HelpWindow.tsx";
 import styles from "./KitApp.module.css";
-import { KitLayout, slotClass } from "./layout/KitLayout.tsx";
+import { KitLayout } from "./layout/KitLayout.tsx";
 import { LineWindow } from "./line/LineWindow.tsx";
 import { Notepad, insertIntoNotepad } from "./notepad/Notepad.tsx";
 import { PartsBox } from "./parts/PartsBox.tsx";
 import { useKit } from "./store.ts";
 import { TimeMachineBar } from "./time-machine/TimeMachineBar.tsx";
-
-function Pending() {
-  return <p className="hint">準備中です。</p>;
-}
 
 export function KitApp() {
   const year = useKit((s) => s.year);
@@ -40,9 +36,7 @@ export function KitApp() {
       <BrowserWindow html={view.html} pageTitle={view.title} />
       <LineWindow />
       <CheckerWindow score={view.score} warnings={view.warnings} />
-      <Window title="ヘルプ - あのころのWeb解説" controls={["?", "×"]} className={slotClass.help}>
-        <Pending />
-      </Window>
+      <HelpWindow />
     </>
   );
 

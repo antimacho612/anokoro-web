@@ -1,3 +1,4 @@
+import type { TopicId } from "@anokoro/era-checker";
 import {
   MAX_YEAR,
   MIN_YEAR,
@@ -50,6 +51,9 @@ export interface KitState {
   progressRatio: number;
   adLoading: boolean;
   lastLoad: LastLoad | null;
+  /** ヘルプで開いているトピック。null は既定のトピック */
+  helpTopic: TopicId | null;
+  helpOpen: boolean;
   setYear: (year: number) => void;
   stepYear: (delta: number) => void;
   /** メモ帳での入力。表示はまだ更新しない */
@@ -60,6 +64,12 @@ export interface KitState {
   replace: (source: string) => void;
   setResolution: (resolution: Resolution) => void;
   setSound: (sound: boolean) => void;
+  /** ヘルプのタブを切り替える */
+  selectHelpTopic: (topic: TopicId) => void;
+  /** ヘルプを開く。topic を渡すとそのトピックにする */
+  openHelp: (topic?: TopicId) => void;
+  closeHelp: () => void;
+  toggleHelp: () => void;
 }
 
 function clampYear(year: number): Year {
@@ -111,6 +121,8 @@ export function createKitStore({
       progressRatio: 0,
       adLoading: false,
       lastLoad: null,
+      helpTopic: null,
+      helpOpen: false,
       setYear: moveTo,
       stepYear: (delta) => moveTo(get().year + delta),
       edit: (next) => set({ source: next, status: STATUS_EDITING }),
@@ -118,6 +130,11 @@ export function createKitStore({
       replace: (next) => set({ source: next, shownSource: next, display: "local" }),
       setResolution: (resolution) => set({ resolution }),
       setSound: (sound) => set({ sound }),
+      selectHelpTopic: (helpTopic) => set({ helpTopic }),
+      openHelp: (topic) =>
+        set(({ helpTopic }) => ({ helpTopic: topic ?? helpTopic, helpOpen: true })),
+      closeHelp: () => set({ helpOpen: false }),
+      toggleHelp: () => set(({ helpOpen }) => ({ helpOpen: !helpOpen })),
     };
   });
 }

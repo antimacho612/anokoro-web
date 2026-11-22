@@ -1,6 +1,7 @@
 import { formatResolution, resolutionPeriodForYear } from "@anokoro/era-data";
 import { useEffect, useState, type RefCallback } from "react";
 import { Window } from "../../ui/Window/Window.tsx";
+import { HelpToggle } from "../help/HelpToggle.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { BLANK_PAGE } from "../line/frame-page.ts";
 import { frameSlot, netController } from "../line/net.ts";
@@ -75,7 +76,7 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
         <span>表示(V)</span>
         <span>お気に入り(A)</span>
         <span>ツール(T)</span>
-        <span>ヘルプ(H)</span>
+        <HelpToggle className="menuLink">ヘルプ(H)</HelpToggle>
       </div>
       <div className={styles.navrow}>
         <button type="button" className="btn" disabled>

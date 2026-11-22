@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import styles from "./KitLayout.module.css";
 
-export type KitSlot = "notepad" | "parts" | "browser" | "line" | "checker" | "help";
+export type KitSlot = "notepad" | "parts" | "browser" | "line" | "checker";
 
 /** 1 列表示のときの並び順をスロットのクラスで決める */
 export const slotClass: Record<KitSlot, string> = {
@@ -10,7 +10,6 @@ export const slotClass: Record<KitSlot, string> = {
   browser: styles.browser,
   line: styles.line,
   checker: styles.checker,
-  help: styles.help,
 };
 
 type KitLayoutProps = {

@@ -1,0 +1,90 @@
+.dialog {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+  width: min(560px, calc(100vw - 32px));
+}
+
+.dialog:focus {
+  outline: none;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 4px 2px;
+}
+
+.body {
+  height: min(520px, calc(100dvh - 240px));
+  overflow: auto;
+  padding: 4px 14px 12px;
+  line-height: 1.75;
+  font-size: 13px;
+  font-family: "MS PGothic", "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+.body h3 {
+  font-size: 16px;
+  margin: 10px 0 6px;
+  color: #000080;
+  border-bottom: 2px solid #000080;
+  padding-bottom: 2px;
+}
+
+.body h4 {
+  font-size: 14px;
+  margin: 14px 0 2px;
+  color: #800000;
+}
+
+.body h4::before {
+  content: "■ ";
+}
+
+.body p {
+  margin: 4px 0;
+}
+
+.body ul {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+
+.body code {
+  font-family: "MS Gothic", "Courier New", monospace;
+  background: #eef;
+  padding: 0 3px;
+  border: 1px solid #ccd;
+}
+
+.body[data-topic="timeline"] ul {
+  list-style: none;
+  padding: 0;
+}
+
+.body[data-topic="timeline"] li {
+  display: flex;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px dotted #bbb;
+}
+
+.body[data-topic="timeline"] li strong {
+  flex: none;
+  width: 54px;
+  color: #000080;
+}
+
+@media (max-width: 860px) {
+  .dialog {
+    inset: 0;
+    width: auto;
+  }
+
+  .body {
+    height: calc(100dvh - 120px);
+  }
+}

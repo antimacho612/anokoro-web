@@ -41,7 +41,7 @@
   flex: none;
 }
 
-.controls i {
+.controls > * {
   font-style: normal;
   width: var(--ctl-w);
   height: var(--ctl-h);
@@ -57,15 +57,26 @@
   font-weight: var(--ctl-weight);
   line-height: 1;
   text-shadow: none;
+  padding: 0;
+  font-family: inherit;
 }
 
-.controls i.close {
+.controls > button {
+  cursor: pointer;
+}
+
+.controls > button:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -3px;
+}
+
+.controls > .close {
   width: var(--ctl-close-w);
   background: var(--ctl-close-bg);
   color: var(--ctl-close-fg);
 }
 
-.controls i.close:hover {
+.controls > .close:hover {
   background: var(--ctl-close-hover-bg);
   color: var(--ctl-close-hover-fg);
 }

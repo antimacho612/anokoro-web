@@ -1,6 +1,7 @@
 import { useEffect, useState, type KeyboardEvent, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import { Window } from "../../ui/Window/Window.tsx";
+import { HelpToggle } from "../help/HelpToggle.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import styles from "./Notepad.module.css";
@@ -77,7 +78,7 @@ export function Notepad({ textareaRef }: NotepadProps) {
         <span>ファイル(F)</span>
         <span>編集(E)</span>
         <span>書式(O)</span>
-        <span>ヘルプ(H)</span>
+        <HelpToggle className="menuLink">ヘルプ(H)</HelpToggle>
         <label>
           <input
             type="checkbox"

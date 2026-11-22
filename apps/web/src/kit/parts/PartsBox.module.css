@@ -39,3 +39,13 @@
   max-width: 84px;
   max-height: 38px;
 }
+
+.tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.tip > span {
+  flex: 1;
+}

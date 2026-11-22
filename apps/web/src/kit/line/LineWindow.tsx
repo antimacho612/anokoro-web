@@ -1,6 +1,7 @@
 import { getLine, isLineKey, linesForYear } from "@anokoro/era-data";
 import { useEffect, useState } from "react";
 import { Window } from "../../ui/Window/Window.tsx";
+import { HelpButton } from "../help/HelpButton.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import { LINE_NOTES } from "./line-notes.ts";
@@ -91,7 +92,10 @@ export function LineWindow() {
       <div className={`${styles.row} ${styles.small}`}>
         {feeText(line, connection === "online" ? connectedAtMs : null, now)}
       </div>
-      <div className={`${styles.row} ${styles.small} ${styles.note}`}>💡 {LINE_NOTES[lineKey]}</div>
+      <div className={`${styles.row} ${styles.small} ${styles.note}`}>
+        <span>💡 {LINE_NOTES[lineKey]}</span>
+        <HelpButton topic="line" />
+      </div>
       {lastLoad && <div className={`${styles.row} ${styles.small}`}>{lastLoadText(lastLoad)}</div>}
       <p className="hint">
         ブラウザの「更新」を押すと、選んだ回線の速さでページを読み込みます。メモ帳で編集している間はローカル表示（一瞬で表示）です。
