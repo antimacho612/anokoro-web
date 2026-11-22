@@ -47,9 +47,9 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
   const resolution = useKit((s) => s.resolution);
   const setResolution = useKit((s) => s.setResolution);
   const display = useKit((s) => s.display);
-  const netGeneration = useKit((s) => s.netGeneration);
+  const netFrameKey = useKit((s) => s.netFrameKey);
   const isLoading = useKit((s) => s.loading);
-  const progress = useKit((s) => s.progress);
+  const progressRatio = useKit((s) => s.progressRatio);
   const isAdLoading = useKit((s) => s.adLoading);
   const [viewportRef, viewportWidth] = useElementWidth();
 
@@ -137,7 +137,7 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
             <AdBanner isLoading={isAdLoading} />
           </div>
           <iframe
-            key={isNet ? `net-${netGeneration}` : "local"}
+            key={isNet ? `net-${netFrameKey}` : "local"}
             ref={frameSlot.attach}
             className={styles.frame}
             sandbox="allow-same-origin"
@@ -158,9 +158,9 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
             aria-label="読み込みの進み具合"
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-valuenow={Math.round(progress * 100)}
+            aria-valuenow={Math.round(progressRatio * 100)}
           >
-            <i style={{ width: `${progress * 100}%` }} />
+            <i style={{ width: `${progressRatio * 100}%` }} />
           </div>
         )}
         <div>🌐 インターネット</div>

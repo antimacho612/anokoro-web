@@ -8,6 +8,7 @@
     "dev": "vp run web#dev"
   },
   "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "catalog:",
     "vite-plus": "catalog:"
   },
   "devEngines": {

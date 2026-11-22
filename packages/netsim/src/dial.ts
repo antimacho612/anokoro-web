@@ -1,18 +1,15 @@
 import { systemClock, type Clock, type TimerId } from "./clock.ts";
 
-/** 常時接続はダイヤルしない */
 export type DialupKind = "modem" | "isdn";
 
 export interface DialStep {
-  /** ダイヤル開始からの経過（ms） */
-  at: number;
+  atMs: number;
   message: string;
 }
 
 export interface DialSchedule {
   steps: readonly DialStep[];
-  /** 接続済みになる経過（ms） */
-  connectedAt: number;
+  connectedAtMs: number;
 }
 
 const DIALING = "ダイヤル中...";
@@ -22,21 +19,21 @@ const REGISTERING = "ネットワークにコンピュータを登録してい�
 export const DIAL_SCHEDULES: Record<DialupKind, DialSchedule> = {
   modem: {
     steps: [
-      { at: 0, message: DIALING },
-      { at: 2550, message: "呼び出し中..." },
-      { at: 3750, message: "接続を確立しています..." },
-      { at: 8900, message: AUTHENTICATING },
-      { at: 9900, message: REGISTERING },
+      { atMs: 0, message: DIALING },
+      { atMs: 2550, message: "呼び出し中..." },
+      { atMs: 3750, message: "接続を確立しています..." },
+      { atMs: 8900, message: AUTHENTICATING },
+      { atMs: 9900, message: REGISTERING },
     ],
-    connectedAt: 10800,
+    connectedAtMs: 10800,
   },
   isdn: {
     steps: [
-      { at: 0, message: DIALING },
-      { at: 600, message: AUTHENTICATING },
-      { at: 1300, message: REGISTERING },
+      { atMs: 0, message: DIALING },
+      { atMs: 600, message: AUTHENTICATING },
+      { atMs: 1300, message: REGISTERING },
     ],
-    connectedAt: 1900,
+    connectedAtMs: 1900,
   },
 };
 
@@ -54,7 +51,7 @@ export interface DialHandle {
 }
 
 export function dial({ kind, clock = systemClock, onStep = () => {} }: DialOptions): DialHandle {
-  const { steps, connectedAt } = DIAL_SCHEDULES[kind];
+  const { steps, connectedAtMs } = DIAL_SCHEDULES[kind];
   let resolve!: (connected: boolean) => void;
   const done = new Promise<boolean>((r) => (resolve = r));
   let finished = false;
@@ -68,9 +65,9 @@ export function dial({ kind, clock = systemClock, onStep = () => {} }: DialOptio
   };
 
   for (const step of steps) {
-    timers.push(clock.setTimeout(() => onStep(step), step.at));
+    timers.push(clock.setTimeout(() => onStep(step), step.atMs));
   }
-  timers.push(clock.setTimeout(() => finish(true), connectedAt));
+  timers.push(clock.setTimeout(() => finish(true), connectedAtMs));
 
   return { abort: () => finish(false), done };
 }

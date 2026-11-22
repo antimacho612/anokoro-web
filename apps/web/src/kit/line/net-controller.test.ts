@@ -1,7 +1,7 @@
 import { ManualClock } from "@anokoro/netsim";
 import { describe, expect, it } from "vite-plus/test";
 import { createKitStore, type KitStore } from "../store.ts";
-import type { NetPage } from "./frame-page.ts";
+import type { NetFrameWriter } from "./frame-page.ts";
 import { NetController } from "./net-controller.ts";
 
 const SOURCE =
@@ -10,7 +10,7 @@ const SOURCE =
 function recordingPage() {
   const calls: string[] = [];
   let html = "";
-  const page: NetPage = {
+  const page: NetFrameWriter = {
     open: () => calls.push("open"),
     write: (chunk) => void (html += chunk),
     close: () => calls.push("close"),
@@ -21,7 +21,6 @@ function recordingPage() {
   return { page, calls, html: () => html };
 }
 
-/** Promise の続きを流す。時計は ManualClock なので実時間は進めない */
 const flush = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
 function setup(year: number, store: KitStore = createKitStore({ year, source: SOURCE })) {
@@ -36,11 +35,10 @@ function setup(year: number, store: KitStore = createKitStore({ year, source: SO
     store,
     clock,
     now: () => 1_000_000,
-    nextPage: () => Promise.resolve(recorder.page),
+    waitForBlankFrame: () => Promise.resolve(recorder.page),
     modem: { play: () => void modem.played++, stop: () => void modem.stopped++ },
   });
-  controller.attach();
-  /** 時計を最後まで進め、そのたびに Promise の続きを流す */
+  controller.stopOnEditOrYearChange();
   const runAll = async () => {
     for (let i = 0; i < 100 && (clock.pending > 0 || i === 0); i++) {
       await flush();
@@ -58,7 +56,12 @@ describe("常時接続の回線", () => {
     expect(store.getState().loading).toBe(true);
     await runAll();
     const state = store.getState();
-    expect(state).toMatchObject({ loading: false, display: "net", counter: 775, kiriban: null });
+    expect(state).toMatchObject({
+      loading: false,
+      display: "net",
+      counter: 775,
+      lastKiriban: null,
+    });
     expect(state.lastLoad?.lineName).toBe("ADSL 12M");
     expect(modem.played).toBe(0);
     expect(statuses[0]).toBe("サイト www.hogespace.example に接続しています...");
@@ -89,7 +92,7 @@ describe("ダイヤルアップ", () => {
     expect(statuses).toContain("呼び出し中...");
     expect(store.getState()).toMatchObject({
       connection: "online",
-      connectedAt: 1_000_000,
+      connectedAtMs: 1_000_000,
       loading: false,
     });
   });
@@ -179,7 +182,7 @@ describe("打ち切り", () => {
     await flush();
     void controller.reload();
     await runAll();
-    expect(store.getState()).toMatchObject({ counter: 776, loading: false, netGeneration: 2 });
+    expect(store.getState()).toMatchObject({ counter: 776, loading: false, netFrameKey: 2 });
   });
 });
 
@@ -190,12 +193,12 @@ describe("キリ番", () => {
     const { statuses, controller, runAll } = setup(2003, store);
     void controller.reload();
     await runAll();
-    expect(store.getState().kiriban).toBe(777);
+    expect(store.getState().lastKiriban).toBe(777);
     expect(statuses).toContain("キリ番 777 を踏みました！");
     expect(statuses.at(-1)).not.toMatch(/^ページが表示されました/);
 
     void controller.reload();
     await runAll();
-    expect(store.getState().kiriban).toBeNull();
+    expect(store.getState().lastKiriban).toBeNull();
   });
 });

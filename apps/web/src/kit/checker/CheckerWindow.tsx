@@ -16,13 +16,13 @@ const LEVEL_LABEL: Record<Warning["level"], string> = {
 
 export function CheckerWindow({ score, warnings }: CheckerWindowProps) {
   const year = useKit((s) => s.year);
-  const kiriban = useKit((s) => s.kiriban);
+  const lastKiriban = useKit((s) => s.lastKiriban);
 
   return (
     <Window title={`時代チェッカー - ${year}年モード`} className={slotClass.checker}>
-      {kiriban !== null && (
+      {lastKiriban !== null && (
         <div className={styles.kiri} role="alert">
-          ★☆ キリ番 {kiriban} ゲット！おめでとうございます！掲示板で報告してね ☆★
+          ★☆ キリ番 {lastKiriban} ゲット！おめでとうございます！掲示板で報告してね ☆★
         </div>
       )}
       <div className={styles.score}>

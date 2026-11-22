@@ -17,10 +17,8 @@ export const STATUS_EDITING = "読み込み中...";
 export const STATUS_LOCAL = "ローカルのファイルを表示しています";
 export const STATUS_START = "ローカルのファイルを表示しています（「更新」で回線経由の読み込み）";
 
-/** ダイヤルアップ回線の状態。常時接続の回線では使わない */
-export type Connection = "offline" | "dialing" | "online";
+export type DialupConnection = "offline" | "dialing" | "online";
 
-/** local: メモ帳の内容を即時表示 / net: 回線経由で読み込んだ表示 */
 export type Display = "local" | "net";
 
 export interface LastLoad {
@@ -40,22 +38,16 @@ export interface KitState {
   resolution: Resolution;
   /** <!--COUNTER--> に入れる数 */
   counter: number;
-  /** 直前の読み込みで踏んだキリ番 */
-  kiriban: number | null;
+  lastKiriban: number | null;
   lineKey: LineKey;
-  connection: Connection;
-  /** 接続済みになった時刻（Date.now() の値） */
-  connectedAt: number | null;
-  /** ダイヤル中の表示 */
+  connection: DialupConnection;
+  connectedAtMs: number | null;
   dialMessage: string;
   sound: boolean;
   display: Display;
-  /** 回線経由表示を始めるたびに増やし、疑似ブラウザの iframe を作り直す */
-  netGeneration: number;
+  netFrameKey: number;
   loading: boolean;
-  /** 読み込みの進捗（0 〜 1） */
-  progress: number;
-  /** 広告バナーを読み込み中か */
+  progressRatio: number;
   adLoading: boolean;
   lastLoad: LastLoad | null;
   setYear: (year: number) => void;
@@ -107,16 +99,16 @@ export function createKitStore({
       status: STATUS_START,
       resolution: resolutionPeriodForYear(initialYear).default,
       counter: INITIAL_COUNTER,
-      kiriban: null,
+      lastKiriban: null,
       lineKey: defaultLineForYear(initialYear).key,
       connection: "offline",
-      connectedAt: null,
+      connectedAtMs: null,
       dialMessage: "",
       sound: true,
       display: "local",
-      netGeneration: 0,
+      netFrameKey: 0,
       loading: false,
-      progress: 0,
+      progressRatio: 0,
       adLoading: false,
       lastLoad: null,
       setYear: moveTo,

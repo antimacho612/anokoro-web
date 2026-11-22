@@ -6,6 +6,7 @@ catalogMode: prefer
 
 catalog:
   "@playwright/test": ^1.65.1
+  "@eslint-community/eslint-plugin-eslint-comments": ^4.8.1
   "@types/css-tree": ^3.2.0
   "@types/node": ^24.0.0
   "@types/react": ^19.3.0

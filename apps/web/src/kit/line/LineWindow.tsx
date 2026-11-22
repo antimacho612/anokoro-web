@@ -8,12 +8,13 @@ import { connectionText, feeText, lastLoadText } from "./line-text.ts";
 import styles from "./LineWindow.module.css";
 import { netController } from "./net.ts";
 
-/** active の間だけ 1 秒ごとに再描画し、いまの時刻を返す */
+const CLOCK_TICK_MS = 1000;
+
 function useNow(active: boolean): Date {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     if (!active) return;
-    const id = window.setInterval(() => setNow(new Date()), 1000);
+    const id = window.setInterval(() => setNow(new Date()), CLOCK_TICK_MS);
     return () => window.clearInterval(id);
   }, [active]);
   return active ? now : new Date();
@@ -23,7 +24,7 @@ export function LineWindow() {
   const year = useKit((s) => s.year);
   const lineKey = useKit((s) => s.lineKey);
   const connection = useKit((s) => s.connection);
-  const connectedAt = useKit((s) => s.connectedAt);
+  const connectedAtMs = useKit((s) => s.connectedAtMs);
   const dialMessage = useKit((s) => s.dialMessage);
   const sound = useKit((s) => s.sound);
   const setSound = useKit((s) => s.setSound);
@@ -88,7 +89,7 @@ export function LineWindow() {
         </div>
       )}
       <div className={`${styles.row} ${styles.small}`}>
-        {feeText(line, connection === "online" ? connectedAt : null, now)}
+        {feeText(line, connection === "online" ? connectedAtMs : null, now)}
       </div>
       <div className={`${styles.row} ${styles.small} ${styles.note}`}>💡 {LINE_NOTES[lineKey]}</div>
       {lastLoad && <div className={`${styles.row} ${styles.small}`}>{lastLoadText(lastLoad)}</div>}

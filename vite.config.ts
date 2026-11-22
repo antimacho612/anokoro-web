@@ -6,12 +6,26 @@ export default defineConfig({
     ignorePatterns: ["packages/era-checker/test/golden/**"],
   },
   lint: {
-    jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
-    rules: { "vite-plus/prefer-vite-plus-imports": "error" },
-    options: { typeAware: true, typeCheck: true },
+    jsPlugins: [
+      { name: "vite-plus", specifier: "vite-plus/oxlint-plugin" },
+      { name: "eslint-comments", specifier: "@eslint-community/eslint-plugin-eslint-comments" },
+    ],
+    rules: {
+      "vite-plus/prefer-vite-plus-imports": "error",
+      "typescript/ban-ts-comment": [
+        "error",
+        {
+          "ts-ignore": true,
+          "ts-nocheck": true,
+          "ts-expect-error": "allow-with-description",
+          minimumDescriptionLength: 5,
+        },
+      ],
+      "eslint-comments/require-description": "error",
+    },
+    options: { typeAware: true, typeCheck: true, reportUnusedDisableDirectives: "error" },
   },
   test: {
-    // E2E は Playwright で別に動かす
     exclude: ["**/node_modules/**", "**/dist/**", "apps/web/e2e/**"],
   },
   run: {

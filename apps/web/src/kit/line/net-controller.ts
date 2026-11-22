@@ -12,7 +12,7 @@ import {
 import { isKiriban } from "@anokoro/shared";
 import { PSEUDO_HOST, SITE_ROOT } from "../browser/pseudo-url.ts";
 import type { KitStore } from "../store.ts";
-import type { NetPage } from "./frame-page.ts";
+import type { NetFrameWriter } from "./frame-page.ts";
 import type { ModemSound } from "./modem-player.ts";
 
 export const STATUS_DIAL_START = "ダイヤルアップ接続を開始します...";
@@ -21,12 +21,10 @@ export const STATUS_HUNG_UP = "切断しました";
 
 export interface NetControllerDeps {
   store: KitStore;
-  /** 新しく作られた疑似ブラウザの iframe が白紙を読み込み終えたら、その文書の口で解決する */
-  nextPage: () => Promise<NetPage | null>;
+  waitForBlankFrame: () => Promise<NetFrameWriter | null>;
   modem: ModemSound;
   onLineChange?: (key: LineKey) => void;
   clock?: Clock;
-  /** 接続時間の基準にする時刻 */
   now?: () => number;
 }
 
@@ -38,10 +36,9 @@ function htmlBytesOf(source: string): number {
   return new TextEncoder().encode(source).length;
 }
 
-/** 回線の接続と、回線経由表示の読み込みを進める */
 export class NetController {
   readonly #store: KitStore;
-  readonly #nextPage: () => Promise<NetPage | null>;
+  readonly #waitForBlankFrame: () => Promise<NetFrameWriter | null>;
   readonly #modem: ModemSound;
   readonly #onLineChange: (key: LineKey) => void;
   readonly #clock: Clock;
@@ -49,21 +46,19 @@ export class NetController {
   #dialHandle: DialHandle | null = null;
   #dialing: Promise<boolean> | null = null;
   #load: LoadHandle | null = null;
-  #page: NetPage | null = null;
-  /** 読み込みの世代。古い世代の処理は自分で止まる */
+  #page: NetFrameWriter | null = null;
   #generation = 0;
 
   constructor(deps: NetControllerDeps) {
     this.#store = deps.store;
-    this.#nextPage = deps.nextPage;
+    this.#waitForBlankFrame = deps.waitForBlankFrame;
     this.#modem = deps.modem;
     this.#onLineChange = deps.onLineChange ?? (() => {});
     this.#clock = deps.clock ?? systemClock;
     this.#now = deps.now ?? Date.now;
   }
 
-  /** 編集や年の切替に合わせて読み込みを打ち切る。戻り値で購読を解除する */
-  attach(): () => void {
+  stopOnEditOrYearChange(): () => void {
     return this.#store.subscribe((state, prev) => {
       if (state.year !== prev.year) {
         if (state.connection !== "offline") this.hangup();
@@ -82,14 +77,16 @@ export class NetController {
     this.#store.setState({ status });
   }
 
-  /** 「接続」ボタン。接続できたらステータスバーに知らせる */
   connectByUser(): void {
     void this.#connect().then((ok) => {
       if (ok) this.#setStatus(connectedMessage(this.#line()));
     });
   }
 
-  /** ダイヤルする。接続音を鳴らすため、クリックの処理中に同期で呼び始める */
+  /**
+   * ダイヤルする。接続音を鳴らすため、クリックの処理中に同期で呼び始める
+   * （出典: https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay）
+   */
   #connect(): Promise<boolean> {
     const line = this.#line();
     const { connection, sound } = this.#store.getState();
@@ -109,7 +106,7 @@ export class NetController {
       this.#dialHandle = null;
       this.#dialing = null;
       if (connected) {
-        this.#store.setState({ connection: "online", connectedAt: this.#now(), dialMessage: "" });
+        this.#store.setState({ connection: "online", connectedAtMs: this.#now(), dialMessage: "" });
       }
       return connected;
     });
@@ -121,7 +118,7 @@ export class NetController {
     this.#dialHandle = null;
     this.#dialing = null;
     this.#modem.stop();
-    this.#store.setState({ connection: "offline", connectedAt: null, dialMessage: "" });
+    this.#store.setState({ connection: "offline", connectedAtMs: null, dialMessage: "" });
     this.#cancelLoad(STATUS_HUNG_UP);
   }
 
@@ -145,18 +142,17 @@ export class NetController {
     page?.close();
     this.#store.setState({
       loading: false,
-      progress: 0,
+      progressRatio: 0,
       adLoading: false,
       ...(message === undefined ? {} : { status: message }),
     });
   }
 
-  /** 「更新」「移動」。未接続ならダイヤルしてから、選んだ回線の速さで読み込む */
   async reload(): Promise<void> {
     this.#cancelLoad();
     const generation = this.#generation;
     const isCurrent = () => generation === this.#generation;
-    this.#store.setState({ loading: true, progress: 0 });
+    this.#store.setState({ loading: true, progressRatio: 0 });
 
     if (this.#line().dial !== "always" && this.#store.getState().connection !== "online") {
       this.#setStatus(STATUS_DIAL_START);
@@ -169,20 +165,20 @@ export class NetController {
     }
 
     const line = this.#line();
-    const { source, year, counter: prevCounter, netGeneration } = this.#store.getState();
+    const { source, year, counter: prevCounter, netFrameKey } = this.#store.getState();
     const counter = prevCounter + 1;
-    const kiriban = isKiriban(counter) ? counter : null;
+    const lastKiriban = isKiriban(counter) ? counter : null;
     this.#store.setState({
       counter,
-      kiriban,
+      lastKiriban,
       shownSource: source,
-      ...(kiriban === null ? {} : { status: `キリ番 ${kiriban} を踏みました！` }),
+      ...(lastKiriban === null ? {} : { status: `キリ番 ${lastKiriban} を踏みました！` }),
     });
     const result = checkEra(source, { year, mode: "net", counter });
 
-    const nextPage = this.#nextPage();
-    this.#store.setState({ display: "net", netGeneration: netGeneration + 1 });
-    const page = await nextPage;
+    const blankFrame = this.#waitForBlankFrame();
+    this.#store.setState({ display: "net", netFrameKey: netFrameKey + 1 });
+    const page = await blankFrame;
     if (!isCurrent()) return;
     if (!page) {
       this.#store.setState({ loading: false, display: "local" });
@@ -242,7 +238,7 @@ export class NetController {
           );
           break;
         case "progress":
-          this.#store.setState({ progress: event.loadedBytes / event.totalBytes });
+          this.#store.setState({ progressRatio: event.loadedBytes / event.totalBytes });
           break;
         case "complete": {
           this.#load = null;
@@ -254,9 +250,9 @@ export class NetController {
           };
           this.#store.setState({
             loading: false,
-            progress: 0,
+            progressRatio: 0,
             lastLoad,
-            ...(kiriban === null ? { status: completeMessage(event.elapsedMs) } : {}),
+            ...(lastKiriban === null ? { status: completeMessage(event.elapsedMs) } : {}),
           });
           break;
         }

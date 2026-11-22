@@ -1,7 +1,6 @@
 import type { AssetRef } from "@anokoro/era-checker";
 
-/** 回線経由表示で、読み込みの進み具合を疑似ブラウザの文書に反映する口 */
-export interface NetPage {
+export interface NetFrameWriter {
   open(): void;
   write(html: string): void;
   close(): void;
@@ -10,7 +9,6 @@ export interface NetPage {
   assetDone(index: number, asset: AssetRef): void;
 }
 
-/** 回線経由表示の直前に iframe へ入れる白紙の文書 */
 export const BLANK_PAGE = "<!DOCTYPE html><html><head></head><body></body></html>";
 
 const MARK: Record<AssetRef["kind"], string> = {
@@ -24,8 +22,7 @@ function clipFromBottom(fraction: number): string {
   return `inset(0 0 ${Math.max(0, 100 - fraction * 100).toFixed(1)}% 0)`;
 }
 
-/** sandbox="allow-same-origin" の iframe の文書に、親から書き込む */
-export function createFramePage(doc: Document): NetPage {
+export function createNetFrameWriter(doc: Document): NetFrameWriter {
   const find = (index: number, asset: AssetRef): HTMLElement | null =>
     doc.querySelector<HTMLElement>(`[${MARK[asset.kind]}="${index}"]`);
 
@@ -65,15 +62,16 @@ export function createFramePage(doc: Document): NetPage {
   };
 }
 
-/**
- * 疑似ブラウザの iframe を受け取り、次に作られた iframe の読み込み完了を待てるようにする。
- * React の ref コールバックに attach を渡す。
- */
+export interface LoadableFrame {
+  readonly contentDocument: Document | null;
+  addEventListener(type: "load", listener: () => void, options: { once: true }): void;
+}
+
 export class FrameSlot {
   #attached = 0;
   #waiters: { after: number; resolve: (doc: Document | null) => void }[] = [];
 
-  readonly attach = (el: HTMLIFrameElement | null): void => {
+  readonly attach = (el: LoadableFrame | null): void => {
     if (!el) return;
     const index = ++this.#attached;
     el.addEventListener(
@@ -87,8 +85,7 @@ export class FrameSlot {
     );
   };
 
-  /** この呼び出しより後に attach された iframe が読み込まれたら、その文書で解決する */
-  next(): Promise<Document | null> {
+  nextLoadedDocument(): Promise<Document | null> {
     return new Promise((resolve) => this.#waiters.push({ after: this.#attached, resolve }));
   }
 }

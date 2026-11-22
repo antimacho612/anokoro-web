@@ -55,3 +55,15 @@ test("キリ番を踏むと知らせる", async ({ page }) => {
   );
   await expect(preview(page).locator(".__ctr")).toHaveText("000777");
 });
+
+test("プレビューの iframe は、ローカル表示でも回線経由表示でも allow-same-origin だけを許す", async ({
+  page,
+}) => {
+  const frame = page.locator('iframe[title="プレビュー"]');
+  await page.goto("/kit/?year=2003");
+  await expect(frame).toHaveAttribute("sandbox", "allow-same-origin");
+
+  await page.getByRole("button", { name: "更新", exact: true }).click();
+  await expect(statusBar(page)).toHaveText(/^ページが表示されました/);
+  await expect(frame).toHaveAttribute("sandbox", "allow-same-origin");
+});

@@ -37,3 +37,9 @@ vp build     # 本番ビルド
 
 - E2E は Playwright、D1 のマイグレーションは Wrangler（どちらも Vite+ には含まれない）
 - 変更を完了とする前に `vp check` と `vp test` を通す
+- E2E は `apps/web` で `vp exec playwright test` を実行する。Playwright だけは個別の設定ファイル（`apps/web/playwright.config.ts`）を置く
+
+## Lint で検査しないと決めたもの
+
+- TODO と FIXME の検出（`eslint/no-warning-comments`）は入れない。チケット番号付きの TODO を許す区別ができず、一律に禁止することになるため
+- `oxlint-disable` の理由の必須化は検査できない。`eslint-comments/require-description` は `eslint-disable` のコメントだけを対象にするため、抑制には `eslint-disable` の形で理由を書く

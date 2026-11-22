@@ -1,6 +1,5 @@
 import type { LineKey } from "@anokoro/era-data";
 
-/** 回線ウィンドウに出す一言解説 */
 export const LINE_NOTES: Record<LineKey, string> = {
   m28: "1990年代後半の主力。2000年代にはもう遅い部類で、画像の多いページは1分近くかかることもありました",
   m56: "ダイヤルアップの最終形。名前は56kでも、実際の速度は40〜50kbps程度に落ち着くことが多い回線でした",

@@ -17,7 +17,7 @@ if (draft !== undefined) kitStore.getState().replace(draft);
 persistDraft(kitStore, storage);
 restoreNetSettings(kitStore, storage);
 persistNetSettings(kitStore, storage);
-netController.attach();
+netController.stopOnEditOrYearChange();
 
 const container = document.getElementById("root");
 if (container) {
