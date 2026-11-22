@@ -20,6 +20,10 @@ describe("lineAfterYearChange", () => {
     expect(lineAfterYearChange(1999, 1997, "m56")).toBe("m28");
   });
 
+  it("既定の回線が同じでも、移った先で選べなくなった回線は既定にする", () => {
+    expect(lineAfterYearChange(2005, 2006, "isdn")).toBe("adsl12");
+  });
+
   it("どの年からどの年へ動いても、移った先で選べない回線にはならない", () => {
     for (const prev of YEARS) {
       for (const current of linesForYear(prev)) {

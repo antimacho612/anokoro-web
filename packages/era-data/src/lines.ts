@@ -17,8 +17,8 @@ export interface LineEntry {
   dial: DialKind;
   /** 接続後に表示する速度。常時接続では null */
   connectedLabel: string | null;
-  /** 選べるようになる年 */
-  availableFrom: Year;
+  /** 選べる年の範囲。終わりは新しく選ぶ人がほとんどいなくなった年 */
+  availableYears: YearRange;
   /** 既定の回線になる年の範囲 */
   defaultYears: YearRange | null;
   sources: readonly Source[];
@@ -32,9 +32,9 @@ export const LINES: readonly LineEntry[] = [
     latencyMs: 400,
     dial: "modem",
     connectedLabel: "28.8Kbps",
-    availableFrom: 1995,
+    availableYears: [1995, 2000],
     defaultYears: [1995, 1997],
-    sources: [SRC.modem, SRC.telehoudai],
+    sources: [SRC.modem, SRC.telehoudai, SRC.v90],
   },
   {
     key: "m56",
@@ -43,9 +43,9 @@ export const LINES: readonly LineEntry[] = [
     latencyMs: 300,
     dial: "modem",
     connectedLabel: "53.3Kbps",
-    availableFrom: 1998,
+    availableYears: [1998, 2007],
     defaultYears: [1998, 1999],
-    sources: [SRC.modem],
+    sources: [SRC.modem, SRC.broadband2009],
   },
   {
     key: "isdn",
@@ -54,9 +54,9 @@ export const LINES: readonly LineEntry[] = [
     latencyMs: 150,
     dial: "isdn",
     connectedLabel: "64Kbps",
-    availableFrom: 1995,
+    availableYears: [1995, 2005],
     defaultYears: [2000, 2000],
-    sources: [SRC.ins],
+    sources: [SRC.ins, SRC.isdnDecline2005],
   },
   {
     key: "adsl1",
@@ -65,9 +65,9 @@ export const LINES: readonly LineEntry[] = [
     latencyMs: 60,
     dial: "always",
     connectedLabel: null,
-    availableFrom: 2001,
+    availableYears: [2001, 2006],
     defaultYears: [2001, 2002],
-    sources: [SRC.adsl, SRC.yahooBB],
+    sources: [SRC.adsl, SRC.yahooBB, SRC.adsl12m2002],
   },
   {
     key: "adsl12",
@@ -76,9 +76,9 @@ export const LINES: readonly LineEntry[] = [
     latencyMs: 40,
     dial: "always",
     connectedLabel: null,
-    availableFrom: 2002,
+    availableYears: [2002, 2015],
     defaultYears: [2003, 2006],
-    sources: [SRC.adsl, SRC.yahooBB],
+    sources: [SRC.adsl, SRC.yahooBB, SRC.broadband2009],
   },
   {
     key: "hikari",
@@ -87,7 +87,7 @@ export const LINES: readonly LineEntry[] = [
     latencyMs: 15,
     dial: "always",
     connectedLabel: null,
-    availableFrom: 2001,
+    availableYears: [2001, 2015],
     defaultYears: [2007, 2015],
     sources: [SRC.ftth, SRC.bflets],
   },
@@ -107,7 +107,7 @@ export function isLineKey(value: unknown): value is LineKey {
 
 /** その年に選べる回線（表の順） */
 export function linesForYear(year: Year): LineEntry[] {
-  return LINES.filter((line) => year >= line.availableFrom);
+  return LINES.filter((line) => inRange(year, line.availableYears));
 }
 
 /** その年の既定の回線 */

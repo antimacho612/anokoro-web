@@ -99,10 +99,14 @@ describe("回線", () => {
   });
 
   it.each(LINES.map((l) => [l.key, l] as const))("%s: 年が範囲内で根拠がある", (_key, line) => {
-    expect(inYears(line.availableFrom)).toBe(true);
+    const [availableFrom, availableUntil] = line.availableYears;
+    expect(inYears(availableFrom)).toBe(true);
+    expect(inYears(availableUntil)).toBe(true);
+    expect(availableFrom).toBeLessThanOrEqual(availableUntil);
     if (line.defaultYears) {
       const [from, to] = line.defaultYears;
-      expect(from).toBeGreaterThanOrEqual(line.availableFrom);
+      expect(from).toBeGreaterThanOrEqual(availableFrom);
+      expect(to).toBeLessThanOrEqual(availableUntil);
       expect(from).toBeLessThanOrEqual(to);
       expect(inYears(to)).toBe(true);
     }
@@ -119,14 +123,16 @@ describe("回線", () => {
 
   it("年ごとに選べる回線と既定が変わる", () => {
     expect(linesForYear(1995).map((l) => l.key)).toEqual(["m28", "isdn"]);
+    expect(linesForYear(2000).map((l) => l.key)).toEqual(["m28", "m56", "isdn"]);
     expect(linesForYear(2003).map((l) => l.key)).toEqual([
-      "m28",
       "m56",
       "isdn",
       "adsl1",
       "adsl12",
       "hikari",
     ]);
+    expect(linesForYear(2007).map((l) => l.key)).toEqual(["m56", "adsl12", "hikari"]);
+    expect(linesForYear(2015).map((l) => l.key)).toEqual(["adsl12", "hikari"]);
     expect(defaultLineForYear(1995).key).toBe("m28");
     expect(defaultLineForYear(2000).key).toBe("isdn");
     expect(defaultLineForYear(2003).key).toBe("adsl12");

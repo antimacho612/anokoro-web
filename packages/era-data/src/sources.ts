@@ -40,6 +40,22 @@ export const SRC = {
   yahooBB: { title: "Wikipedia: Yahoo! BB", url: "https://ja.wikipedia.org/wiki/Yahoo!_BB" },
   ftth: { title: "Wikipedia: FTTH", url: "https://ja.wikipedia.org/wiki/FTTH" },
   bflets: { title: "Wikipedia: Bフレッツ", url: "https://ja.wikipedia.org/wiki/Bフレッツ" },
+  v90: {
+    title: "INTERNET Watch: V.90 が ITU で正式勧告（1998年）",
+    url: "https://internet.watch.impress.co.jp/www/article/981012/v90.htm",
+  },
+  isdnDecline2005: {
+    title: "INTERNET Watch: 加入電話・ISDN の契約数が 6,000 万件を下回る（2005年）",
+    url: "https://internet.watch.impress.co.jp/cda/news/2005/08/04/8690.html",
+  },
+  adsl12m2002: {
+    title: "INTERNET Watch: 12Mbps ADSL の動向（2002年）",
+    url: "https://internet.watch.impress.co.jp/www/article/2002/0722/adsl.htm",
+  },
+  broadband2009: {
+    title: "総務省: ブロードバンドサービスの契約数等（平成21年3月末）",
+    url: "https://www.soumu.go.jp/menu_news/s-news/14885.html",
+  },
   // 解像度
   w3schoolsDisplay: {
     title: "W3Schools: Browser Display Statistics",
