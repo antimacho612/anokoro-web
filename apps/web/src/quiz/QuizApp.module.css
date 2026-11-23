@@ -14,17 +14,6 @@
   text-shadow: var(--desktop-text-shadow);
 }
 
-.links {
-  display: flex;
-  gap: 6px;
-}
-
-.links a {
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-}
-
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
@@ -167,18 +156,133 @@
 .result {
   min-height: 72px;
   margin: 8px 0;
-  padding: 6px 8px;
   line-height: 1.6;
 }
 
 .message {
   margin: 0;
+  padding: 8px 10px;
   font-weight: bold;
   font-size: 14px;
 }
 
-.note {
-  margin: 4px 0 0;
+.cardCorrect,
+.cardFailed {
+  padding: 10px 12px;
+  border: 2px solid;
+  background: #fff;
+  color: #000;
+}
+
+.cardCorrect {
+  border-color: #e00000;
+  background: #fffbe6;
+}
+
+.cardFailed {
+  border-color: #3050a0;
+  background: #f2f5ff;
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.markCorrect,
+.markFailed {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  animation: stamp 0.25s ease-out;
+}
+
+.markCorrect {
+  border: 7px solid #e00000;
+  border-radius: 50%;
+}
+
+.markFailed {
+  color: #3050a0;
+  font-size: 52px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+@keyframes stamp {
+  from {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .markCorrect,
+  .markFailed {
+    animation: none;
+  }
+}
+
+.verdictText {
+  min-width: 0;
+}
+
+.verdictTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.cardCorrect .verdictTitle {
+  color: #e00000;
+}
+
+.cardFailed .verdictTitle {
+  color: #3050a0;
+}
+
+.verdictSub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #444;
+}
+
+.facts {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px dashed #999;
+  font-size: 12px;
+}
+
+.facts dt {
+  color: #555;
+}
+
+.facts dd {
+  margin: 0 0 6px;
+}
+
+.facts dd:last-child {
+  margin-bottom: 0;
+}
+
+.factLabel {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.factCode {
+  display: block;
+  padding: 2px 6px;
+  background: #fff;
+  border: 1px solid #ccc;
+  font-family: "MS Gothic", "Courier New", monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .actions {

@@ -6,7 +6,13 @@ import {
   type Question,
   type TrickQuestion,
 } from "./generate.ts";
-import { INITIAL_PROGRESS, answerNote, judge, remainingTries, type QuizProgress } from "./judge.ts";
+import {
+  INITIAL_PROGRESS,
+  answerFacts,
+  judge,
+  remainingTries,
+  type QuizProgress,
+} from "./judge.ts";
 
 function findQuestion<T extends Question>(matches: (q: Question) => q is T): T {
   for (let seed = 0; seed < 5000; seed++) {
@@ -77,12 +83,27 @@ describe("judge", () => {
   });
 });
 
-describe("answerNote", () => {
-  it("機能や回線が使えるようになった年を示す", () => {
-    expect(answerNote(findQuestion(hasStartYear))).toMatch(/は\d{4}年から$/);
-    expect(answerNote(findQuestion(noStartYear))).toMatch(
-      /は2015年になっても、まだふつうには使えませんでした$/,
-    );
-    expect(answerNote(lineQuestion)).toMatch(/は\d{4}年から。\d{4}年にはまだ選べませんでした$/);
+describe("answerFacts", () => {
+  it("技術の名前、使えるようになった年、何年早いか、答えの行を返す", () => {
+    const q = findQuestion(hasStartYear);
+    const facts = answerFacts(q);
+    const since = FEATURES[q.trick.feature].availableFrom;
+    expect(facts.label).toBe(FEATURES[q.trick.feature].label);
+    expect(facts.since).toBe(since);
+    expect(facts.yearsEarly).toBe((since ?? 0) - q.year);
+    expect(facts.yearsEarly).toBeGreaterThan(0);
+    expect(facts.code).toBe(q.source.split("\n")[(q.answerLines[0] ?? 0) - 1]?.trim());
+  });
+
+  it("2015 年までに使えるようにならなかった技術は、年を null にする", () => {
+    const facts = answerFacts(findQuestion(noStartYear));
+    expect(facts.since).toBeNull();
+    expect(facts.yearsEarly).toBeNull();
+  });
+
+  it("回線の問題は回線の名前と年を返し、答えの行はない", () => {
+    const facts = answerFacts(lineQuestion);
+    expect(facts.since).toBeGreaterThan(lineQuestion.year);
+    expect(facts.code).toBeNull();
   });
 });

@@ -30,8 +30,9 @@ test("表示モードで時代外れの要素を選ぶと正解し、解説を�
   await pageFrame(page)
     .locator("[anokoro-quiz-answer]")
     .click({ position: { x: 4, y: 4 } });
-  await expect(result(page)).toContainText("正解！");
-  await expect(result(page)).toContainText("2011年から");
+  await expect(result(page)).toContainText("一発正解！");
+  await expect(result(page)).toContainText("2011年から。2005年より 6 年先の技術でした");
+  await expect(result(page)).toContainText('style="border-radius:10px"');
 
   await answerWindow(page).getByRole("button", { name: "解説を開く" }).click();
   await expect(
@@ -131,11 +132,21 @@ test("問題を作れない条件では、お知らせを出してランダム�
   await expect(page).toHaveURL(/\/quiz\/\?seed=\d+$/);
 });
 
-test("作成キットのヘルプ(H) と解説から開く。タイムマシンには入口を置かない", async ({ page }) => {
+test("作成キットのタスクバー、ヘルプ(H)、解説から開く。タイムマシンには入口を置かない", async ({
+  page,
+}) => {
   await page.goto("/kit/?year=2003");
   await expect(
     page.getByRole("group", { name: "タイムマシン" }).getByRole("link", { name: "まちがいさがし" }),
   ).toHaveCount(0);
+  await page
+    .getByRole("navigation", { name: "タスクバー" })
+    .getByRole("link", { name: "まちがいさがし" })
+    .click();
+  await expect(page).toHaveURL(/\/quiz\/\?seed=\d+$/);
+  await expect(answerWindow(page)).toBeVisible();
+
+  await page.goto("/kit/?year=2003");
   await page
     .getByRole("region", { name: "index.html - メモ帳" })
     .getByRole("button", { name: "ヘルプ(H)" })
@@ -166,10 +177,24 @@ test("作成キットのヘルプ(H) と解説から開く。タイムマシン�
   ).toHaveCount(0);
 });
 
-test("作成キットへ戻るリンクは出題年のキットを開く", async ({ page }) => {
+test("タスクバーに作成キットへ戻るリンクと今日の 1 問を置き、作成キットと同じ窓を開ける", async ({
+  page,
+}) => {
   await page.goto(`/quiz/?seed=${DISPLAY_SEED}`);
-  await expect(page.getByRole("link", { name: "作成キットへ戻る" })).toHaveAttribute(
+  const taskbar = page.getByRole("navigation", { name: "タスクバー" });
+  await expect(taskbar.getByRole("link", { name: "作成キットへ戻る" })).toHaveAttribute(
     "href",
     "/kit/?year=2005",
   );
+  await expect(taskbar.getByRole("link", { name: "今日の 1 問" })).toHaveAttribute(
+    "href",
+    "/quiz/?daily",
+  );
+  await expect(taskbar.getByLabel("出題年 2005年")).toBeVisible();
+
+  await taskbar.getByRole("button", { name: "このサイトについて" }).click();
+  await expect(page.getByRole("dialog", { name: "このサイトについて" })).toBeVisible();
+  await taskbar.getByRole("button", { name: "解説" }).click();
+  await expect(helpDialog(page)).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "このサイトについて" })).toHaveCount(0);
 });

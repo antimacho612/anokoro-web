@@ -10,7 +10,7 @@ import { LineWindow } from "./line/LineWindow.tsx";
 import { Notepad, insertIntoNotepad, moveNotepadCaret } from "./notepad/Notepad.tsx";
 import { PartsBox } from "./parts/PartsBox.tsx";
 import { useKit } from "./store.ts";
-import { Taskbar } from "./taskbar/Taskbar.tsx";
+import { KitTaskbar } from "./taskbar/KitTaskbar.tsx";
 import { TimeMachineBar } from "./time-machine/TimeMachineBar.tsx";
 
 export function KitApp() {
@@ -49,7 +49,7 @@ export function KitApp() {
 
   return (
     <>
-      <Taskbar />
+      <KitTaskbar />
       <header className={styles.top}>
         <h1 className="dot">あのころ Web ホームページ作成キット</h1>
       </header>

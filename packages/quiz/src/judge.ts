@@ -1,4 +1,4 @@
-import { FEATURES, MAX_YEAR, getLine } from "@anokoro/era-data";
+import { FEATURES, getLine, type Year } from "@anokoro/era-data";
 import type { Question } from "./generate.ts";
 
 /** 答えられる回数 */
@@ -82,15 +82,33 @@ export function judge(question: Question, progress: QuizProgress, pick: QuizPick
   return { progress: { kind, misses }, outcome: "miss" };
 }
 
-/** 答え合わせの説明。「〇〇は XXXX 年から」 */
-export function answerNote(question: Question): string {
+/** 答え合わせに出す、時代外れだった技術（または回線）のこと */
+export interface AnswerFacts {
+  /** 技術や回線の名前 */
+  label: string;
+  /** 使えるようになった年。1995〜2015 年のうちに使えるようにならなかったものは null */
+  since: Year | null;
+  /** 出題年から使えるようになるまでの年数。since が null なら null */
+  yearsEarly: number | null;
+  /** 答えのソースの行（前後の空白を除く）。回線の問題では null */
+  code: string | null;
+}
+
+export function answerFacts(question: Question): AnswerFacts {
   if (question.kind === "line") {
     const line = getLine(question.lineKey);
-    return `${line.name}は${line.availableYears[0]}年から。${question.year}年にはまだ選べませんでした`;
+    const since = line.availableYears[0];
+    return { label: line.name, since, yearsEarly: since - question.year, code: null };
   }
   const feature = FEATURES[question.trick.feature];
-  if (feature.availableFrom === null) {
-    return `${feature.label}は${MAX_YEAR}年になっても、まだふつうには使えませんでした`;
-  }
-  return `${feature.label}は${feature.availableFrom}年から`;
+  const since = feature.availableFrom;
+  const lineNumber = question.answerLines[0];
+  const code =
+    lineNumber === undefined ? null : (question.source.split("\n")[lineNumber - 1]?.trim() ?? null);
+  return {
+    label: feature.label,
+    since,
+    yearsEarly: since === null ? null : since - question.year,
+    code,
+  };
 }

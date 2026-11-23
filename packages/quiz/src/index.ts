@@ -26,10 +26,11 @@ export {
 export {
   INITIAL_PROGRESS,
   MAX_TRIES,
-  answerNote,
+  answerFacts,
   judge,
   pickKey,
   remainingTries,
+  type AnswerFacts,
   type JudgeOutcome,
   type JudgeResult,
   type QuizPick,

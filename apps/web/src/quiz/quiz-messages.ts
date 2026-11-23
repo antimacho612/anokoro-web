@@ -1,31 +1,25 @@
-import { answerNote, remainingTries, type JudgeResult, type Question } from "@anokoro/quiz";
+import { remainingTries, type JudgeResult } from "@anokoro/quiz";
 
 export const IGNORED_MESSAGE = "この問題は表示では見分けられません。ソース表示で行を選んでください";
 export const REPEAT_MESSAGE = "そこはもう選びました";
 
-export interface QuizMessage {
-  message: string;
-  /** 答え合わせの説明。終わったときだけ */
-  note: string;
-}
-
-/** 判定の結果から、答えのウィンドウに出す文言を決める */
-export function messageFor(question: Question, { progress, outcome }: JudgeResult): QuizMessage {
+/**
+ * 答えている途中に、答えのウィンドウに出す一言。
+ * 終わったとき（正解、3 回の間違い）は結果の欄に出すので空にする
+ */
+export function messageFor({ progress, outcome }: JudgeResult): string {
   switch (outcome) {
-    case "correct":
-      return { message: "正解！", note: answerNote(question) };
     case "miss":
-      if (progress.kind === "failed") {
-        const where = question.kind === "line" ? "答えは回線でした" : "答えはここでした";
-        return { message: where, note: answerNote(question) };
-      }
-      return { message: `ちがうようです（残り ${remainingTries(progress)} 回）`, note: "" };
+      return progress.kind === "failed"
+        ? ""
+        : `ちがうようです（残り ${remainingTries(progress)} 回）`;
     case "repeat":
-      return { message: REPEAT_MESSAGE, note: "" };
+      return REPEAT_MESSAGE;
     case "ignored":
-      return { message: IGNORED_MESSAGE, note: "" };
+      return IGNORED_MESSAGE;
+    case "correct":
     case "finished":
-      return { message: "", note: "" };
+      return "";
     default: {
       const exhaustive: never = outcome;
       return exhaustive;

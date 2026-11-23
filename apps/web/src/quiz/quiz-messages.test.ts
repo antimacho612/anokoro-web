@@ -12,38 +12,25 @@ function questionWith(matches: (q: Question) => boolean): Question {
 
 const trick = questionWith((q) => q.kind === "trick" && q.displayable);
 const sourceOnly = questionWith((q) => q.kind === "trick" && !q.displayable);
-const line = questionWith((q) => q.kind === "line");
 
 describe("messageFor", () => {
-  it("正解なら「正解！」と年の説明", () => {
+  it("正解したら途中の一言は出さない（結果の欄に出す）", () => {
     const r = judge(trick, INITIAL_PROGRESS, { kind: "element", path: "0", isAnswer: true });
-    expect(messageFor(trick, r)).toEqual({
-      message: "正解！",
-      note: expect.stringMatching(/\d{4}年/),
-    });
+    expect(messageFor(r)).toBe("");
   });
 
-  it("間違えると残りの回数を出し、3 回目で答えを示す", () => {
+  it("間違えると残りの回数を出し、3 回目は結果の欄に任せる", () => {
     const pick = (n: number) => ({ kind: "element", path: String(n), isAnswer: false }) as const;
     const first = judge(trick, INITIAL_PROGRESS, pick(1));
-    expect(messageFor(trick, first)).toEqual({ message: "ちがうようです（残り 2 回）", note: "" });
-    expect(messageFor(trick, judge(trick, first.progress, pick(1))).message).toBe(REPEAT_MESSAGE);
+    expect(messageFor(first)).toBe("ちがうようです（残り 2 回）");
+    expect(messageFor(judge(trick, first.progress, pick(1)))).toBe(REPEAT_MESSAGE);
     const third = judge(trick, judge(trick, first.progress, pick(2)).progress, pick(3));
-    expect(messageFor(trick, third).message).toBe("答えはここでした");
-  });
-
-  it("回線の問題で 3 回間違えると「答えは回線でした」", () => {
-    let progress = INITIAL_PROGRESS;
-    let last = judge(line, progress, { kind: "line", line: 1 });
-    for (const n of [2, 3]) {
-      progress = last.progress;
-      last = judge(line, progress, { kind: "line", line: n });
-    }
-    expect(messageFor(line, last).message).toBe("答えは回線でした");
+    expect(third.progress.kind).toBe("failed");
+    expect(messageFor(third)).toBe("");
   });
 
   it("ソース表示だけの問題で要素を選ぶと案内を出す", () => {
     const r = judge(sourceOnly, INITIAL_PROGRESS, { kind: "element", path: "0", isAnswer: true });
-    expect(messageFor(sourceOnly, r).message).toBe(IGNORED_MESSAGE);
+    expect(messageFor(r)).toBe(IGNORED_MESSAGE);
   });
 });
