@@ -15,7 +15,9 @@ import { ConfirmDialog } from "../../ui/Dialog.tsx";
 import { Window } from "../../ui/Window/Window.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
-import { FolderIcon, PageIcon } from "./icons.tsx";
+import { SAMPLE_SITES } from "../../samples/index.ts";
+import { sampleUrl } from "../../view/view-source.ts";
+import { FolderIcon, PageIcon, SampleFolderIcon } from "./icons.tsx";
 import { useWorkspace, workspace } from "./instance.ts";
 import styles from "./MyComputer.module.css";
 import { NewSiteDialog, PageNameDialog, SiteInfoDialog } from "./SiteDialogs.tsx";
@@ -64,6 +66,43 @@ function IconButton({ label, icon, isSelected, onSelect, onOpen }: IconButtonPro
   );
 }
 
+const SAMPLES_FOLDER = "samples";
+
+/** 見本サイトの一覧。開くと閲覧画面で見る */
+function SamplesFolder() {
+  const [selected, setSelected] = useState<string | null>(null);
+  const open = (id: string): void => {
+    window.location.assign(sampleUrl(import.meta.env.BASE_URL, id));
+  };
+  return (
+    <div className={styles.contents}>
+      <div className={styles.address}>
+        アドレス
+        <div className="sunken">マイコンピュータ\見本サイト</div>
+      </div>
+      <p className={styles.props}>
+        運営が作った架空のサイトです。開くと閲覧画面で見られ、「キットに取り込む」で自分のサイトにコピーできます。
+      </p>
+      <div className={`${styles.pane} sunken`}>
+        <ul className={styles.icons} aria-label="見本サイトの一覧">
+          {SAMPLE_SITES.map((sample) => (
+            <li key={sample.id}>
+              <IconButton
+                label={`${sample.name}（${sample.year}年）`}
+                icon={<FolderIcon />}
+                isSelected={selected === sample.id}
+                onSelect={() => setSelected(sample.id)}
+                onOpen={() => open(sample.id)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p className="hint">ダブルクリックで開きます。</p>
+    </div>
+  );
+}
+
 function fallbackSite(year: number): NewSite {
   return {
     name: "マイホームページ",
@@ -84,7 +123,10 @@ export function MyComputer() {
   const [selectedPage, setSelectedPage] = useState<string | null>(null);
   const [modal, setModal] = useState<Modal | null>(null);
 
-  const folder = sites.find((s) => s.id === (folderId ?? currentId)) ?? sites[0];
+  const showsSamples = folderId === SAMPLES_FOLDER;
+  const folder = showsSamples
+    ? undefined
+    : (sites.find((s) => s.id === (folderId ?? currentId)) ?? sites[0]);
   const isCurrent = folder?.id === currentId;
   const selected = folder?.pages.some((p) => p.path === selectedPage) ? selectedPage : null;
   const close = (): void => setModal(null);
@@ -140,8 +182,18 @@ export function MyComputer() {
                 />
               </li>
             ))}
+            <li>
+              <IconButton
+                label="見本サイト"
+                icon={<SampleFolderIcon />}
+                isSelected={showsSamples}
+                onSelect={() => selectFolder(SAMPLES_FOLDER)}
+                onOpen={() => selectFolder(SAMPLES_FOLDER)}
+              />
+            </li>
           </ul>
         </div>
+        {showsSamples && <SamplesFolder />}
         {folder && (
           <div className={styles.contents}>
             <div className={styles.address}>
