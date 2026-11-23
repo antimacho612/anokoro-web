@@ -21,3 +21,15 @@ vp run ci             # check、test、build を順に実行
 ```sh
 ANOKORO_BASE=/anokoro-web/ vp run -r build
 ```
+
+## ライセンス
+
+| 対象                                     | ライセンス                                    |
+| ---------------------------------------- | --------------------------------------------- |
+| プログラム（下記以外のすべて）           | [MIT License](LICENSE)                        |
+| 文章（`content/`、`docs/`）              | [CC BY 4.0](content/LICENSE.md)               |
+| 素材の SVG（`packages/assets/src/svg/`） | [CC0 1.0](packages/assets/src/svg/LICENSE.md) |
+
+「ネットサーファー」「ほげスペース」「ほげほげ」は架空の名前で、実在の製品やサービスとは関係ありません。
+
+本番ビルドには、同梱したサードパーティ製パッケージのライセンス表記を `third-party-licenses.txt` として出力し、サイトの「このサイトについて」からリンクする。

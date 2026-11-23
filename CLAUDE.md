@@ -19,6 +19,7 @@
 - 年に依存するルール（タグ、属性、CSS、回線、解像度）はコードに直書きせず、`packages/era-data` のデータとして持つ。各行に根拠の URL を書く
 - 警告と解説トピックの対応は、ルール定義の `topic` で持つ（文言マッチングはしない）
 - 音はユーザーの操作をきっかけにしてだけ鳴らす。点滅は `prefers-reduced-motion` で抑える
+- 実行時に同梱する依存は、MIT、ISC、BSD、Apache-2.0 など、表記だけで使えるライセンスに限る。表記は `apps/web/config/third-party-licenses.ts` がビルド時にバンドルから集めて `third-party-licenses.txt` に出すので、手で一覧を書かない
 - `localStorage` のキーは `anokoro:` で始め、読み書きは try/catch で囲む
 - UI の文言はすべて日本語
 
