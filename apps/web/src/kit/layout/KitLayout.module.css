@@ -23,6 +23,10 @@
     display: contents;
   }
 
+  .computer {
+    order: 0;
+  }
+
   .notepad {
     order: 1;
   }

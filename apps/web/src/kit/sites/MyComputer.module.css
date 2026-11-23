@@ -1,0 +1,131 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 2px 0 4px;
+}
+
+.notice {
+  margin: 4px 2px;
+  padding: 4px 6px;
+  background: #ffffe1;
+  border: 1px solid #808080;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.explorer {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 6px;
+  align-items: start;
+}
+
+.folders .icons {
+  flex-direction: column;
+}
+
+.folders .icon {
+  flex-direction: row;
+  width: 100%;
+  text-align: left;
+  gap: 4px;
+}
+
+.contents {
+  min-width: 0;
+}
+
+.contents > .address:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 480px) {
+  .explorer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.pane {
+  padding: 4px;
+  min-height: 72px;
+}
+
+.icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 92px;
+  padding: 4px 2px;
+  border: 1px solid transparent;
+  background: none;
+  font: inherit;
+  font-size: 11px;
+  color: #000;
+  cursor: pointer;
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.icon:focus-visible {
+  border: 1px dotted #000;
+  outline: none;
+}
+
+.icon[aria-pressed="true"] > span,
+.icon[aria-current="true"] > span {
+  background: var(--accent);
+  color: #fff;
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+  font-size: 12px;
+}
+
+.address > div {
+  flex: 1;
+  padding: 2px 4px;
+  font-family: "MS Gothic", monospace;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.props {
+  font-size: 11px;
+  color: #333;
+  margin: 2px 2px 4px;
+}
+
+.kinds {
+  border: 1px solid #808080;
+  margin: 8px 0;
+  padding: 4px 8px 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+}
+
+.kinds label {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.kindNotYet {
+  color: var(--disabled-fg);
+}

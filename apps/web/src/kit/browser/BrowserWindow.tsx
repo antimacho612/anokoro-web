@@ -5,15 +5,27 @@ import { HelpMenu } from "../help/HelpMenu.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { BLANK_PAGE } from "../line/frame-page.ts";
 import { frameSlot, netController } from "../line/net.ts";
-import { useKit } from "../store.ts";
+import { kitStore, useKit } from "../store.ts";
 import styles from "./BrowserWindow.module.css";
+import { canGoBack, canGoForward } from "../../site/browser-history.ts";
+import { captureLinks } from "../../site/link-capture.ts";
+import { resolveLink } from "../../site/link-target.ts";
+import { findPage } from "../../site/site-model.ts";
+import type { Workspace } from "../sites/workspace.ts";
 import { SITE_ROOT } from "./pseudo-url.ts";
 import { findResolution, resolutionValue } from "./resolution.ts";
 import { stageLayout } from "./stage-layout.ts";
 
+/** 疑似ブラウザのページ移動。作成キットでも閲覧画面でも、開いているサイトの中を動く */
+export type BrowserNavigator = Pick<
+  Workspace,
+  "back" | "forward" | "home" | "followLink" | "current"
+>;
+
 type BrowserWindowProps = {
   html: string;
   pageTitle: string;
+  navigator: BrowserNavigator;
 };
 
 function AdBanner({ isLoading }: { isLoading: boolean }) {
@@ -29,7 +41,7 @@ function AdBanner({ isLoading }: { isLoading: boolean }) {
   );
 }
 
-export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
+export function BrowserWindow({ html, pageTitle, navigator }: BrowserWindowProps) {
   const year = useKit((s) => s.year);
   const status = useKit((s) => s.status);
   const resolution = useKit((s) => s.resolution);
@@ -39,6 +51,9 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
   const isLoading = useKit((s) => s.loading);
   const progressRatio = useKit((s) => s.progressRatio);
   const isAdLoading = useKit((s) => s.adLoading);
+  const pagePath = useKit((s) => s.pagePath);
+  const notFoundUrl = useKit((s) => s.notFoundUrl);
+  const history = useKit((s) => s.history);
   const [viewportRef, viewportWidth] = useElementWidth();
 
   const candidates = resolutionPeriodForYear(year).candidates;
@@ -55,6 +70,35 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
     void netController.reload();
   };
 
+  const reloadIfNet = (): void => {
+    if (isNet) void netController.reload();
+  };
+
+  const handleFrameLoad = (frame: HTMLIFrameElement): void => {
+    const doc = frame.contentDocument;
+    if (!doc) return;
+    captureLinks(doc, (href) => {
+      const site = navigator.current();
+      const target = resolveLink({
+        href,
+        currentPath: pagePath,
+        hasPage: (path) => site !== undefined && findPage(site, path) !== undefined,
+        siteRoot: SITE_ROOT,
+      });
+      if (target.kind === "hash") return false;
+      navigator.followLink(target);
+      if (target.kind === "page") reloadIfNet();
+      return true;
+    });
+  };
+
+  const go = (move: () => void): void => {
+    move();
+    if (kitStore.getState().notFoundUrl === null) reloadIfNet();
+  };
+
+  const address = notFoundUrl ?? `${SITE_ROOT}${pagePath}`;
+
   return (
     <Window title={title} controls={["_", "□", "×"]} className={slotClass.browser}>
       <div className="menubar">
@@ -66,10 +110,20 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
         <HelpMenu />
       </div>
       <div className={styles.navrow}>
-        <button type="button" className="btn" disabled>
+        <button
+          type="button"
+          className="btn"
+          disabled={!canGoBack(history)}
+          onClick={() => go(() => navigator.back())}
+        >
           ← 戻る
         </button>
-        <button type="button" className="btn" disabled>
+        <button
+          type="button"
+          className="btn"
+          disabled={!canGoForward(history)}
+          onClick={() => go(() => navigator.forward())}
+        >
           進む →
         </button>
         <button
@@ -83,7 +137,7 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
         <button type="button" className="btn" onClick={handleReload}>
           更新
         </button>
-        <button type="button" className="btn" disabled>
+        <button type="button" className="btn" onClick={() => go(() => navigator.home())}>
           ホーム
         </button>
         <label className={styles.res}>
@@ -102,7 +156,9 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
       </div>
       <div className={styles.addr}>
         アドレス(D)
-        <div className={`${styles.addrBox} sunken`}>{`${SITE_ROOT}index.html`}</div>
+        <div className={`${styles.addrBox} sunken`} data-testid="address">
+          {address}
+        </div>
         <button type="button" className="btn" onClick={handleReload}>
           移動
         </button>
@@ -130,6 +186,7 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
             className={styles.frame}
             sandbox="allow-same-origin"
             title="プレビュー"
+            onLoad={(e) => handleFrameLoad(e.currentTarget)}
             srcDoc={isNet ? BLANK_PAGE : html}
             style={{ width: layout.stageWidth, height: layout.frameHeight }}
           />

@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { createKitStore } from "../store.ts";
-import { loadDraft, persistDraft, type StorageAccess } from "./draft-storage.ts";
+import { loadDraft, saveLastOpened, type StorageAccess } from "./draft-storage.ts";
 
 function memoryStorage(): { access: StorageAccess; data: Map<string, string> } {
   const data = new Map<string, string>();
@@ -17,30 +16,33 @@ const broken: StorageAccess = () => {
   throw new Error("SecurityError");
 };
 
-describe("下書きの保存", () => {
-  it("ローカル表示を更新したときに anokoro:draft へ保存する", () => {
+describe("最後に開いていたページ", () => {
+  it("anokoro:draft に保存して読み出す", () => {
     const { access, data } = memoryStorage();
-    const store = createKitStore();
-    persistDraft(store, access);
-    store.getState().edit("<p>途中");
-    expect(data.has("anokoro:draft")).toBe(false);
-    store.getState().show();
-    expect(data.get("anokoro:draft")).toBe("<p>途中");
+    expect(loadDraft(access)).toEqual({ kind: "none" });
+    saveLastOpened(access, { siteId: "s1", path: "diary.html" });
+    expect(JSON.parse(data.get("anokoro:draft") ?? "")).toEqual({
+      siteId: "s1",
+      path: "diary.html",
+    });
+    expect(loadDraft(access)).toEqual({
+      kind: "last-opened",
+      lastOpened: { siteId: "s1", path: "diary.html" },
+    });
   });
 
-  it("保存した下書きを読む。空なら undefined", () => {
+  it("M1 の書きかけの HTML はそのまま返す", () => {
     const { access, data } = memoryStorage();
-    expect(loadDraft(access)).toBeUndefined();
-    data.set("anokoro:draft", "");
-    expect(loadDraft(access)).toBeUndefined();
     data.set("anokoro:draft", "<html>");
-    expect(loadDraft(access)).toBe("<html>");
+    expect(loadDraft(access)).toEqual({ kind: "legacy-html", html: "<html>" });
+    data.set("anokoro:draft", '{"x":1}');
+    expect(loadDraft(access)).toEqual({ kind: "legacy-html", html: '{"x":1}' });
+    data.set("anokoro:draft", "");
+    expect(loadDraft(access)).toEqual({ kind: "none" });
   });
 
   it("ストレージが使えなくても例外を投げない", () => {
-    expect(loadDraft(broken)).toBeUndefined();
-    const store = createKitStore();
-    persistDraft(store, broken);
-    expect(() => store.getState().replace("x")).not.toThrow();
+    expect(loadDraft(broken)).toEqual({ kind: "none" });
+    expect(() => saveLastOpened(broken, { siteId: "a", path: "b" })).not.toThrow();
   });
 });

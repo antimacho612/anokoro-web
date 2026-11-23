@@ -5,6 +5,8 @@ export type TitleControl = "_" | "□" | "×" | "?";
 
 export type WindowProps = {
   title: string;
+  /** タイトルの前に付ける印（未保存の * など）。ウィンドウの名前には含めない */
+  titleMark?: string;
   controls?: readonly TitleControl[];
   className?: string;
   children?: ReactNode;
@@ -16,6 +18,7 @@ export type WindowProps = {
 
 export function Window({
   title,
+  titleMark,
   controls = ["_", "×"],
   className,
   children,
@@ -39,8 +42,9 @@ export function Window({
       aria-labelledby={titleId}
     >
       <div className={styles.titlebar}>
-        <h2 id={titleId} className={styles.title}>
-          {title}
+        <h2 className={styles.title}>
+          {titleMark && <span aria-hidden="true">{titleMark}</span>}
+          <span id={titleId}>{title}</span>
         </h2>
         <span className={styles.controls}>
           {controls.map((control) =>

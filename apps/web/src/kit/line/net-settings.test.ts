@@ -44,7 +44,7 @@ describe("restoreNetSettings", () => {
 });
 
 describe("保存", () => {
-  it("回線、接続音、カウンターを anokoro: のキーで保存する", () => {
+  it("回線と接続音を anokoro: のキーで保存する。カウンターはサイトに保存するので書かない", () => {
     const store = createKitStore({ year: 2003 });
     const { data, access } = memoryStorage();
     persistNetSettings(store, access);
@@ -54,7 +54,6 @@ describe("保存", () => {
     expect(Object.fromEntries(data)).toEqual({
       "anokoro:line": "isdn",
       "anokoro:sound": "off",
-      "anokoro:counter": "775",
     });
   });
 });

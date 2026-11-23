@@ -17,9 +17,12 @@
     "@anokoro/modem-sound": "workspace:*",
     "@anokoro/netsim": "workspace:*",
     "@anokoro/quiz": "workspace:*",
+    "@anokoro/share-codec": "workspace:*",
     "@anokoro/shared": "workspace:*",
+    "@anokoro/site-store": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "zod": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {

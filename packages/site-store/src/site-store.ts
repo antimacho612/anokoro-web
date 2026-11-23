@@ -68,3 +68,23 @@ export async function requestPersistence(
     return false;
   }
 }
+
+/** IndexedDB が使えない環境で使う、ページを閉じると消える保存先 */
+export function createMemorySiteStore(): SiteStore {
+  const sites = new Map<string, LocalSite>();
+  return {
+    async list() {
+      return [...sites.values()].sort((a, b) => b.updatedAt - a.updatedAt);
+    },
+    async get(id) {
+      return sites.get(id);
+    },
+    async put(site) {
+      sites.set(site.id, structuredClone(site));
+    },
+    async delete(id) {
+      sites.delete(id);
+    },
+    close() {},
+  };
+}

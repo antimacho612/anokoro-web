@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import styles from "./KitLayout.module.css";
 
-export type KitSlot = "notepad" | "parts" | "browser" | "line" | "checker";
+export type KitSlot = "computer" | "notepad" | "parts" | "browser" | "line" | "checker";
 
 /** 1 列表示のときの並び順をスロットのクラスで決める */
 export const slotClass: Record<KitSlot, string> = {
+  computer: styles.computer,
   notepad: styles.notepad,
   parts: styles.parts,
   browser: styles.browser,

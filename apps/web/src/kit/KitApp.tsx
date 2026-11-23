@@ -9,7 +9,10 @@ import { KitLayout } from "./layout/KitLayout.tsx";
 import { LineWindow } from "./line/LineWindow.tsx";
 import { Notepad, insertIntoNotepad, moveNotepadCaret } from "./notepad/Notepad.tsx";
 import { PartsBox } from "./parts/PartsBox.tsx";
+import { MyComputer } from "./sites/MyComputer.tsx";
+import { workspace } from "./sites/instance.ts";
 import { useKit } from "./store.ts";
+import { NOT_FOUND_TITLE, notFoundPage } from "../site/not-found-page.ts";
 import { KitTaskbar } from "./taskbar/KitTaskbar.tsx";
 import { TimeMachineBar } from "./time-machine/TimeMachineBar.tsx";
 
@@ -18,6 +21,7 @@ export function KitApp() {
   const shownSource = useKit((s) => s.shownSource);
   const counter = useKit((s) => s.counter);
   const replace = useKit((s) => s.replace);
+  const notFoundUrl = useKit((s) => s.notFoundUrl);
   const notepadRef = useRef<HTMLTextAreaElement>(null);
 
   const view = checkEra(shownSource, { year, mode: "local", counter });
@@ -32,6 +36,7 @@ export function KitApp() {
 
   const left = (
     <>
+      <MyComputer />
       <Notepad textareaRef={notepadRef} />
       <PartsBox onInsert={handleInsert} />
     </>
@@ -39,7 +44,11 @@ export function KitApp() {
 
   const right = (
     <>
-      <BrowserWindow html={view.html} pageTitle={view.title} />
+      <BrowserWindow
+        html={notFoundUrl === null ? view.html : notFoundPage(notFoundUrl)}
+        pageTitle={notFoundUrl === null ? view.title : NOT_FOUND_TITLE}
+        navigator={workspace}
+      />
       <LineWindow />
       <CheckerWindow score={view.score} warnings={view.warnings} onLocate={handleLocate} />
       <HelpWindow />

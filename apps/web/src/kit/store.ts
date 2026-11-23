@@ -9,6 +9,8 @@ import {
   type Year,
 } from "@anokoro/era-data";
 import { createStore, useStore, type StoreApi } from "zustand";
+import { startHistory, type BrowserHistory } from "../site/browser-history.ts";
+import { INDEX_PAGE, INITIAL_COUNTER } from "../site/site-model.ts";
 import { resolutionAfterYearChange } from "./browser/resolution.ts";
 import { lineAfterYearChange } from "./line/line-choice.ts";
 import { TEMPLATE } from "./notepad/templates.ts";
@@ -32,6 +34,12 @@ export interface LastLoad {
 
 export interface KitState {
   year: Year;
+  /** メモ帳で開いているページ */
+  pagePath: string;
+  /** 疑似ブラウザの履歴 */
+  history: BrowserHistory;
+  /** 疑似ブラウザで開けなかった URL。開けたページを表示しているときは null */
+  notFoundUrl: string | null;
   /** メモ帳に書かれている HTML */
   source: string;
   /** ローカル表示に使っている HTML。入力が止まってから source に追いつく */
@@ -65,6 +73,10 @@ export interface KitState {
   show: () => void;
   /** 中身を差し替えて、すぐにローカル表示を更新する */
   replace: (source: string) => void;
+  /** 別のページをメモ帳と疑似ブラウザで開く */
+  loadPage: (page: { path: string; html: string; history: BrowserHistory }) => void;
+  /** 疑似ブラウザに「ページが見つかりません」を出す */
+  showNotFound: (url: string, history: BrowserHistory) => void;
   setResolution: (resolution: Resolution) => void;
   setSound: (sound: boolean) => void;
   selectHelpTopic: (topic: TopicId) => void;
@@ -87,8 +99,6 @@ export interface KitStoreInit {
   source?: string;
 }
 
-export const INITIAL_COUNTER = 774;
-
 export function createKitStore({
   year = DEFAULT_YEAR,
   source = TEMPLATE,
@@ -108,6 +118,9 @@ export function createKitStore({
     };
     return {
       year: initialYear,
+      pagePath: INDEX_PAGE,
+      history: startHistory({ kind: "page", path: INDEX_PAGE }),
+      notFoundUrl: null,
       source,
       shownSource: source,
       status: STATUS_START,
@@ -132,8 +145,26 @@ export function createKitStore({
       setYear: moveTo,
       stepYear: (delta) => moveTo(get().year + delta),
       edit: (next) => set({ source: next, status: STATUS_EDITING }),
-      show: () => set({ shownSource: get().source, status: STATUS_LOCAL, display: "local" }),
+      show: () =>
+        set({
+          shownSource: get().source,
+          status: STATUS_LOCAL,
+          display: "local",
+          notFoundUrl: null,
+        }),
       replace: (next) => set({ source: next, shownSource: next, display: "local" }),
+      loadPage: ({ path, html, history }) =>
+        set({
+          pagePath: path,
+          history,
+          notFoundUrl: null,
+          source: html,
+          shownSource: html,
+          status: STATUS_LOCAL,
+          display: "local",
+        }),
+      showNotFound: (notFoundUrl, history) =>
+        set({ notFoundUrl, history, status: "ページが見つかりません", display: "local" }),
       setResolution: (resolution) => set({ resolution }),
       setSound: (sound) => set({ sound }),
       selectHelpTopic: (wantedHelpTopic) => set({ wantedHelpTopic }),

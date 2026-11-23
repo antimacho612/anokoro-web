@@ -7,7 +7,18 @@ import { HelpMenu } from "../help/HelpMenu.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import styles from "./Notepad.module.css";
-import { BLANK, TEMPLATE } from "./templates.ts";
+import {
+  normalizePagePath,
+  nextPagePath,
+  newPageHtml,
+  pagePathProblem,
+  canAddPage,
+} from "../../site/site-model.ts";
+import { siteTemplate } from "../../site/templates.ts";
+import { menuItemClass, MenuBarMenu } from "../../ui/MenuBarMenu.tsx";
+import { useWorkspace, workspace } from "../sites/instance.ts";
+import { PageNameDialog } from "../sites/SiteDialogs.tsx";
+import { BLANK } from "./templates.ts";
 import { byteLength, formatUsage, insertText, offsetOf } from "./text-edit.ts";
 
 /** 入力が止まってからローカル表示を更新するまでの時間 */
@@ -17,15 +28,6 @@ interface PendingConfirm {
   message: string;
   source: string;
 }
-
-const RESET: PendingConfirm = {
-  message: "いま書いている内容は消えます。テンプレートに戻しますか？",
-  source: TEMPLATE,
-};
-const CLEAR: PendingConfirm = {
-  message: "いま書いている内容は消えます。白紙から書きますか？",
-  source: BLANK,
-};
 
 /** メモ帳の選択範囲に text を入れ、カーソルを挿入した文字の後ろに置く */
 export function insertIntoNotepad(
@@ -67,6 +69,19 @@ export function Notepad({ textareaRef }: NotepadProps) {
   const [wrap, setWrap] = useState(true);
   const [fontSize, setFontSize] = useSourceFontSize();
   const [confirm, setConfirm] = useState<PendingConfirm | null>(null);
+  const [isNaming, setIsNaming] = useState(false);
+  const pagePath = useKit((s) => s.pagePath);
+  const year = useKit((s) => s.year);
+  const isDirty = useWorkspace((s) => s.dirty);
+  const site = useWorkspace((s) => s.sites.find((x) => x.id === s.currentId));
+
+  const askReset = (): void =>
+    setConfirm({
+      message: "いま書いている内容は消えます。テンプレートに戻しますか？",
+      source: siteTemplate(site?.genre ?? "personal", year),
+    });
+  const askClear = (): void =>
+    setConfirm({ message: "いま書いている内容は消えます。白紙から書きますか？", source: BLANK });
 
   useEffect(() => {
     if (source === shownSource) return;
@@ -75,6 +90,11 @@ export function Notepad({ textareaRef }: NotepadProps) {
   }, [source, shownSource, show]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>): void => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+      void workspace.flush();
+      return;
+    }
     if (e.key !== "Tab") return;
     e.preventDefault();
     insertIntoNotepad(e.currentTarget, "\t", edit);
@@ -86,9 +106,61 @@ export function Notepad({ textareaRef }: NotepadProps) {
   };
 
   return (
-    <Window title="index.html - メモ帳" controls={["_", "□", "×"]} className={slotClass.notepad}>
+    <Window
+      title={`${pagePath} - メモ帳`}
+      titleMark={isDirty ? "*" : undefined}
+      controls={["_", "□", "×"]}
+      className={slotClass.notepad}
+    >
       <div className="menubar">
-        <span>ファイル(F)</span>
+        <MenuBarMenu label="ファイル(F)" menuLabel="ファイル">
+          {(close) => (
+            <>
+              <li role="none">
+                <button
+                  type="button"
+                  role="menuitem"
+                  className={menuItemClass}
+                  disabled={!site || !canAddPage(site)}
+                  onClick={() => {
+                    close();
+                    setIsNaming(true);
+                  }}
+                >
+                  新規(N)...
+                </button>
+              </li>
+              {site?.pages.map((page) => (
+                <li role="none" key={page.path}>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    className={menuItemClass}
+                    onClick={() => {
+                      close();
+                      workspace.openPage(page.path);
+                    }}
+                  >
+                    開く(O)：{page.path}
+                  </button>
+                </li>
+              ))}
+              <li role="none">
+                <button
+                  type="button"
+                  role="menuitem"
+                  className={menuItemClass}
+                  onClick={() => {
+                    close();
+                    void workspace.flush();
+                  }}
+                >
+                  上書き保存(S)
+                </button>
+              </li>
+            </>
+          )}
+        </MenuBarMenu>
         <span>編集(E)</span>
         <span>書式(O)</span>
         <FontSizeMenu size={fontSize} onChange={setFontSize} />
@@ -116,10 +188,10 @@ export function Notepad({ textareaRef }: NotepadProps) {
         aria-label="HTML"
       />
       <div className={styles.toolrow}>
-        <button type="button" className="btn" onClick={() => setConfirm(RESET)}>
+        <button type="button" className="btn" onClick={askReset}>
           テンプレートに戻す
         </button>
-        <button type="button" className="btn" onClick={() => setConfirm(CLEAR)}>
+        <button type="button" className="btn" onClick={askClear}>
           白紙から書く
         </button>
         <span className={styles.size}>{formatUsage(byteLength(source))}</span>
@@ -137,6 +209,19 @@ export function Notepad({ textareaRef }: NotepadProps) {
             </button>
           </div>
         </div>
+      )}
+      {isNaming && site && (
+        <PageNameDialog
+          title="新しいページ"
+          initial={nextPagePath(site)}
+          normalize={normalizePagePath}
+          validate={(path) => pagePathProblem(site, path)}
+          onSubmit={(path) => {
+            setIsNaming(false);
+            void workspace.addPage(path, newPageHtml(path));
+          }}
+          onCancel={() => setIsNaming(false)}
+        />
       )}
     </Window>
   );

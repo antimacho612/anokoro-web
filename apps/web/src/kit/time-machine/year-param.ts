@@ -16,3 +16,9 @@ export function withYearParam(href: string, year: Year): string {
   url.searchParams.set(YEAR_PARAM, String(year));
   return url.href;
 }
+
+/** URL で年が正しく指定されているか */
+export function hasYearParam(search: string): boolean {
+  const raw = new URLSearchParams(search).get(YEAR_PARAM);
+  return raw !== null && /^\d{4}$/.test(raw) && isYear(Number(raw));
+}

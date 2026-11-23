@@ -165,7 +165,7 @@ export class NetController {
     }
 
     const line = this.#line();
-    const { source, year, counter: prevCounter, netFrameKey } = this.#store.getState();
+    const { source, year, counter: prevCounter, netFrameKey, pagePath } = this.#store.getState();
     const counter = prevCounter + 1;
     const lastKiriban = isKiriban(counter) ? counter : null;
     this.#store.setState({
@@ -206,7 +206,7 @@ export class NetController {
           page.open();
           this.#store.setState({
             adLoading: true,
-            status: `ページ ${SITE_ROOT}index.html を開いています...`,
+            status: `ページ ${SITE_ROOT}${pagePath} を開いています...`,
           });
           break;
         case "html":

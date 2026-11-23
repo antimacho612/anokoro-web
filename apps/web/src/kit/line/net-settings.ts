@@ -5,7 +5,8 @@ import { isLineSelectable } from "./line-choice.ts";
 
 const LINE_KEY = "anokoro:line";
 const SOUND_KEY = "anokoro:sound";
-const COUNTER_KEY = "anokoro:counter";
+/** M1 で使っていたローカルカウンター。いまはサイトに保存し、最初のサイトを作るときにだけ読む */
+const LEGACY_COUNTER_KEY = "anokoro:counter";
 
 function read(storage: StorageAccess, key: string): string | null {
   try {
@@ -27,7 +28,7 @@ export function restoreNetSettings(store: KitStore, storage: StorageAccess): voi
   if (isLineKey(line) && isLineSelectable(year, line)) store.setState({ lineKey: line });
   const sound = read(storage, SOUND_KEY);
   if (sound === "on" || sound === "off") store.setState({ sound: sound === "on" });
-  const counter = Number(read(storage, COUNTER_KEY) ?? Number.NaN);
+  const counter = Number(read(storage, LEGACY_COUNTER_KEY) ?? Number.NaN);
   if (Number.isSafeInteger(counter) && counter >= 0) store.setState({ counter });
 }
 
@@ -38,6 +39,5 @@ export function saveLine(storage: StorageAccess, key: LineKey): void {
 export function persistNetSettings(store: KitStore, storage: StorageAccess): () => void {
   return store.subscribe((state, prev) => {
     if (state.sound !== prev.sound) write(storage, SOUND_KEY, state.sound ? "on" : "off");
-    if (state.counter !== prev.counter) write(storage, COUNTER_KEY, String(state.counter));
   });
 }
