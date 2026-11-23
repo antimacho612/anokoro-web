@@ -7,6 +7,10 @@ const notepadHelpMenu = (page: Page) =>
   page
     .getByRole("region", { name: "index.html - メモ帳" })
     .getByRole("button", { name: "ヘルプ(H)" });
+const openHelpFromNotepadMenu = async (page: Page) => {
+  await notepadHelpMenu(page).click();
+  await page.getByRole("menuitem", { name: "この年の解説" }).click();
+};
 const openedTab = (page: Page, title: string) =>
   helpDialog(page).getByRole("button", { name: title, pressed: true });
 
@@ -70,13 +74,27 @@ test("メニューの「ヘルプ(H)」は、前のトピックのままヘル�
   await page.goto("/kit/?year=2003");
   await notepadHelpMenu(page).click();
   await expect(notepadHelpMenu(page)).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByRole("menuitem", { name: "この年の解説" })).toBeFocused();
+  await page.getByRole("menuitem", { name: "この年の解説" }).click();
   await expect(openedTab(page, "年表")).toBeVisible();
   await helpDialog(page).getByRole("button", { name: "ブラウザ" }).click();
 
   await notepadHelpMenu(page).click();
   await expect(helpDialog(page)).toHaveCount(0);
-  await notepadHelpMenu(page).click();
+  await openHelpFromNotepadMenu(page);
   await expect(openedTab(page, "ブラウザ")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(notepadHelpMenu(page)).toBeFocused();
+});
+
+test("メニューの「ヘルプ(H)」は Esc で閉じる", async ({ page }) => {
+  await page.goto("/kit/?year=2003");
+  await notepadHelpMenu(page).click();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.getByRole("menuitem", { name: "時代まちがいさがし" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menu")).toHaveCount(0);
+  await expect(notepadHelpMenu(page)).toBeFocused();
 });
 
 test("タイムマシンバーの「この年の解説」から、選んだ年の解説を開閉する", async ({ page }) => {
@@ -96,14 +114,14 @@ test("タイムマシンバーの「この年の解説」から、選んだ年�
 
 test("選んだ年より後の内容は出さない", async ({ page }) => {
   await page.goto("/kit/?year=2001");
-  await notepadHelpMenu(page).click();
+  await openHelpFromNotepadMenu(page);
   const body = helpDialog(page).getByRole("document");
   await expect(openedTab(page, "年表")).toBeVisible();
   await expect(body).toContainText("IE6 登場");
   await expect(body).not.toContainText("はてなダイアリー");
 
   await page.goto("/kit/?year=1998");
-  await notepadHelpMenu(page).click();
+  await openHelpFromNotepadMenu(page);
   await expect(helpDialog(page).getByRole("button", { name: "年表" })).toHaveCount(0);
   await expect(openedTab(page, "回線事情")).toBeVisible();
   await expect(body).not.toContainText("ADSL");
