@@ -143,6 +143,12 @@
   margin-right: 2px;
 }
 
+.rule {
+  margin: 6px 2px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .tries {
   margin: 8px 2px;
   display: flex;

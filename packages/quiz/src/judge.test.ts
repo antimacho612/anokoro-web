@@ -1,3 +1,4 @@
+import { FEATURES } from "@anokoro/era-data";
 import { describe, expect, it } from "vite-plus/test";
 import {
   generateQuestion,
@@ -22,6 +23,10 @@ const isLine = (q: Question): q is LineQuestion => q.kind === "line";
 const displayable = findQuestion(isDisplayable);
 const sourceOnly = findQuestion(isSourceOnly);
 const lineQuestion = findQuestion(isLine);
+const hasStartYear = (q: Question): q is TrickQuestion =>
+  q.kind === "trick" && FEATURES[q.trick.feature].availableFrom !== null;
+const noStartYear = (q: Question): q is TrickQuestion =>
+  q.kind === "trick" && FEATURES[q.trick.feature].availableFrom === null;
 const answerLine = displayable.answerLines[0] ?? 0;
 const wrongLine = (n: number): number => answerLine + 100 + n;
 
@@ -74,7 +79,10 @@ describe("judge", () => {
 
 describe("answerNote", () => {
   it("機能や回線が使えるようになった年を示す", () => {
-    expect(answerNote(displayable)).toMatch(/は\d{4}年から$/);
+    expect(answerNote(findQuestion(hasStartYear))).toMatch(/は\d{4}年から$/);
+    expect(answerNote(findQuestion(noStartYear))).toMatch(
+      /は2015年になっても、まだふつうには使えませんでした$/,
+    );
     expect(answerNote(lineQuestion)).toMatch(/は\d{4}年から。\d{4}年にはまだ選べませんでした$/);
   });
 });

@@ -1,6 +1,6 @@
 import { resolutionPeriodForYear } from "@anokoro/era-data";
 import type { LoadHandle } from "@anokoro/netsim";
-import { ANSWER_ATTRIBUTE, type QuizPick, type QuizProgress, type Question } from "@anokoro/quiz";
+import type { QuizPick, QuizProgress, Question } from "@anokoro/quiz";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useElementWidth } from "../ui/use-element-width.ts";
 import {
@@ -77,10 +77,11 @@ function applyMarks(doc: Document, question: Question, progress: QuizProgress): 
     if (miss.kind === "element") findByPath<Element>(doc.body, miss.path)?.setAttribute(MISS, "");
   }
   if (question.kind !== "trick" || progress.kind === "playing") return;
-  const answer = doc.querySelector(`[${ANSWER_ATTRIBUTE}]`);
-  if (!answer) return;
-  answer.setAttribute(progress.kind === "correct" ? HIT : REVEAL, "");
-  if (progress.kind === "failed") scrollToElement(answer);
+  const answers = Array.from(doc.body.querySelectorAll(question.answerSelector));
+  const mark = progress.kind === "correct" ? HIT : REVEAL;
+  for (const answer of answers) answer.setAttribute(mark, "");
+  const [first] = answers;
+  if (progress.kind === "failed" && first) scrollToElement(first);
 }
 
 export function PageWindow({ question, progress, mode, onModeChange, onPick }: PageWindowProps) {
@@ -122,7 +123,8 @@ export function PageWindow({ question, progress, mode, onModeChange, onPick }: P
     if (el === doc.body || el === doc.documentElement) return;
     const path = elementPath<Element>(doc.body, el);
     if (path === undefined) return;
-    const isAnswer = el.closest(`[${ANSWER_ATTRIBUTE}]`) !== null;
+    const { question: q } = latest.current;
+    const isAnswer = q.kind === "trick" && el.closest(q.answerSelector) !== null;
     latest.current.onPick({ kind: "element", path, isAnswer });
   };
 

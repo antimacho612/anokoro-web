@@ -1,0 +1,46 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>ほげナビ</title>
+<style type="text/css">
+body { background-color: #FFFFFF; color: #000000; font-size: 13px; }
+.logo { font-size: 32px; font-weight: bold; color: #CC0000; }
+.tab { background-color: #FFE8E0; border: 1px solid #CC9988; padding: 2px 8px; }
+.cat { font-weight: bold; font-size: 14px; }
+.sub { font-size: 12px; color: #555555; }
+.side { background-color: #F0F4FF; border: 1px solid #99AACC; padding: 6px; font-size: 12px; }
+{{quiz:css}}
+</style>
+</head>
+<body>
+<div align="center">
+<span class="logo">ほげナビ</span><br>
+<span class="tab">ウェブ</span> <span class="tab">ニュース</span> <span class="tab">オークション</span>
+<form>
+<input{{quiz:attr:input}} name="q" size="40"> <input type="submit" value="検索">
+</form>
+</div>
+<table{{quiz:attr:table}} width="740" align="center" cellpadding="6">
+<tr>
+<td valign="top">
+<span class="cat"><a href="news.html">ニュース</a></span><br>
+<span class="sub">国内、海外、経済、スポーツ...</span><br><br>
+<span class="cat"><a href="computer.html">コンピュータとインターネット</a></span><br>
+<span class="sub">ブロードバンド、パソコン、ソフトウェア{{quiz:inline}}...</span><br><br>
+<span class="cat"><a{{quiz:attr:a}} href="hobby.html">趣味とスポーツ</a></span><br>
+<span class="sub">釣り、鉄道、ゲーム...</span>
+</td>
+<td valign="top" width="210">
+<div{{quiz:style}} class="side">
+<b>注目のトピックス</b><br>
+<img{{quiz:attr:img}} src="new.gif"> ブログを始めよう<br>
+<img src="new.gif"> 光回線のお申し込み
+</div>
+<br>
+{{quiz:block}}
+<div{{quiz:style}} class="side"><a href="add.html">サイトのご登録はこちら</a></div>
+</td>
+</tr>
+</table>
+</body>
+</html>

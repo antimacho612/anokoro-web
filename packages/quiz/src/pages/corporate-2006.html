@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>ほげほげ製菓株式会社</title>
+<style type="text/css">
+body { margin: 0; background-color: #F7F2EA; color: #333333; font-size: 12px; }
+#wrap { width: 780px; margin: 0 auto; background-color: #FFFFFF; }
+#head { background-color: #8A4416; color: #FFFFFF; padding: 16px; font-size: 18px; }
+#nav { background-color: #EADCC8; padding: 6px 16px; }
+#nav a { color: #5A2A08; margin-right: 16px; }
+#main { float: left; width: 520px; padding: 16px; }
+#side { margin-left: 552px; padding: 16px; }
+h2 { font-size: 14px; color: #8A4416; border-bottom: 1px solid #EADCC8; }
+#foot { clear: both; text-align: center; padding: 10px; color: #777777; font-size: 10px; }
+{{quiz:css}}
+</style>
+</head>
+<body>
+<div id="wrap">
+<div{{quiz:style}} id="head"><b>ほげほげ製菓株式会社</b></div>
+<div id="nav">
+<a href="index.html">ホーム</a>
+<a href="products.html">商品紹介</a>
+<a href="recipe.html">おやつレシピ</a>
+<a{{quiz:attr:a}} href="company.html">会社概要</a>
+</div>
+<div id="main">
+<h2{{quiz:style}}>新着情報</h2>
+<p>秋の新商品「くりおかき」を発売しました。{{quiz:inline}}</p>
+<p>工場見学は毎週土曜日に受け付けています。</p>
+{{quiz:block}}
+<h2>おすすめ商品</h2>
+<p{{quiz:style}}>もち米と醤油だけで焼き上げた「ほげおかき」は、創業当時からの人気商品です。</p>
+<img{{quiz:attr:img}} src="line.gif" width="500" height="8">
+</div>
+<div id="side">
+<b>商品を探す</b>
+<form><input{{quiz:attr:input}} name="q" size="18"> <input type="submit" value="検索"></form>
+</div>
+<div id="foot">Copyright ほげほげ製菓株式会社 All rights reserved.</div>
+</div>
+</body>
+</html>

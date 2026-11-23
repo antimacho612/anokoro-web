@@ -19,6 +19,22 @@ const style = (
   visible,
 });
 
+const rule = (
+  id: string,
+  ruleId: string,
+  feature: FeatureId,
+  css: string,
+  target: string,
+): QuizTrick => ({
+  id,
+  ruleId,
+  topic: "css",
+  feature,
+  requires: CSS_REQUIRES,
+  insert: { kind: "rule", css, target },
+  visible: true,
+});
+
 export const QUIZ_TRICKS: readonly QuizTrick[] = [
   // ---- CSS（style 属性） ----
   style("border-radius", "css.border-radius", "css.border-radius", "border-radius:10px", true),
@@ -51,9 +67,81 @@ export const QUIZ_TRICKS: readonly QuizTrick[] = [
   style("transition", "css.motion", "css.transition", "transition:color 0.3s", false),
   style("variables", "css.variables", "css.variables", "--main-color:#ff6600", false),
   style("sticky", "css.position", "css.position-sticky", "position:sticky;top:0", false),
-  style("filter", "css.property", "css.filter", "filter:grayscale(1)", false),
+  style("filter", "css.property", "css.filter", "filter:blur(1px)", true),
+  style(
+    "position-fixed",
+    "css.position",
+    "css.position-fixed",
+    "position:fixed;top:8px;right:8px",
+    true,
+  ),
+  style("clip-path", "css.property", "css.mask", "clip-path:circle(45%)", true),
+
+  // ---- CSS（<style> の規則） ----
+  rule(
+    "attribute-selector",
+    "css.selector.attribute",
+    "css.selector.attribute",
+    "a[href] { background-color: #FFFF66; }",
+    "a[href]",
+  ),
+  rule(
+    "before",
+    "css.selector.pseudo-class",
+    "css.selector.before-after",
+    'a:before { content: "▶"; color: #FF6600; }',
+    "a",
+  ),
+  rule(
+    "pseudo-element",
+    "css.selector.pseudo-element",
+    "css.selector.pseudo-element",
+    'a::after { content: " ★"; color: #FF9900; }',
+    "a",
+  ),
+  rule(
+    "not",
+    "css.selector.pseudo-class",
+    "css.selector.structural",
+    "a:not(.top) { background-color: #CCFFCC; }",
+    "a:not(.top)",
+  ),
+  rule(
+    "media-query",
+    "css.media",
+    "css.media-queries",
+    "@media screen and (min-width: 640px) { a { background-color: #FFE0F0; } }",
+    "a",
+  ),
+  rule(
+    "is",
+    "css.selector.pseudo-class",
+    "css.selector.modern",
+    ":is(h1, h2, b) { color: #009966; }",
+    ":is(h1, h2, b)",
+  ),
 
   // ---- HTML の要素 ----
+  {
+    id: "marquee",
+    ruleId: "html.element.marquee",
+    topic: "html",
+    feature: "html.marquee",
+    insert: {
+      kind: "element",
+      slot: "block",
+      html: "<marquee>ようこそ！ゆっくりしていってね</marquee>",
+    },
+    visible: true,
+  },
+  {
+    id: "meter",
+    ruleId: "html.element.meter",
+    topic: "html",
+    feature: "html5.other-elements",
+    insert: { kind: "element", slot: "inline", html: '<meter value="0.6"></meter>' },
+    visible: true,
+  },
   {
     id: "mark",
     ruleId: "html.element.mark",
@@ -162,6 +250,22 @@ export const QUIZ_TRICKS: readonly QuizTrick[] = [
     topic: "html",
     feature: "html5.input-types",
     insert: { kind: "attribute", tag: "input", name: "type", value: "range" },
+    visible: true,
+  },
+  {
+    id: "input-color",
+    ruleId: "html.input-type",
+    topic: "html",
+    feature: "html5.input-types",
+    insert: { kind: "attribute", tag: "input", name: "type", value: "color" },
+    visible: true,
+  },
+  {
+    id: "input-number",
+    ruleId: "html.input-type",
+    topic: "html",
+    feature: "html5.input-types",
+    insert: { kind: "attribute", tag: "input", name: "type", value: "number" },
     visible: true,
   },
   {

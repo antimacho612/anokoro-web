@@ -1,6 +1,6 @@
 import type { QuizPage, QuizTrick, SlotKind, TrickInsert } from "./types.ts";
 
-const SLOT_PATTERN = /\{\{quiz:(block|inline|style|attr:(?:input|img|a|table))\}\}/g;
+const SLOT_PATTERN = /\{\{quiz:(block|inline|style|css|attr:(?:input|img|a|table))\}\}/g;
 
 /** 目印だけの行。仕掛けを入れないときは行ごと消す */
 const SLOT_ONLY_LINE = /^[\t ]*\{\{quiz:[^}]+\}\}[\t ]*$/;
@@ -40,6 +40,7 @@ function isSlotKind(value: string | undefined): value is SlotKind {
     value === "block" ||
     value === "inline" ||
     value === "style" ||
+    value === "css" ||
     value === "attr:input" ||
     value === "attr:img" ||
     value === "attr:a" ||
@@ -62,6 +63,8 @@ export function slotKindOf(insert: TrickInsert): SlotKind {
       return `attr:${insert.tag}`;
     case "style":
       return "style";
+    case "rule":
+      return "css";
     default: {
       const exhaustive: never = insert;
       return exhaustive;
@@ -92,6 +95,8 @@ function renderInsert(insert: TrickInsert, markAnswer: boolean): string {
         : `${marker} ${insert.name}="${escapeAttribute(insert.value)}"`;
     case "style":
       return `${marker} style="${escapeAttribute(insert.declarations)}"`;
+    case "rule":
+      return insert.css;
     default: {
       const exhaustive: never = insert;
       return exhaustive;

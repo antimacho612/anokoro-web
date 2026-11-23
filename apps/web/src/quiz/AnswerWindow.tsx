@@ -36,7 +36,7 @@ export function AnswerWindow({
       <p className={styles.year}>
         <span className="dot">{question.year}年</span>の{kindLabel}
       </p>
-      <p className="hint">{rule}</p>
+      <p className={styles.rule}>{rule}</p>
       <p className={styles.tries} aria-label={`残り ${remaining} 回`}>
         残り
         {Array.from({ length: MAX_TRIES }, (_, i) => (

@@ -11,6 +11,7 @@ export {
 } from "./assemble.ts";
 export { pageAvailableIn, trickAvailableIn, trickDisplayable } from "./eligibility.ts";
 export {
+  DISPLAYABLE_SHARE,
   LINE_QUESTION_SHARE,
   LINE_SPEEDUP_MIN,
   futureLinesFor,

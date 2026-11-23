@@ -101,3 +101,23 @@ describe("お題と仕掛けの検査", () => {
     },
   );
 });
+
+describe("<style> の規則の仕掛け", () => {
+  const tagsOf = (selector: string): string[] =>
+    [...selector.matchAll(/(?:^|[\s(,])([a-z][a-z0-9]*)/g)].flatMap((m) => (m[1] ? [m[1]] : []));
+
+  it.each(QUIZ_PAGES.map((p) => [p.id, p] as const))(
+    "%s: 見た目が変わる要素がお題にある",
+    (_id, page) => {
+      for (const trick of QUIZ_TRICKS) {
+        if (trick.insert.kind !== "rule" || slotsFor(page, trick).length === 0) continue;
+        const tags = tagsOf(trick.insert.target);
+        expect(tags.length, trick.id).toBeGreaterThan(0);
+        const found = tags.some((tag) =>
+          new RegExp(String.raw`<${tag}[\s>{]`, "i").test(page.source),
+        );
+        expect(found, trick.id).toBe(true);
+      }
+    },
+  );
+});

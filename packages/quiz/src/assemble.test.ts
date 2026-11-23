@@ -126,10 +126,10 @@ describe("出題できる年", () => {
     expect(trickAvailableIn(dataAttr, 2015)).toBe(true);
   });
 
-  it("表示モードで出せるのは、見た目が変わり、使える年があるものだけ", () => {
+  it("表示モードで出せるのは、見た目が変わるもの", () => {
     expect(trickDisplayable(radius)).toBe(true);
     expect(trickDisplayable(section)).toBe(false);
-    expect(trickDisplayable({ ...dataAttr, visible: true })).toBe(false);
+    expect(trickDisplayable({ ...dataAttr, visible: true })).toBe(true);
   });
 });
 

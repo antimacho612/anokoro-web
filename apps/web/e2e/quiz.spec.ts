@@ -2,12 +2,14 @@ import { type Page } from "@playwright/test";
 import { expect, test } from "./fixtures.ts";
 
 // シードで問題が決まる（packages/quiz の generateQuestion）。
-// 27: 2003 年の個人ホームページに border-radius（表示モードで答えられる）
-// 12: 2001 年の個人ホームページに position:sticky（ソース表示モードだけ）
-// 7: 1995 年、光ファイバーで読み込む回線の問題
-const DISPLAY_SEED = 27;
-const SOURCE_ONLY_SEED = 12;
-const LINE_SEED = 7;
+// 26: 2005 年のネットショップに border-radius（表示モードで答えられる）
+// 2: 2010 年の企業サイトの <style> に :is()（表示モードで答えられる）
+// 157: 1999 年の掲示板に position:sticky（ソース表示モードだけ）
+// 52: 1999 年、光ファイバーで読み込む回線の問題
+const DISPLAY_SEED = 26;
+const RULE_SEED = 2;
+const SOURCE_ONLY_SEED = 157;
+const LINE_SEED = 52;
 
 const pageFrame = (page: Page) => page.frameLocator('iframe[title="お題のページ"]');
 const answerWindow = (page: Page) => page.getByRole("region", { name: "答え" });
@@ -22,7 +24,7 @@ async function waitForPage(page: Page): Promise<void> {
 
 test("表示モードで時代外れの要素を選ぶと正解し、解説を開ける", async ({ page }) => {
   await page.goto(`/quiz/?seed=${DISPLAY_SEED}`);
-  await expect(answerWindow(page)).toContainText("2003年の個人ホームページ");
+  await expect(answerWindow(page)).toContainText("2005年のネットショップ");
   await waitForPage(page);
 
   await pageFrame(page)
@@ -44,10 +46,13 @@ test("間違えると残りが減り、3 回で答えを示す。同じ場所の
   await waitForPage(page);
   const frame = pageFrame(page);
 
-  await frame.locator("a", { hasText: "メール" }).click();
+  await frame.locator("a", { hasText: "ご利用ガイド" }).click();
   await expect(result(page)).toHaveText("ちがうようです（残り 2 回）");
-  await expect(frame.locator("a", { hasText: "メール" })).toHaveAttribute("data-quiz-miss", "");
-  await frame.locator("a", { hasText: "メール" }).click();
+  await expect(frame.locator("a", { hasText: "ご利用ガイド" })).toHaveAttribute(
+    "data-quiz-miss",
+    "",
+  );
+  await frame.locator("a", { hasText: "ご利用ガイド" }).click();
   await expect(result(page)).toHaveText("そこはもう選びました");
   await expect(answerWindow(page).getByLabel("残り 2 回")).toBeVisible();
 
@@ -64,6 +69,29 @@ test("間違えると残りが減り、3 回で答えを示す。同じ場所の
   await expect(frame.locator("[anokoro-quiz-answer]")).toHaveAttribute("data-quiz-reveal", "");
 });
 
+test("<style> の規則の問題は、見た目が変わった要素を選ぶと正解", async ({ page }) => {
+  await page.goto(`/quiz/?seed=${RULE_SEED}`);
+  await expect(answerWindow(page)).toContainText("2010年の企業・お店の公式サイト");
+  await waitForPage(page);
+
+  await pageFrame(page).locator("h2", { hasText: "新着情報" }).click();
+  await expect(result(page)).toContainText("正解！");
+  await expect(pageFrame(page).locator("h2", { hasText: "新着情報" })).toHaveAttribute(
+    "data-quiz-hit",
+    "",
+  );
+});
+
+test("ソース表示の文字の大きさを切り替え、次に開いたときも保つ", async ({ page }) => {
+  await page.goto(`/quiz/?seed=${SOURCE_ONLY_SEED}`);
+  const source = page.getByRole("list", { name: "お題のソース" });
+  await expect(source).toHaveCSS("font-size", "13px");
+  await page.getByRole("button", { name: "文字の大きさ：大" }).click();
+  await expect(source).toHaveCSS("font-size", "16px");
+  await page.reload();
+  await expect(page.getByRole("list", { name: "お題のソース" })).toHaveCSS("font-size", "16px");
+});
+
 test("ソース表示モードだけの問題は、行を選んで答える", async ({ page }) => {
   await page.goto(`/quiz/?seed=${SOURCE_ONLY_SEED}`);
   await expect(page.getByRole("button", { name: "ソース", exact: true })).toHaveAttribute(
@@ -77,10 +105,10 @@ test("ソース表示モードだけの問題は、行を選んで答える", as
 
 test("回線の問題は「ページではなく回線がおかしい」で正解", async ({ page }) => {
   await page.goto(`/quiz/?seed=${LINE_SEED}`);
-  await expect(answerWindow(page)).toContainText("1995年");
+  await expect(answerWindow(page)).toContainText("1999年");
   await answerWindow(page).getByRole("button", { name: "ページではなく回線がおかしい" }).click();
   await expect(result(page)).toContainText("正解！");
-  await expect(result(page)).toContainText("1995年にはまだ選べませんでした");
+  await expect(result(page)).toContainText("1999年にはまだ選べませんでした");
 
   await answerWindow(page).getByRole("button", { name: "解説を開く" }).click();
   await expect(
@@ -103,22 +131,18 @@ test("問題を作れない条件では、お知らせを出してランダム�
   await expect(page).toHaveURL(/\/quiz\/\?seed=\d+$/);
 });
 
-test("作成キットの 3 か所の入口から開く", async ({ page }) => {
+test("作成キットのヘルプ(H) と解説から開く。タイムマシンには入口を置かない", async ({ page }) => {
   await page.goto("/kit/?year=2003");
-  await page
-    .getByRole("group", { name: "タイムマシン" })
-    .getByRole("link", { name: "まちがいさがし" })
-    .click();
-  await expect(page).toHaveURL(/\/quiz\/\?seed=\d+$/);
-  await expect(answerWindow(page)).toBeVisible();
-
-  await page.goto("/kit/?year=2003");
+  await expect(
+    page.getByRole("group", { name: "タイムマシン" }).getByRole("link", { name: "まちがいさがし" }),
+  ).toHaveCount(0);
   await page
     .getByRole("region", { name: "index.html - メモ帳" })
     .getByRole("button", { name: "ヘルプ(H)" })
     .click();
   await page.getByRole("menuitem", { name: "時代まちがいさがし" }).click();
-  await expect(page).toHaveURL(/\/quiz\//);
+  await expect(page).toHaveURL(/\/quiz\/\?seed=\d+$/);
+  await expect(answerWindow(page)).toBeVisible();
 
   await page.goto("/kit/?year=2003");
   await page.getByRole("button", { name: "2020年代のコード（違反例）" }).click();
@@ -146,6 +170,6 @@ test("作成キットへ戻るリンクは出題年のキットを開く", async
   await page.goto(`/quiz/?seed=${DISPLAY_SEED}`);
   await expect(page.getByRole("link", { name: "作成キットへ戻る" })).toHaveAttribute(
     "href",
-    "/kit/?year=2003",
+    "/kit/?year=2005",
   );
 });

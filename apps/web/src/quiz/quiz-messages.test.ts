@@ -19,7 +19,7 @@ describe("messageFor", () => {
     const r = judge(trick, INITIAL_PROGRESS, { kind: "element", path: "0", isAnswer: true });
     expect(messageFor(trick, r)).toEqual({
       message: "正解！",
-      note: expect.stringMatching(/年から/),
+      note: expect.stringMatching(/\d{4}年/),
     });
   });
 

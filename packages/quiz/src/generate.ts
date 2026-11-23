@@ -1,15 +1,15 @@
 import { checkEra, type TopicId } from "@anokoro/era-checker";
 import {
-  FEATURES,
   LINES,
   YEARS,
   defaultLineForYear,
+  type FeatureId,
   type LineEntry,
   type LineKey,
   type Year,
 } from "@anokoro/era-data";
 import { createRandom, type Random } from "@anokoro/shared";
-import { assembleQuiz, slotsFor } from "./assemble.ts";
+import { ANSWER_ATTRIBUTE, assembleQuiz, slotsFor } from "./assemble.ts";
 import { pageAvailableIn, trickAvailableIn, trickDisplayable } from "./eligibility.ts";
 import { QUIZ_PAGES } from "./pages.ts";
 import { QUIZ_TRICKS } from "./tricks.ts";
@@ -19,7 +19,10 @@ import type { QuizPage, QuizTrick } from "./types.ts";
 export const LINE_SPEEDUP_MIN = 10;
 
 /** トピックを指定しないとき、回線の問題を出す割合（回線の問題を出せる年に限る） */
-export const LINE_QUESTION_SHARE = 0.15;
+export const LINE_QUESTION_SHARE = 0.05;
+
+/** お題に表示モードで答えられる仕掛けとそうでない仕掛けの両方があるとき、表示モードで答えられる方を選ぶ割合 */
+export const DISPLAYABLE_SHARE = 0.7;
 
 interface QuestionBase {
   seed: number;
@@ -29,8 +32,8 @@ interface QuestionBase {
   source: string;
   /** 表示モードで描くソース。答えの要素に ANSWER_ATTRIBUTE が付く */
   displaySource: string;
-  /** 表示モードで時代チェッカーに渡す年 */
-  renderYear: Year;
+  /** 表示モードで、年に関係なく描く機能（答えの技術だけ） */
+  allowFeatures: readonly FeatureId[];
   /** 読み込みに使う回線 */
   lineKey: LineKey;
   topic: TopicId;
@@ -44,6 +47,8 @@ export interface TrickQuestion extends QuestionBase {
   answerLines: readonly number[];
   /** 表示モードで要素をクリックして答えられるか。false ならソース表示モードだけで答える */
   displayable: boolean;
+  /** 表示モードで正解になる要素を選ぶセレクター */
+  answerSelector: string;
 }
 
 /** ページは正しく、回線だけが時代に合わない問題 */
@@ -118,9 +123,15 @@ export function quizTopics(): ReadonlySet<TopicId> {
   return topics;
 }
 
-function renderYearOf(trick: QuizTrick, year: Year): Year {
-  const from = FEATURES[trick.feature].availableFrom;
-  return from === null ? year : Math.max(year, from);
+function answerSelectorOf(trick: QuizTrick): string {
+  return trick.insert.kind === "rule" ? trick.insert.target : `[${ANSWER_ATTRIBUTE}]`;
+}
+
+function pickTrick(random: Random, tricks: readonly QuizTrick[]): QuizTrick {
+  const displayable = tricks.filter(trickDisplayable);
+  const others = tricks.filter((t) => !trickDisplayable(t));
+  if (displayable.length === 0 || others.length === 0) return pick(random, tricks);
+  return pick(random, random() < DISPLAYABLE_SHARE ? displayable : others);
 }
 
 function trickQuestion(
@@ -130,7 +141,7 @@ function trickQuestion(
   candidates: readonly TrickCandidate[],
 ): TrickQuestion {
   const page = pick(random, unique(candidates.map((c) => c.page)));
-  const trick = pick(
+  const trick = pickTrick(
     random,
     candidates.filter((c) => c.page === page).map((c) => c.trick),
   );
@@ -149,12 +160,13 @@ function trickQuestion(
     page,
     source,
     displaySource,
-    renderYear: renderYearOf(trick, year),
+    allowFeatures: [trick.feature],
     lineKey: defaultLineForYear(year).key,
     topic: trick.topic,
     trick,
     answerLines,
     displayable: trickDisplayable(trick),
+    answerSelector: answerSelectorOf(trick),
   };
 }
 
@@ -172,7 +184,7 @@ function lineQuestion(seed: number, random: Random, year: Year): LineQuestion {
     page,
     source,
     displaySource: source,
-    renderYear: year,
+    allowFeatures: [],
     lineKey: line.key,
     topic: "line",
   };
@@ -181,6 +193,7 @@ function lineQuestion(seed: number, random: Random, year: Year): LineQuestion {
 /**
  * シードと条件から問題を作る。同じシードと条件なら同じ問題を返す。
  * 年を先に等しい確率で選び、その年のお題、仕掛け、差し込み口の順に選ぶ。
+ * 仕掛けは、表示モードで答えられるものを DISPLAYABLE_SHARE の割合で選ぶ。
  */
 export function generateQuestion({ seed, topic }: GenerateOptions): GenerateResult {
   const normalizedSeed = seed >>> 0;

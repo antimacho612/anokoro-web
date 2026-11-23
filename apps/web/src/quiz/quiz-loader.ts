@@ -47,7 +47,8 @@ export function startQuizLoad({
   onComplete,
 }: QuizLoadOptions): LoadHandle {
   const result = checkEra(question.displaySource, {
-    year: question.renderYear,
+    year: question.year,
+    allowFeatures: question.allowFeatures,
     mode: "net",
     counter: QUIZ_COUNTER,
   });

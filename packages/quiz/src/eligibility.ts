@@ -1,11 +1,4 @@
-import {
-  FEATURES,
-  featureStatus,
-  inRange,
-  siteKindYears,
-  type FeatureEntry,
-  type Year,
-} from "@anokoro/era-data";
+import { featureStatus, inRange, siteKindYears, type Year } from "@anokoro/era-data";
 import type { QuizPage, QuizTrick } from "./types.ts";
 
 function usable(trick: QuizTrick, year: Year): boolean {
@@ -23,10 +16,9 @@ export function trickAvailableIn(trick: QuizTrick, year: Year): boolean {
   return featureStatus(trick.feature, year) === "future" && usable(trick, year);
 }
 
-/** 表示モードで出題できる仕掛けか。見た目が変わり、描ける年があるもの */
+/** 表示モードで出題できる仕掛けか。見た目が変わるもの */
 export function trickDisplayable(trick: QuizTrick): boolean {
-  const feature: FeatureEntry = FEATURES[trick.feature];
-  return trick.visible && feature.availableFrom !== null;
+  return trick.visible;
 }
 
 /** その年に出題できるお題か。お題の年の範囲と、サイトの種類がある年の両方に入るもの */

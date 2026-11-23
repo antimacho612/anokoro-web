@@ -1,5 +1,5 @@
 import { checkEra, type TopicId } from "@anokoro/era-checker";
-import { FEATURES, YEARS, defaultLineForYear, featureStatus, getLine } from "@anokoro/era-data";
+import { YEARS, defaultLineForYear, featureStatus, getLine } from "@anokoro/era-data";
 import { describe, expect, it } from "vite-plus/test";
 import { ANSWER_ATTRIBUTE, assembleQuiz, slotsFor } from "./assemble.ts";
 import { pageAvailableIn, trickAvailableIn, trickDisplayable } from "./eligibility.ts";
@@ -12,6 +12,8 @@ import {
 } from "./generate.ts";
 import { QUIZ_PAGES } from "./pages.ts";
 import { QUIZ_TRICKS } from "./tricks.ts";
+
+const squash = (text: string): string => text.replace(/\s+/g, "").toLowerCase();
 
 const SEEDS = Array.from({ length: 600 }, (_, i) => i * 7919 + 1);
 
@@ -75,22 +77,30 @@ describe("generateQuestion", () => {
 });
 
 describe("表示モード", () => {
-  it("表示モードで出せる仕掛けは、描く年で警告が消え、答えの目印が残る", () => {
+  it("表示モードで出せる仕掛けは、答えの機能を許すと警告が消え、答えの目印が残る", () => {
     for (const year of YEARS) {
       for (const page of QUIZ_PAGES.filter((p) => pageAvailableIn(p, year))) {
         const tricks = QUIZ_TRICKS.filter((t) => trickDisplayable(t) && trickAvailableIn(t, year));
         for (const trick of tricks) {
-          const renderYear = Math.max(year, FEATURES[trick.feature].availableFrom ?? year);
           for (const slot of slotsFor(page, trick)) {
             const label = `${year} 年、${page.id}、${trick.id}、差し込み口 ${slot.index}`;
             const placement = { trick, slot: slot.index };
             const { source } = assembleQuiz(page, placement, { markAnswer: true });
-            const result = checkEra(source, { year: renderYear, mode: "net" });
+            const result = checkEra(source, {
+              year,
+              mode: "net",
+              allowFeatures: [trick.feature],
+            });
             expect(
               result.warnings.filter((w) => w.level === "future"),
               label,
             ).toEqual([]);
-            expect(result.html, label).toContain(ANSWER_ATTRIBUTE);
+            if (trick.insert.kind === "rule") {
+              const selector = trick.insert.css.split("{")[0] ?? "";
+              expect(squash(result.html), label).toContain(squash(selector));
+            } else {
+              expect(result.html, label).toContain(ANSWER_ATTRIBUTE);
+            }
           }
         }
       }
