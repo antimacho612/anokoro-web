@@ -1,7 +1,8 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vite-plus/test";
 import { ASSETS, BROKEN_IMAGE, FAKE_BYTES, PENDING_IMAGE, SITE_ICON } from "./manifest.ts";
-import { assetBaseName, findAsset, toDataUri } from "./resolve.ts";
+import { toDataUri } from "./data-uri.ts";
+import { assetBaseName, findAsset } from "./resolve.ts";
 
 const svgDir = new URL("./svg/", import.meta.url);
 const all = [...ASSETS, BROKEN_IMAGE, PENDING_IMAGE, SITE_ICON];

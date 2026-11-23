@@ -8,4 +8,5 @@ export {
   type AssetRights,
   type SystemImage,
 } from "./manifest.ts";
-export { assetBaseName, findAsset, toDataUri } from "./resolve.ts";
+export { toDataUri } from "./data-uri.ts";
+export { assetBaseName, findAsset } from "./resolve.ts";
