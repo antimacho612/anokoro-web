@@ -33,7 +33,7 @@ dist-ssr
 .claude/worktrees/
 
 # 非公開ドキュメント
-docs/spec
+docs/
 CLAUDE.local.md
 
 test-results
