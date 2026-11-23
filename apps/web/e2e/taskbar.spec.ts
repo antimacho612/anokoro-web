@@ -28,6 +28,9 @@ test("使い方、お知らせ、このサイトについてを開き、閉じ�
 
   await taskbarButton(page, "このサイトについて").click();
   await expect(dialog(page, "このサイトについて")).toContainText("CC0-1.0");
+  await expect(
+    dialog(page, "このサイトについて").getByRole("link", { name: "ライセンス表記の一覧" }),
+  ).toHaveAttribute("href", "/third-party-licenses.txt");
   await dialog(page, "このサイトについて").getByRole("button", { name: "閉じる" }).click();
   await expect(taskbarButton(page, "このサイトについて")).toBeFocused();
 
