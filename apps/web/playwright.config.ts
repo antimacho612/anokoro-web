@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 4173;
+const DEV_PORT = 4173;
+const BUILD_PORT = 4174;
 
 export default defineConfig({
   testDir: "e2e",
@@ -9,13 +10,29 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {
-    baseURL: `http://localhost:${PORT}`,
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: {
-    command: `vp dev --port ${PORT} --strictPort`,
-    url: `http://localhost:${PORT}/kit/`,
-    reuseExistingServer: !process.env.CI,
-  },
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${DEV_PORT}` },
+    },
+    {
+      name: "build",
+      testMatch: /security\.spec\.ts$/,
+      use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${BUILD_PORT}` },
+    },
+  ],
+  webServer: [
+    {
+      command: `vp dev --port ${DEV_PORT} --strictPort`,
+      url: `http://localhost:${DEV_PORT}/kit/`,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: `vp build && vp preview --port ${BUILD_PORT} --strictPort`,
+      url: `http://localhost:${BUILD_PORT}/kit/`,
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });

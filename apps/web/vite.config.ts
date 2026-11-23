@@ -4,12 +4,18 @@ import { helpContent } from "@anokoro/help/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite-plus";
 import { resolveBase } from "./config/base.ts";
+import { securityMeta } from "./config/csp.ts";
 
 const root = import.meta.dirname;
 
 export default defineConfig({
   base: resolveBase(process.env.ANOKORO_BASE),
-  plugins: [react(), siteFavicon(), helpContent({ dir: resolve(root, "../../content/help") })],
+  plugins: [
+    react(),
+    siteFavicon(),
+    securityMeta(),
+    helpContent({ dir: resolve(root, "../../content/help") }),
+  ],
   build: {
     rollupOptions: {
       input: {
