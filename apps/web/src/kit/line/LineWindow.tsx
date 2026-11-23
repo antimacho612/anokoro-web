@@ -92,6 +92,11 @@ export function LineWindow() {
       <div className={`${styles.row} ${styles.small}`}>
         {feeText(line, connection === "online" ? connectedAtMs : null, now)}
       </div>
+      {dialup && (
+        <p className="hint">
+          ※通話料は当時の再現です。実際に電話をかけたり、お金がかかったりすることはありません。
+        </p>
+      )}
       <div className={`${styles.row} ${styles.small} ${styles.note}`}>
         <span>💡 {LINE_NOTES[lineKey]}</span>
         <HelpButton topic="line" />
