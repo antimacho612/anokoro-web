@@ -95,6 +95,26 @@ function trickCandidates(year: Year, topic: TopicId | undefined): TrickCandidate
   );
 }
 
+interface YearOption {
+  year: Year;
+  tricks: readonly TrickCandidate[];
+  line: boolean;
+}
+
+const yearOptionsCache = new Map<TopicId | undefined, readonly YearOption[]>();
+
+function yearOptionsFor(topic: TopicId | undefined): readonly YearOption[] {
+  const cached = yearOptionsCache.get(topic);
+  if (cached !== undefined) return cached;
+  const options = YEARS.map((year) => ({
+    year,
+    tricks: trickCandidates(year, topic),
+    line: lineAvailable(year, topic),
+  })).filter((o) => o.tricks.length > 0 || o.line);
+  yearOptionsCache.set(topic, options);
+  return options;
+}
+
 function lineAvailable(year: Year, topic: TopicId | undefined): boolean {
   return (
     (topic === undefined || topic === "line") &&
@@ -198,11 +218,7 @@ function lineQuestion(seed: number, random: Random, year: Year): LineQuestion {
 export function generateQuestion({ seed, topic }: GenerateOptions): GenerateResult {
   const normalizedSeed = seed >>> 0;
   const random = createRandom(normalizedSeed);
-  const options = YEARS.map((year) => ({
-    year,
-    tricks: trickCandidates(year, topic),
-    line: lineAvailable(year, topic),
-  })).filter((o) => o.tricks.length > 0 || o.line);
+  const options = yearOptionsFor(topic);
   if (options.length === 0) return { ok: false, reason: "no-question" };
 
   const { year, tricks, line } = pick(random, options);
