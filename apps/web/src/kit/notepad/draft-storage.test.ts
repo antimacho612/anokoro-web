@@ -1,5 +1,8 @@
+import { parseSiteId, type SiteId } from "@anokoro/site-store";
 import { describe, expect, it } from "vite-plus/test";
 import { loadDraft, saveLastOpened, type StorageAccess } from "./draft-storage.ts";
+
+const testId = (n: number): SiteId => parseSiteId(`01J${String(n).padStart(23, "0")}`);
 
 function memoryStorage(): { access: StorageAccess; data: Map<string, string> } {
   const data = new Map<string, string>();
@@ -20,14 +23,14 @@ describe("最後に開いていたページ", () => {
   it("anokoro:draft に保存して読み出す", () => {
     const { access, data } = memoryStorage();
     expect(loadDraft(access)).toEqual({ kind: "none" });
-    saveLastOpened(access, { siteId: "s1", path: "diary.html" });
+    saveLastOpened(access, { siteId: testId(1), path: "diary.html" });
     expect(JSON.parse(data.get("anokoro:draft") ?? "")).toEqual({
-      siteId: "s1",
+      siteId: testId(1),
       path: "diary.html",
     });
     expect(loadDraft(access)).toEqual({
       kind: "last-opened",
-      lastOpened: { siteId: "s1", path: "diary.html" },
+      lastOpened: { siteId: testId(1), path: "diary.html" },
     });
   });
 
@@ -43,6 +46,6 @@ describe("最後に開いていたページ", () => {
 
   it("ストレージが使えなくても例外を投げない", () => {
     expect(loadDraft(broken)).toEqual({ kind: "none" });
-    expect(() => saveLastOpened(broken, { siteId: "a", path: "b" })).not.toThrow();
+    expect(() => saveLastOpened(broken, { siteId: testId(2), path: "b" })).not.toThrow();
   });
 });

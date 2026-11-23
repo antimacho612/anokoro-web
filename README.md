@@ -19,10 +19,14 @@ vp run ci             # check、test、build を順に実行
 ```
 
 公開先のパス（Vite の `base`）は環境変数 `ANOKORO_BASE` で切り替える（既定は `/`）。
+独自ドメインを用意するまでは GitHub Pages の `/<リポジトリ名>/` 配下で公開するため。
 
 ```sh
 ANOKORO_BASE=/anokoro-web/ vp run -r build
 ```
+
+ゴールデンテスト（`packages/era-checker/test/golden.test.ts`）は、入力 HTML を年ごとに検査した出力 HTML と結果をファイルで持つ。
+期待値を更新するときは `vp test -u` を実行し、差分を目で確かめてからコミットする。
 
 ## ライセンス
 

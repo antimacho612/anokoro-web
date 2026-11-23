@@ -1,7 +1,8 @@
+import type { YearRange } from "@anokoro/era-data";
 import { describe, expect, test } from "vite-plus/test";
 import { resolveTopic, topicHtml, topicsForYear, type HelpTopic } from "./index.ts";
 
-const topic = (id: HelpTopic["id"], years: [number, number]): HelpTopic => ({
+const topic = (id: HelpTopic["id"], years: YearRange): HelpTopic => ({
   id,
   title: id,
   years,

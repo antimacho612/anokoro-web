@@ -1,7 +1,7 @@
 import {
+  clampYear,
   FEATURES,
   LINES,
-  MAX_YEAR,
   RESOLUTION_PERIODS,
   featureStatus,
   formatResolution,
@@ -130,7 +130,7 @@ export function planFragments(timeline: BootTimeline, seed: number): PlannedFrag
   let queuedYear: number | null = null;
 
   for (let t = start; t < start + warp.ms * PLAN_UNTIL_WARP_RATIO; t += FRAGMENT_INTERVAL_MS) {
-    const year = Math.min(displayYear(yearValueAt(timeline, t)), MAX_YEAR);
+    const year = clampYear(displayYear(yearValueAt(timeline, t)));
     if (year !== queuedYear) {
       queue = tokensIntroducedIn(year);
       queuedYear = year;

@@ -1,6 +1,6 @@
-import { SITE_KINDS } from "@anokoro/era-data";
+import { SITE_KINDS, type Year } from "@anokoro/era-data";
 import { SITE_CATEGORIES } from "@anokoro/shared";
-import type { LocalSite } from "@anokoro/site-store";
+import type { LocalSite, SiteId } from "@anokoro/site-store";
 import { DECODE_ERROR_MESSAGES, type SharedSite } from "@anokoro/share-codec";
 import {
   useRef,
@@ -119,7 +119,7 @@ function SamplesFolder() {
   );
 }
 
-function fallbackSite(year: number): NewSite {
+function fallbackSite(year: Year): NewSite {
   return {
     name: "マイホームページ",
     year,
@@ -170,14 +170,14 @@ export function MyComputer() {
     void workspace.createSite(site).then((created) => selectFolder(created.id));
   };
 
-  const openShare = (id: string): void => {
+  const openShare = (id: SiteId): void => {
     void workspace.flush().then(() => {
       const site = workspace.state.getState().sites.find((s) => s.id === id);
       if (site) setModal({ kind: "share", site });
     });
   };
 
-  const exportSite = (id: string): void => {
+  const exportSite = (id: SiteId): void => {
     void workspace.flush().then(async () => {
       const site = workspace.state.getState().sites.find((s) => s.id === id);
       if (!site) return;

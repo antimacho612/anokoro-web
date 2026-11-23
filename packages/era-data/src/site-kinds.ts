@@ -1,4 +1,5 @@
 import { MAX_YEAR, type Source, type Year, type YearRange } from "./years.ts";
+import type { TopicId } from "./topics.ts";
 
 const wikipediaJa = (title: string): Source => ({
   title: `Wikipedia: ${title}`,
@@ -11,12 +12,10 @@ export interface SiteKindEntry {
   availableFrom: Year;
   /** よく見かけた最後の年。ないものは対象の最終年まで続く */
   endsAfter?: Year;
-  /** この種類の解説トピックの ID */
-  topic: string;
+  topic: TopicId;
   sources: readonly Source[];
 }
 
-/** サイトの種類（第 1 段階の 6 種類） */
 export const SITE_KINDS = {
   personal: {
     label: "個人ホームページ",
@@ -109,7 +108,6 @@ export const SITE_KIND_IDS: readonly SiteKindId[] = [
   "blog",
 ];
 
-/** その種類がある年の範囲 */
 export function siteKindYears(id: SiteKindId): YearRange {
   const kind: SiteKindEntry = SITE_KINDS[id];
   return [kind.availableFrom, kind.endsAfter ?? MAX_YEAR];

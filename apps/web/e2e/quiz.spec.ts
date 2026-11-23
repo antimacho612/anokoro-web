@@ -1,11 +1,6 @@
 import { type Page } from "@playwright/test";
 import { expect, test } from "./fixtures.ts";
 
-// シードで問題が決まる（packages/quiz の generateQuestion）。
-// 26: 2005 年のネットショップに border-radius（表示モードで答えられる）
-// 2: 2010 年の企業サイトの <style> に :is()（表示モードで答えられる）
-// 157: 1999 年の掲示板に position:sticky（ソース表示モードだけ）
-// 52: 1999 年、光ファイバーで読み込む回線の問題
 const DISPLAY_SEED = 26;
 const RULE_SEED = 2;
 const SOURCE_ONLY_SEED = 157;

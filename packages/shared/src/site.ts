@@ -1,7 +1,6 @@
-import { MAX_YEAR, MIN_YEAR, isSiteKindId, type SiteKindId } from "@anokoro/era-data";
+import { isSiteKindId, isYear, type SiteKindId, type Year } from "@anokoro/era-data";
 import { z } from "zod";
 
-/** ページのファイル名。サイト内リンクの解決とファイル名の衝突を単純にするため、小文字の英数字に限る */
 export const PAGE_PATH_PATTERN = /^[a-z0-9_-]{1,32}\.html$/;
 export const MAX_PAGE_BYTES = 100 * 1024;
 export const MAX_PAGES = 50;
@@ -44,7 +43,7 @@ export function siteBytes(pages: readonly SitePage[]): number {
   return pages.reduce((sum, page) => sum + utf8Bytes(page.html), 0);
 }
 
-export const yearSchema = z.number().int().min(MIN_YEAR).max(MAX_YEAR);
+export const yearSchema = z.custom<Year>(isYear);
 
 export const siteNameSchema = z.string().trim().min(1).max(MAX_SITE_NAME_LENGTH);
 

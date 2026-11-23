@@ -1,6 +1,5 @@
 import type { Source } from "./years.ts";
 
-// 複数の行で使う出典
 export const caniuse = (slug: string, title: string): Source => ({
   title: `Can I use: ${title}`,
   url: `https://caniuse.com/${slug}`,
@@ -29,7 +28,6 @@ export const SRC = {
     title: "MDN: <blink>",
     url: "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blink",
   },
-  // 回線
   telehoudai: {
     title: "Wikipedia: テレホーダイ",
     url: "https://ja.wikipedia.org/wiki/テレホーダイ",
@@ -56,7 +54,6 @@ export const SRC = {
     title: "総務省: ブロードバンドサービスの契約数等（平成21年3月末）",
     url: "https://www.soumu.go.jp/menu_news/s-news/14885.html",
   },
-  // 解像度
   w3schoolsDisplay: {
     title: "W3Schools: Browser Display Statistics",
     url: "https://www.w3schools.com/browsers/browsers_display.asp",
@@ -65,7 +62,6 @@ export const SRC = {
     title: "StatCounter: Desktop Screen Resolution Stats Japan",
     url: "https://gs.statcounter.com/screen-resolution-stats/desktop/japan/#yearly-2009-2015",
   },
-  // 作成キットの外観（日本での発売日）
   win95: {
     title: "Wikipedia: Microsoft Windows 95",
     url: "https://ja.wikipedia.org/wiki/Microsoft_Windows_95",

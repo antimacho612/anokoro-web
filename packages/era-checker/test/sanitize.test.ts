@@ -1,4 +1,3 @@
-// 無害化と細かな振る舞いの単体テスト
 import { parse, type DefaultTreeAdapterTypes as T } from "parse5";
 import { describe, expect, it } from "vite-plus/test";
 import { checkEra, type CheckOptions } from "../src/index.ts";
@@ -49,7 +48,7 @@ function expectInert(html: string): void {
     for (const { name, value } of el.attrs) {
       expect(name.startsWith("on"), `${name} が残っている`).toBe(false);
       if (URL_ATTRS.has(name)) {
-        // oxlint-disable-next-line no-control-regex -- ブラウザの URL 解析に合わせて制御文字を除く
+        // eslint-disable-next-line no-control-regex -- ブラウザの URL 解析に合わせて制御文字を除く
         const cleaned = value.replace(/[\u0000-\u0020]/g, "").toLowerCase();
         expect(cleaned).not.toMatch(/^(javascript|vbscript):/);
         if (cleaned.startsWith("data:")) expect(cleaned).toMatch(/^data:image\//);
@@ -99,7 +98,7 @@ const ATTACKS = [
 
 describe("攻撃文字列", () => {
   it.each(ATTACKS)("%s", (attack) => {
-    for (const year of [1996, 2003, 2015]) {
+    for (const year of [1996, 2003, 2015] as const) {
       for (const mode of ["local", "net", "publish"] as const) {
         expectInert(run(attack, { year, mode }));
         expectInert(checkEra(attack, { year, mode }).html);
@@ -191,6 +190,15 @@ describe("警告", () => {
     expect(score).toBe(97);
   });
 
+  it("一部のブラウザだけが対応していた年は、文言が機能ごとに決まるので、警告も機能の ID でまとめる", () => {
+    const { warnings } = checkEra(page(`<section>a</section><article>b</article>`), {
+      year: 2009,
+      mode: "local",
+    });
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toMatchObject({ ruleId: "html5.semantic", count: 2 });
+  });
+
   it("一部のブラウザだけが対応していた年は、文言を変える", () => {
     const { warnings } = checkEra(page(`<p style="border-radius:3px">x</p>`), {
       year: 2008,
@@ -202,9 +210,35 @@ describe("警告", () => {
   });
 });
 
+describe("時代に関係なく決まっている扱い", () => {
+  it("メディアの要素は、使える年でも安全のためプラグインの箱に置き換える", () => {
+    const html = run(`<video src="a.mp4"></video><canvas></canvas>`, { year: 2015 });
+    expect(html).toContain("__plugin");
+    expect(elements(html).map((e) => e.tagName)).not.toContain("video");
+    expect(elements(html).map((e) => e.tagName)).not.toContain("canvas");
+  });
+
+  it("@charset は警告を出さずに捨てる", () => {
+    const { html, warnings } = checkEra(
+      page("", `<style>@charset "Shift_JIS"; p { color: red }</style>`),
+      { year: 2003, mode: "local" },
+    );
+    expect(warnings).toEqual([]);
+    expect(html).not.toContain("@charset");
+  });
+
+  it("公開版は UTF-8 で配信するので、文字コードの指定を外す", () => {
+    const head = `<meta charset="Shift_JIS"><meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">`;
+    expect(run("", { mode: "publish" }, head)).not.toMatch(/charset/i);
+    expect(run("", { mode: "local" }, head)).toMatch(/charset/i);
+  });
+});
+
 describe("入力の検証", () => {
   it("対象外の年は受け付けない", () => {
+    // @ts-expect-error 型を通らない呼び出し元（JS や未検証の入力）からの範囲外の年を確かめる
     expect(() => checkEra("", { year: 1994, mode: "local" })).toThrow(RangeError);
+    // @ts-expect-error 型を通らない呼び出し元（JS や未検証の入力）からの範囲外の年を確かめる
     expect(() => checkEra("", { year: 2016, mode: "local" })).toThrow(RangeError);
   });
 

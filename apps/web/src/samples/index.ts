@@ -6,7 +6,7 @@ import { portalSample } from "./portal.ts";
 import { shopSample } from "./shop.ts";
 import type { SampleSite } from "./types.ts";
 
-/** 見本サイト。第 1 段階のサイトの種類ごとに 1 つ */
+/** 見本サイト。サイトの種類ごとに 1 つ */
 export const SAMPLE_SITES: readonly SampleSite[] = [
   personalSample,
   corporateSample,

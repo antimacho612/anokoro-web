@@ -171,6 +171,7 @@ describe("解像度", () => {
     expect(p2003.candidates.map(formatResolution)).toEqual(["640×480", "800×600", "1024×768"]);
     expect(formatResolution(p2003.default)).toBe("800×600");
     expect(formatResolution(resolutionPeriodForYear(1995).default)).toBe("640×480");
+    // @ts-expect-error 型を通らない呼び出し元（JS や未検証の入力）からの範囲外の年を確かめる
     expect(() => resolutionPeriodForYear(2016)).toThrow();
   });
 });
@@ -197,6 +198,7 @@ describe("作成キットの外観", () => {
     expect(uiThemeForYear(2011).id).toBe("glass");
     expect(uiThemeForYear(2012).id).toBe("flat-bold");
     expect(uiThemeForYear(2015).id).toBe("flat-thin");
+    // @ts-expect-error 型を通らない呼び出し元（JS や未検証の入力）からの範囲外の年を確かめる
     expect(() => uiThemeForYear(1994)).toThrow();
   });
 });

@@ -1,4 +1,4 @@
-import { MAX_YEAR, uiThemeForYear, type Year } from "@anokoro/era-data";
+import { MAX_YEAR, YEARS, clampYear, uiThemeForYear, type Year } from "@anokoro/era-data";
 
 export type BootPhaseId = "powerOn" | "selfTest" | "diveIn" | "warp" | "arrive" | "revealDesktop";
 
@@ -76,11 +76,12 @@ export function journeyFor(to: Year, currentYear: number): Journey {
 }
 
 export function checkpointYears(to: Year): Year[] {
-  const years: Year[] = [];
-  for (let year = MAX_YEAR - 1; year > to + FINAL_STEPS; year--) {
-    if (uiThemeForYear(year).id !== uiThemeForYear(year + 1).id) years.push(year);
-  }
-  return years;
+  return YEARS.filter(
+    (year) =>
+      year < MAX_YEAR &&
+      year > to + FINAL_STEPS &&
+      uiThemeForYear(year).id !== uiThemeForYear(clampYear(year + 1)).id,
+  ).toReversed();
 }
 
 function travelMs(years: number): number {

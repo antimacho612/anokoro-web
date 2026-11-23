@@ -1,7 +1,6 @@
 import type { TopicId } from "@anokoro/era-checker";
 import type { FeatureId, SiteKindId, YearRange } from "@anokoro/era-data";
 
-/** 属性の仕掛けを差し込めるタグ */
 export type AttributeSlotTag = "input" | "img" | "a" | "table";
 
 /**
@@ -12,7 +11,6 @@ export type AttributeSlotTag = "input" | "img" | "a" | "table";
  */
 export type SlotKind = "block" | "inline" | "style" | "css" | `attr:${AttributeSlotTag}`;
 
-/** 差し込み口へ入れる内容 */
 export type TrickInsert =
   | { kind: "element"; slot: "block" | "inline"; html: string }
   | { kind: "attribute"; tag: AttributeSlotTag; name: string; value?: string }
@@ -25,7 +23,7 @@ export type TrickInsert =
       target: string;
     };
 
-/** サイトの種類と年の組み合わせごとのお題。仕掛けを入れなければ、使える年で警告ゼロ */
+/** サイトの種類と年の組み合わせごとのお題 */
 export interface QuizPage {
   /** 例: 'personal-1997' */
   id: string;

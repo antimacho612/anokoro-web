@@ -11,7 +11,6 @@ export type LinkTarget =
   /** 同じページの中の移動 */
   | { kind: "hash" }
   | { kind: "mailto" }
-  /** 何もしない */
   | { kind: "none" };
 
 /** 相対 URL を解決するための仮の基準。サイトの中かどうかの判定だけに使う */

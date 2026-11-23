@@ -1,9 +1,11 @@
-import { createMemorySiteStore } from "@anokoro/site-store";
+import { createMemorySiteStore, parseSiteId, type SiteId } from "@anokoro/site-store";
 import { describe, expect, test } from "vite-plus/test";
 import type { StorageAccess } from "../kit/notepad/draft-storage.ts";
 import { personalSample } from "../samples/personal.ts";
 import { importToKit } from "./import-to-kit.ts";
 import { sampleToShared } from "./view-source.ts";
+
+const testId = (n: number): SiteId => parseSiteId(`01J${String(n).padStart(23, "0")}`);
 
 describe("importToKit", () => {
   test("新しいサイトとして保存し、次に作成キットで開くページにする", async () => {
@@ -17,15 +19,15 @@ describe("importToKit", () => {
       open: async () => store,
       storage,
       now: 5,
-      newId: "new1",
+      newId: testId(1),
     });
-    expect(await store.get("new1")).toMatchObject({
+    expect(await store.get(testId(1))).toMatchObject({
       name: "☆ねこまるの部屋☆",
       year: 1999,
       createdAt: 5,
     });
     expect(JSON.parse(data.get("anokoro:draft") ?? "")).toEqual({
-      siteId: "new1",
+      siteId: testId(1),
       path: "index.html",
     });
   });

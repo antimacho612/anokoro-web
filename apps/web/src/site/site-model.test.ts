@@ -1,3 +1,5 @@
+import type { SharedSite } from "@anokoro/share-codec";
+import { parseSiteId, type SiteId } from "@anokoro/site-store";
 import { describe, expect, test } from "vite-plus/test";
 import {
   addPage,
@@ -15,10 +17,12 @@ import {
   updatePageHtml,
 } from "./site-model.ts";
 
+const testId = (n: number): SiteId => parseSiteId(`01J${String(n).padStart(23, "0")}`);
+
 const DAY = 24 * 60 * 60 * 1000;
 
 const base = createSite({
-  id: "s1",
+  id: testId(1),
   name: "たろうのお部屋",
   year: 2001,
   genre: "personal",
@@ -79,14 +83,18 @@ describe("共有データとの変換", () => {
         { path: "diary.html", html: "<p>diary</p>" },
       ],
     });
-    expect(toShared(fromShared(shared, "s2", 500))).toEqual(shared);
+    expect(toShared(fromShared(shared, testId(2), 500))).toEqual(shared);
   });
 
   test("上書きでは id、作成日時、カウンターを残す", () => {
-    const shared = { ...toShared(base), year: 2005, pages: [{ path: "index.html", html: "x" }] };
+    const shared: SharedSite = {
+      ...toShared(base),
+      year: 2005,
+      pages: [{ path: "index.html", html: "x" }],
+    };
     const next = overwriteWithShared({ ...base, counter: 999, lastExportedAt: 150 }, shared, 600);
     expect(next).toMatchObject({
-      id: "s1",
+      id: testId(1),
       counter: 999,
       createdAt: 100,
       updatedAt: 600,

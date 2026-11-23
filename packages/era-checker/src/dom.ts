@@ -1,4 +1,3 @@
-// parse5 の木を操作する小さな道具
 import { defaultTreeAdapter, html, type DefaultTreeAdapterTypes as T } from "parse5";
 
 export type Element = T.Element;

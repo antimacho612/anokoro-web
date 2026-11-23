@@ -86,7 +86,6 @@ export class CheckContext {
       return true;
     }
     if (status === "partial") {
-      // 文言は機能ごとに決まるので、警告も機能の ID でまとめる
       this.warn(feature, "future", partialMessage(feature), topic, loc);
       return true;
     }

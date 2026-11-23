@@ -6,7 +6,6 @@ import type { Source, Year } from "./years.ts";
  * 年は「日本の主流ブラウザ（原則として IE）で普通に使えるようになった年」。
  */
 export interface FeatureEntry {
-  /** 機能の説明 */
   label: string;
   /** 使えるようになった年。null は対象の最終年までは使えない */
   availableFrom: Year | null;
@@ -14,12 +13,10 @@ export interface FeatureEntry {
   partialFrom?: Year;
   /** この年から「もう古い書き方」とみなす */
   outdatedFrom?: Year;
-  /** 根拠（1 件以上） */
-  sources: readonly Source[];
+  sources: readonly [Source, ...Source[]];
 }
 
 export const FEATURES = {
-  // ---- HTML ----
   "html.basic": {
     label: "table・font・center・img などの基本タグ",
     availableFrom: 1995,
@@ -123,14 +120,12 @@ export const FEATURES = {
     ],
   },
 
-  // ---- JavaScript ----
   "js.dhtml": {
     label: "JavaScript の演出パーツ（DHTML）",
     availableFrom: 1997,
     sources: [SRC.ieHistory],
   },
 
-  // ---- CSS: 基本 ----
   "css.basic": {
     label: "基本的な CSS（文字色、大きさ、余白、背景）",
     availableFrom: 1997,
@@ -138,7 +133,6 @@ export const FEATURES = {
     sources: [SRC.css1, SRC.ieHistory],
   },
 
-  // ---- CSS: セレクタ ----
   "css.selector.child": {
     label: "子セレクタ「>」",
     availableFrom: 2006,
@@ -194,7 +188,6 @@ export const FEATURES = {
     ],
   },
 
-  // ---- CSS: レイアウト ----
   "css.max-min": {
     label: "max-width・min-height など",
     availableFrom: 2006,
@@ -255,7 +248,6 @@ export const FEATURES = {
     sources: [caniuse("object-fit", "CSS3 object-fit/object-position")],
   },
 
-  // ---- CSS: 装飾 ----
   "css.png-alpha": {
     label: "PNG の半透明",
     availableFrom: 2006,
@@ -318,7 +310,6 @@ export const FEATURES = {
     ],
   },
 
-  // ---- CSS: 値と単位 ----
   "css.calc": {
     label: "calc()",
     availableFrom: 2011,
@@ -341,7 +332,6 @@ export const FEATURES = {
     sources: [caniuse("css-variables", "CSS Variables (Custom Properties)")],
   },
 
-  // ---- CSS: 動き ----
   "css.transform": {
     label: "transform",
     availableFrom: 2011,
@@ -361,7 +351,6 @@ export const FEATURES = {
     sources: [caniuse("css-animation", "CSS Animation")],
   },
 
-  // ---- CSS: @ ルール ----
   "css.media-queries": {
     label: "条件付きのメディアクエリ @media (…)",
     availableFrom: 2011,
@@ -394,7 +383,6 @@ export const FEATURES = {
 export type FeatureId = keyof typeof FEATURES;
 
 export type FeatureStatus =
-  /** 使える */
   | "available"
   /** 使えるが、この年にはもう古い書き方 */
   | "outdated"
@@ -403,7 +391,6 @@ export type FeatureStatus =
   /** まだ使えない */
   | "future";
 
-/** 選んだ年でその機能が使えるかを判定する */
 export function featureStatus(id: FeatureId, year: Year): FeatureStatus {
   const feature: FeatureEntry = FEATURES[id];
   if (feature.availableFrom !== null && year >= feature.availableFrom) {

@@ -1,7 +1,6 @@
 import { FEATURES, getLine, type Year } from "@anokoro/era-data";
 import type { Question } from "./generate.ts";
 
-/** 答えられる回数 */
 export const MAX_TRIES = 3;
 
 /**
@@ -67,7 +66,6 @@ function isCorrect(question: Question, pick: QuizPick): boolean | "ignored" {
   }
 }
 
-/** 答えを判定し、次の進み具合を返す */
 export function judge(question: Question, progress: QuizProgress, pick: QuizPick): JudgeResult {
   if (progress.kind !== "playing") return { progress, outcome: "finished" };
   const correct = isCorrect(question, pick);

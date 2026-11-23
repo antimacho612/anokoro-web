@@ -1,10 +1,13 @@
 import { MAX_EXPANDED_BYTES } from "@anokoro/share-codec";
+import { parseSiteId, type SiteId } from "@anokoro/site-store";
 import { describe, expect, test } from "vite-plus/test";
 import { createSite, toShared } from "../../site/site-model.ts";
 import { readSiteFile, siteFile } from "./site-file.ts";
 
+const testId = (n: number): SiteId => parseSiteId(`01J${String(n).padStart(23, "0")}`);
+
 const site = createSite({
-  id: "s1",
+  id: testId(1),
   name: "ねこ/の部屋",
   year: 2001,
   genre: "personal",

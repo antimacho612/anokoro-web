@@ -22,7 +22,6 @@ export interface AssetEntry extends AssetRights {
   kind: "image" | "wallpaper";
   /** 読み込みの計算に使う、当時の GIF らしい大きさ（バイト） */
   fakeBytes: number;
-  /** 実体の SVG */
   svg: string;
 }
 

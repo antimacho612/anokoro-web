@@ -1,8 +1,6 @@
 import { validateSharedSite, type DecodeResult, type SharedSite } from "./shared-site.ts";
 
-/** 展開後の大きさの上限 */
 export const MAX_EXPANDED_BYTES = 2 * 1024 * 1024;
-/** これより長い URL は SNS やチャットで切れることがある */
 export const SHARE_URL_WARN_LENGTH = 8_000;
 /** これより長い URL は作らず、ファイルでの共有を案内する */
 export const SHARE_URL_MAX_LENGTH = 64 * 1024;
@@ -81,7 +79,6 @@ export async function decodeSharedSite(payload: string): Promise<DecodeResult> {
   return parseJsonBytes(json);
 }
 
-/** JSON のバイト列を検証する */
 export function parseJsonBytes(bytes: Uint8Array): DecodeResult {
   try {
     const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);

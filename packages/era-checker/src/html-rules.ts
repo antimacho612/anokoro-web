@@ -34,7 +34,7 @@ export const HTML5_TAGS = new Set(
     .map(([t]) => t),
 );
 
-/** 「プラグインが必要です」の箱に置き換えるタグ。安全のため、使える年でも置き換える */
+/** 「プラグインが必要です」の箱に置き換えるタグ */
 export const MEDIA_FEATURES: Readonly<Record<string, FeatureId>> = {
   video: "html5.video",
   audio: "html5.video",
@@ -49,7 +49,6 @@ export const EMBED_TAGS = words("iframe object");
 
 export const FRAME_TAGS = words("frameset frame noframes");
 
-/** HTML5 の属性と、その機能 */
 export function html5AttributeFeature(name: string): FeatureId | null {
   if (name.startsWith("data-") || name.startsWith("aria-")) return "html5.global-attributes";
   if (HTML5_GLOBAL_ATTRS.has(name)) return "html5.global-attributes";

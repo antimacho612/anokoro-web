@@ -1,15 +1,18 @@
 import "fake-indexeddb/auto";
 import { describe, expect, test } from "vite-plus/test";
 import { openSiteStore, requestPersistence } from "./site-store.ts";
+import { isSiteId, parseSiteId, type SiteId } from "./site-id.ts";
 import type { LocalSite } from "./types.ts";
 import { createUlid } from "./ulid.ts";
+
+const testId = (n: number): SiteId => parseSiteId(`01J${String(n).padStart(23, "0")}`);
 
 let dbCount = 0;
 const freshStore = () => openSiteStore(`test-${++dbCount}`);
 
 function site(overrides: Partial<LocalSite> = {}): LocalSite {
   return {
-    id: "01HXXXXXXXXXXXXXXXXXXXXXXX",
+    id: testId(0),
     name: "たろうのお部屋",
     year: 1999,
     genre: "personal",
@@ -31,10 +34,10 @@ describe("openSiteStore", () => {
 
   test("一覧は更新日時の新しい順", async () => {
     const store = await freshStore();
-    await store.put(site({ id: "a", updatedAt: 1 }));
-    await store.put(site({ id: "b", updatedAt: 3 }));
-    await store.put(site({ id: "c", updatedAt: 2 }));
-    expect((await store.list()).map((s) => s.id)).toEqual(["b", "c", "a"]);
+    await store.put(site({ id: testId(1), updatedAt: 1 }));
+    await store.put(site({ id: testId(2), updatedAt: 3 }));
+    await store.put(site({ id: testId(3), updatedAt: 2 }));
+    expect((await store.list()).map((s) => s.id)).toEqual([testId(2), testId(3), testId(1)]);
   });
 
   test("同じ id で保存すると上書きする", async () => {
@@ -54,10 +57,10 @@ describe("openSiteStore", () => {
 
   test("壊れたレコードは一覧から飛ばす", async () => {
     const store = await freshStore();
-    await store.put(site({ id: "ok" }));
-    await store.put({ ...site({ id: "broken" }), pages: [] });
-    expect((await store.list()).map((s) => s.id)).toEqual(["ok"]);
-    expect(await store.get("broken")).toBeUndefined();
+    await store.put(site({ id: testId(4) }));
+    await store.put({ ...site({ id: testId(5) }), pages: [] });
+    expect((await store.list()).map((s) => s.id)).toEqual([testId(4)]);
+    expect(await store.get(testId(5))).toBeUndefined();
   });
 
   test("閉じて開き直しても残っている", async () => {
@@ -90,6 +93,16 @@ describe("createUlid", () => {
     const b = createUlid(2_000, () => 255);
     expect(a).toHaveLength(26);
     expect(a < b).toBe(true);
-    expect(a).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
+    expect(isSiteId(a)).toBe(true);
+  });
+});
+
+describe("isSiteId", () => {
+  test("ULID の形だけを受け付ける", () => {
+    expect(isSiteId("01HXXXXXXXXXXXXXXXXXXXXXXX")).toBe(true);
+    expect(isSiteId("")).toBe(false);
+    expect(isSiteId("view")).toBe(false);
+    expect(isSiteId("01HXXXXXXXXXXXXXXXXXXXXXXI")).toBe(false);
+    expect(isSiteId("01hxxxxxxxxxxxxxxxxxxxxxxx")).toBe(false);
   });
 });

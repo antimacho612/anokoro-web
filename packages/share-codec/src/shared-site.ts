@@ -34,13 +34,11 @@ export const sharedSiteSchema = z.object({
   pages: sitePagesSchema,
 }) satisfies z.ZodType<SharedSite, unknown>;
 
-/** 形式の目印だけを見る。版の違いを「壊れている」と区別するため */
 const envelopeSchema = z.object({ kind: z.literal(SHARED_KIND), v: z.unknown() });
 
 export type DecodeError =
   /** 形式が違う、壊れている */
   | "invalid"
-  /** 大きすぎる */
   | "too-large"
   /** 新しい版で作られた */
   | "unknown-version";

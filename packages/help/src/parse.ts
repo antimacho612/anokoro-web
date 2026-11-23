@@ -1,4 +1,11 @@
-import { MAX_YEAR, MIN_YEAR, isYear, type Source, type YearRange } from "@anokoro/era-data";
+import {
+  MAX_YEAR,
+  MIN_YEAR,
+  clampYear,
+  isYear,
+  type Source,
+  type YearRange,
+} from "@anokoro/era-data";
 import { Lexer, Parser, type Tokens } from "marked";
 import { parse as parseYaml } from "yaml";
 import type { HelpSegment, HelpTopic } from "./types.ts";
@@ -25,7 +32,7 @@ export function parseYearRange(text: string, within: YearRange = [MIN_YEAR, MAX_
 }
 
 function intersect(a: YearRange, b: YearRange): YearRange {
-  return [Math.max(a[0], b[0]), Math.min(a[1], b[1])];
+  return [clampYear(Math.max(a[0], b[0])), clampYear(Math.min(a[1], b[1]))];
 }
 
 function yearsCommentOf(text: string): { range: string; comment: string } | undefined {

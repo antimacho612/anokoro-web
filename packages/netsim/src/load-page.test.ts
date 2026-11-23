@@ -9,9 +9,10 @@ import {
   type LoadEvent,
   type LoadTarget,
 } from "./index.ts";
+import { TICK_MS } from "./load-page.ts";
 
-/** 1 ティックで 100 バイト、応答遅延 100ms */
 const SLOW = { bytesPerSec: 1000, latencyMs: 100 };
+const SLOW_BYTES_PER_TICK = (SLOW.bytesPerSec * TICK_MS) / 1000;
 
 const img = (name: string, fakeBytes: number): LoadAsset => ({ name, fakeBytes, kind: "img" });
 
@@ -58,7 +59,7 @@ describe("素材の読み込み", () => {
     expect(starts).toEqual(["ad", "#0", "#1"]);
   });
 
-  it("同時に読み込むのは 2 件まで", () => {
+  it("同時に読み込むのは 2 件までで、3 件目は先に終わった枠が空いてから始める", () => {
     const events = simulateLoad({
       line: SLOW,
       htmlBytes: 0,
@@ -75,11 +76,10 @@ describe("素材の読み込み", () => {
 
     const start = times(events, "asset-start");
     const done = times(events, "asset-done");
-    // 3 件目は、先に終わった #0 の枠が空いてから接続を始める
     expect(start["#1"]).toBeGreaterThan(done["#0"]!);
   });
 
-  it("転送中の件数で帯域を等分する", () => {
+  it("転送中の件数で帯域を等分し、終わった分の帯域は残りが使う", () => {
     const events = simulateLoad({
       line: SLOW,
       htmlBytes: 0,
@@ -87,12 +87,15 @@ describe("素材の読み込み", () => {
     });
     const at = (t: number, k: string) =>
       events.find((e) => e.type === "asset-progress" && e.at === t && key(e.target) === k);
-    // 2 件で 1 ティック 100 バイトを分け合う
-    expect(at(600, "ad")).toMatchObject({ fraction: 50 / AD_BANNER.fakeBytes });
-    expect(at(600, "#0")).toMatchObject({ fraction: 50 / 1000 });
-    // #0 は 20 ティック後の 2,500ms に終わり、次のティックから広告が帯域を独占する
-    expect(times(events, "asset-done")["#0"]).toBe(2500);
-    expect(at(2600, "ad")).toMatchObject({ fraction: 1100 / AD_BANNER.fakeBytes });
+    const shared = SLOW_BYTES_PER_TICK / 2;
+    const sharedTicks = 1000 / shared;
+    expect(at(600, "ad")).toMatchObject({ fraction: shared / AD_BANNER.fakeBytes });
+    expect(at(600, "#0")).toMatchObject({ fraction: shared / 1000 });
+    const doneAt = 600 + (sharedTicks - 1) * TICK_MS;
+    expect(times(events, "asset-done")["#0"]).toBe(doneAt);
+    expect(at(doneAt + TICK_MS, "ad")).toMatchObject({
+      fraction: (sharedTicks * shared + SLOW_BYTES_PER_TICK) / AD_BANNER.fakeBytes,
+    });
   });
 
   it("カウンターは CGI の待ちとして 1,200ms 遅れて転送を始める", () => {
@@ -114,10 +117,10 @@ describe("素材の読み込み", () => {
 
 describe("完了", () => {
   it("経過時間と合計バイト数を返す", () => {
-    // 広告 12,000 バイトを 1 ティック 100 バイトで 120 ティック
     const events = simulateLoad({ line: SLOW, htmlBytes: 0, assets: [] });
     const done = events.find((e) => e.type === "asset-done");
-    expect(done?.at).toBe(600 + 119 * 100);
+    const adTicks = AD_BANNER.fakeBytes / SLOW_BYTES_PER_TICK;
+    expect(done?.at).toBe(600 + (adTicks - 1) * TICK_MS);
     expect(events.at(-1)).toEqual({
       type: "complete",
       at: 12600,

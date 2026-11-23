@@ -4,6 +4,8 @@ import type { SiteCategoryId, SitePage } from "@anokoro/shared";
 import {
   createMemorySiteStore,
   createUlid,
+  parseSiteId,
+  type SiteId,
   type LocalSite,
   type SiteStore,
 } from "@anokoro/site-store";
@@ -40,13 +42,12 @@ export interface WorkspaceState {
   target: SaveTarget;
   /** 作った順 */
   sites: LocalSite[];
-  currentId: string | null;
-  /** メモ帳の中身がまだ保存されていない */
+  currentId: SiteId | null;
   dirty: boolean;
 }
 
 export interface LastOpened {
-  siteId: string;
+  siteId: SiteId;
   path: string;
 }
 
@@ -61,12 +62,12 @@ export interface NewSite extends SiteInfo {
   pages: readonly SitePage[];
 }
 
-export type ImportMode = { kind: "new" } | { kind: "overwrite"; id: string };
+export type ImportMode = { kind: "new" } | { kind: "overwrite"; id: SiteId };
 
 export interface WorkspaceDeps {
   kit: KitStore;
   now?: () => number;
-  newId?: () => string;
+  newId?: () => SiteId;
   /** 入力が止まってから保存するまでの時間 */
   saveDelayMs?: number;
   rememberLastOpened?: (lastOpened: LastOpened) => void;
@@ -94,7 +95,7 @@ export class Workspace {
   readonly state: StoreApi<WorkspaceState>;
   readonly #kit: KitStore;
   readonly #now: () => number;
-  readonly #newId: () => string;
+  readonly #newId: () => SiteId;
   readonly #saveDelayMs: number;
   readonly #remember: (lastOpened: LastOpened) => void;
   #store: SiteStore = createMemorySiteStore();
@@ -105,7 +106,7 @@ export class Workspace {
   constructor({
     kit,
     now = Date.now,
-    newId = () => createUlid(),
+    newId = () => parseSiteId(createUlid()),
     saveDelayMs = SAVE_DELAY_MS,
     rememberLastOpened = () => {},
   }: WorkspaceDeps) {
@@ -239,7 +240,7 @@ export class Workspace {
     return this.#writing;
   }
 
-  openSite(id: string, path?: string): void {
+  openSite(id: SiteId, path?: string): void {
     void this.flush();
     const site = this.state.getState().sites.find((s) => s.id === id);
     if (!site) return;
@@ -284,7 +285,6 @@ export class Workspace {
     this.#loadPage(path, pushHistory(this.#kit.getState().history, { kind: "page", path }));
   }
 
-  /** 疑似ブラウザでリンクを押した */
   followLink(target: LinkTarget): void {
     switch (target.kind) {
       case "page":
@@ -331,7 +331,6 @@ export class Workspace {
     this.#moveInHistory(goForward(this.#kit.getState().history));
   }
 
-  /** ホームページ（index.html）を開く */
   home(): void {
     const site = this.current();
     if (site) this.openPage(homePath(site));
@@ -345,7 +344,7 @@ export class Workspace {
     return site;
   }
 
-  async updateSiteInfo(id: string, info: Omit<SiteInfo, "year">): Promise<void> {
+  async updateSiteInfo(id: SiteId, info: Omit<SiteInfo, "year">): Promise<void> {
     await this.flush();
     const site = this.state.getState().sites.find((s) => s.id === id);
     if (!site) return;
@@ -353,7 +352,7 @@ export class Workspace {
   }
 
   /** サイトを消す。開いていたサイトなら、残りのサイトか、新しく作ったサイトを開く */
-  async deleteSite(id: string, fallback: NewSite): Promise<void> {
+  async deleteSite(id: SiteId, fallback: NewSite): Promise<void> {
     await this.flush();
     this.state.setState(({ sites }) => ({ sites: sites.filter((s) => s.id !== id) }));
     this.#writing = this.#writing.then(() => this.#store.delete(id)).catch(() => undefined);
@@ -398,7 +397,6 @@ export class Workspace {
     }
   }
 
-  /** 共有されたサイトを取り込んで開く */
   async importShared(shared: SharedSite, mode: ImportMode): Promise<LocalSite | undefined> {
     await this.flush();
     const now = this.#now();
@@ -415,7 +413,7 @@ export class Workspace {
     return site;
   }
 
-  async markExported(id: string): Promise<void> {
+  async markExported(id: SiteId): Promise<void> {
     await this.flush();
     const site = this.state.getState().sites.find((s) => s.id === id);
     if (site) await this.#save({ ...site, lastExportedAt: this.#now() });

@@ -39,8 +39,7 @@ interface Inset {
 }
 
 const FOOTPRINT: Inset = { left: 0.045, right: 0.045, far: 0.05, near: 0.03 };
-/** キーの頭。手前ほど側面が見えるので、手前を大きく削る */
-const TOP_FACE: Inset = { left: 0.17, right: 0.17, far: 0.1, near: 0.36 };
+const KEY_TOP_INSET: Inset = { left: 0.17, right: 0.17, far: 0.1, near: 0.36 };
 
 type Quad = [Point, Point, Point, Point];
 
@@ -87,7 +86,9 @@ function Legends({ spec }: { spec: KeySpec }) {
     return (
       <>
         <text
-          transform={legendTransform(keyPoint(x + TOP_FACE.left + 0.09, y + TOP_FACE.far + 0.17))}
+          transform={legendTransform(
+            keyPoint(x + KEY_TOP_INSET.left + 0.09, y + KEY_TOP_INSET.far + 0.17),
+          )}
           fontSize="5"
           fill="#48433a"
           dominantBaseline="central"
@@ -96,7 +97,7 @@ function Legends({ spec }: { spec: KeySpec }) {
         </text>
         <text
           transform={legendTransform(
-            keyPoint(x + w - TOP_FACE.right - 0.07, y + 1 - TOP_FACE.near - 0.13),
+            keyPoint(x + w - KEY_TOP_INSET.right - 0.07, y + 1 - KEY_TOP_INSET.near - 0.13),
           )}
           fontSize="4.3"
           fill="#8a4532"
@@ -111,7 +112,7 @@ function Legends({ spec }: { spec: KeySpec }) {
   const [lx] = keyPoint(x, y + 0.5);
   const [rx] = keyPoint(x + 1, y + 0.5);
   const fontSize = Math.min(4.8, ((rx - lx) * 0.9 * w) / Math.max(1, label.length * 0.62));
-  const faceMiddle = TOP_FACE.far + (1 - TOP_FACE.far - TOP_FACE.near) / 2;
+  const faceMiddle = KEY_TOP_INSET.far + (1 - KEY_TOP_INSET.far - KEY_TOP_INSET.near) / 2;
   return (
     <text
       transform={legendTransform(keyPoint(x + w / 2, y + Math.min(spec.h, 1) * faceMiddle))}
@@ -127,13 +128,13 @@ function Legends({ spec }: { spec: KeySpec }) {
 
 function skirtSides(spec: KeySpec): { lit: Quad; dark: Quad } {
   const [b0, b1, b2, b3] = rectCorners(spec, FOOTPRINT);
-  const [t0, t1, t2, t3] = rectCorners(spec, TOP_FACE);
+  const [t0, t1, t2, t3] = rectCorners(spec, KEY_TOP_INSET);
   return { lit: [b0, t0, t3, b3], dark: [t1, b1, b2, t2] };
 }
 
 function Key({ spec, paint }: { spec: KeySpec; paint: Paint }) {
   const isMod = spec.tone === "mod";
-  const top = keyOutline(spec, TOP_FACE);
+  const top = keyOutline(spec, KEY_TOP_INSET);
   const sides = spec.notchWidth === undefined ? skirtSides(spec) : null;
   const rim = [top[top.length - 1], top[0], top[1]].filter((p) => p !== undefined);
   return (

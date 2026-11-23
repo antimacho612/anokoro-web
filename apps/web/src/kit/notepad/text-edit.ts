@@ -17,9 +17,10 @@ export function byteLength(text: string): number {
   return encoder.encode(text).length;
 }
 
-/** メモ帳の容量表示。上限の「50MB」は演出 */
+const DECORATIVE_CAPACITY_LABEL = "50MB";
+
 export function formatUsage(bytes: number): string {
-  return `使用容量 ${(bytes / 1024).toFixed(1)}KB / 50MB`;
+  return `使用容量 ${(bytes / 1024).toFixed(1)}KB / ${DECORATIVE_CAPACITY_LABEL}`;
 }
 
 export function offsetOf(value: string, line: number, col: number): number {

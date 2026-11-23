@@ -1,3 +1,4 @@
+import type { Year } from "@anokoro/era-data";
 import type { KitStore } from "../store.ts";
 import { readYearParam, withYearParam } from "./year-param.ts";
 
@@ -9,7 +10,7 @@ export interface UrlEnv {
 /** URL の `?year=` を初期値として読み、以後は年の変更を URL に書き戻す。戻り値で購読を解除する */
 export function syncYearWithUrl(store: KitStore, { location, history }: UrlEnv): () => void {
   store.getState().setYear(readYearParam(location.search));
-  const writeYear = (year: number): void => {
+  const writeYear = (year: Year): void => {
     history.replaceState(history.state, "", withYearParam(location.href, year));
   };
   writeYear(store.getState().year);

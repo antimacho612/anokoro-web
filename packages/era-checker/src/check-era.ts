@@ -17,9 +17,15 @@ const NET_STYLE = "img[data-anokoro-img]{outline:1px solid #aaa;outline-offset:-
 
 const MODES: readonly Mode[] = ["local", "net", "publish"];
 
-/** 再現度。重複を除いた警告 1 種類ごとに future は 8 点、note は 3 点を引く */
+const FUTURE_PENALTY = 8;
+const NOTE_PENALTY = 3;
+
+/** 再現度。重複を除いた警告 1 種類ごとに、レベルに応じた点を 100 点から引く */
 export function scoreOf(warnings: readonly Warning[]): number {
-  const penalty = warnings.reduce((sum, w) => sum + (w.level === "future" ? 8 : 3), 0);
+  const penalty = warnings.reduce(
+    (sum, w) => sum + (w.level === "future" ? FUTURE_PENALTY : NOTE_PENALTY),
+    0,
+  );
   return Math.max(0, 100 - penalty);
 }
 

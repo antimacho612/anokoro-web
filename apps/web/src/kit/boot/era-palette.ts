@@ -1,4 +1,4 @@
-import { MAX_YEAR, MIN_YEAR, uiThemeForYear, type UiThemeId } from "@anokoro/era-data";
+import { MAX_YEAR, clampYear, uiThemeForYear, type UiThemeId } from "@anokoro/era-data";
 
 export type Rgb = readonly [number, number, number];
 
@@ -79,7 +79,7 @@ export const THEME_CSS_ORIGIN: Record<UiThemeId, { frame: CssColorRef; title: Cs
 
 function paletteOfYear(year: number): EraPalette {
   if (year > MAX_YEAR) return PRESENT;
-  return THEMES[uiThemeForYear(Math.max(MIN_YEAR, year)).id];
+  return THEMES[uiThemeForYear(clampYear(year)).id];
 }
 
 function mix(a: Rgb, b: Rgb, t: number): Rgb {

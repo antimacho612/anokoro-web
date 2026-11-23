@@ -1,5 +1,6 @@
 import type { SiteKindId, Year } from "@anokoro/era-data";
 import type { SiteCategoryId } from "@anokoro/shared";
+import type { SiteId } from "./site-id.ts";
 
 export interface LocalPage {
   /** index.html など */
@@ -10,14 +11,12 @@ export interface LocalPage {
 }
 
 export interface LocalSite {
-  /** ULID */
-  id: string;
+  id: SiteId;
   name: string;
   year: Year;
   genre: SiteKindId;
   category: SiteCategoryId;
   pages: LocalPage[];
-  /** ローカルカウンター */
   counter: number;
   createdAt: number;
   updatedAt: number;

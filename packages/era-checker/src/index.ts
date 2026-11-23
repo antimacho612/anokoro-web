@@ -1,5 +1,5 @@
 export { checkEra, scoreOf } from "./check-era.ts";
-export { TOPIC_IDS } from "./types.ts";
+export { TOPIC_IDS } from "@anokoro/era-data";
 export type {
   AssetRef,
   CheckOptions,

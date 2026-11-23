@@ -1,3 +1,4 @@
+import type { Year } from "@anokoro/era-data";
 import { playModemSound, type ModemPlayback } from "@anokoro/modem-sound";
 import { useEffect, useEffectEvent, useRef, useState, type RefObject } from "react";
 import { kitStore, useKit } from "../store.ts";
@@ -51,7 +52,7 @@ function prefersCalm(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function planTimeline(year: number, isCalm: boolean): BootTimeline {
+function planTimeline(year: Year, isCalm: boolean): BootTimeline {
   const journey = journeyFor(year, new Date().getFullYear());
   return isCalm ? reducedMotionTimeline(journey) : fullTimeline(journey);
 }

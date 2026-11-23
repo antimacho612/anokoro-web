@@ -8,7 +8,6 @@ export interface SampleSite {
   year: Year;
   genre: SiteKindId;
   category: SiteCategoryId;
-  /** 見本サイトの紹介 */
   description: string;
   pages: readonly SitePage[];
 }

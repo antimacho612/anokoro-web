@@ -28,17 +28,16 @@ type KindFieldProps = {
   year: Year;
   value: SiteKindId;
   onChange: (kind: SiteKindId) => void;
-  /** 既存のサイトの種類は、年に関係なく選び直せる */
-  lockFuture: boolean;
+  isExistingSite: boolean;
 };
 
-function KindField({ year, value, onChange, lockFuture }: KindFieldProps) {
+function KindField({ year, value, onChange, isExistingSite }: KindFieldProps) {
   const name = useId();
   return (
     <fieldset className={styles.kinds}>
       <legend>サイトの種類</legend>
       {SITE_KIND_IDS.map((kind) => {
-        const notYet = lockFuture && kindNotYet(kind, year);
+        const notYet = !isExistingSite && kindNotYet(kind, year);
         return (
           <label key={kind} className={notYet ? styles.kindNotYet : undefined}>
             <input
@@ -154,7 +153,7 @@ export function NewSiteDialog({ initialYear, onCreate, onCancel }: NewSiteDialog
               ))}
             </select>
           </div>
-          <KindField year={year} value={genre} onChange={setGenre} lockFuture />
+          <KindField year={year} value={genre} onChange={setGenre} isExistingSite={false} />
           <CategoryField value={category} onChange={setCategory} />
           <fieldset className={styles.kinds}>
             <legend>中身</legend>
@@ -215,7 +214,7 @@ export function SiteInfoDialog({ info, onSave, onCancel }: SiteInfoDialogProps) 
         <div className={dialogClass.body}>
           <NameField value={name} onChange={setName} />
           <p className="hint">サイトの年（{info.year} 年）は、タイムマシンで変えられます。</p>
-          <KindField year={info.year} value={genre} onChange={setGenre} lockFuture={false} />
+          <KindField year={info.year} value={genre} onChange={setGenre} isExistingSite />
           <CategoryField value={category} onChange={setCategory} />
         </div>
         <div className={dialogClass.buttons}>

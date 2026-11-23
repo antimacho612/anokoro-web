@@ -6,13 +6,13 @@ import {
   yearSchema,
 } from "@anokoro/shared";
 import { z } from "zod";
+import { siteIdSchema } from "./site-id.ts";
 import type { LocalSite } from "./types.ts";
 
 const timestamp = z.number().int().nonnegative();
 
-/** 自分で保存したデータでも、古い版や壊れたレコードを読み飛ばすために検証する */
 export const localSiteSchema = z.object({
-  id: z.string().min(1),
+  id: siteIdSchema,
   name: siteNameSchema,
   year: yearSchema,
   genre: genreSchema,

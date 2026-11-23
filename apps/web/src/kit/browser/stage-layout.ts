@@ -2,14 +2,12 @@ import type { Resolution } from "@anokoro/era-data";
 
 /** 解像度から引く、ブラウザの枠とタスクバーの高さ */
 export const BROWSER_CHROME_HEIGHT = 150;
-/** 表示領域の上に出す広告帯の高さ */
 export const AD_BAR_HEIGHT = 46;
 
 export interface StageLayout {
   /** 縮小前の表示領域の幅と高さ（広告帯を含む） */
   stageWidth: number;
   stageHeight: number;
-  /** ページを描く iframe の高さ */
   frameHeight: number;
   /** 縮小率。拡大はしない */
   scale: number;

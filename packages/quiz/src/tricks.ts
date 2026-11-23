@@ -36,7 +36,6 @@ const rule = (
 });
 
 export const QUIZ_TRICKS: readonly QuizTrick[] = [
-  // ---- CSS（style 属性） ----
   style("border-radius", "css.border-radius", "css.border-radius", "border-radius:10px", true),
   style("box-shadow", "css.box-shadow", "css.box-shadow", "box-shadow:3px 3px 6px #888888", true),
   style(
@@ -77,7 +76,6 @@ export const QUIZ_TRICKS: readonly QuizTrick[] = [
   ),
   style("clip-path", "css.property", "css.mask", "clip-path:circle(45%)", true),
 
-  // ---- CSS（<style> の規則） ----
   rule(
     "attribute-selector",
     "css.selector.attribute",
@@ -121,7 +119,6 @@ export const QUIZ_TRICKS: readonly QuizTrick[] = [
     ":is(h1, h2, b)",
   ),
 
-  // ---- HTML の要素 ----
   {
     id: "marquee",
     ruleId: "html.element.marquee",
@@ -219,7 +216,6 @@ export const QUIZ_TRICKS: readonly QuizTrick[] = [
     visible: false,
   },
 
-  // ---- HTML の属性 ----
   {
     id: "placeholder",
     ruleId: "html.attr.html5",

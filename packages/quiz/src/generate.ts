@@ -15,7 +15,7 @@ import { QUIZ_PAGES } from "./pages.ts";
 import { QUIZ_TRICKS } from "./tricks.ts";
 import type { QuizPage, QuizTrick } from "./types.ts";
 
-/** 回線の問題に使う回線は、出題年の既定の回線よりこの倍率以上速いものに限る。読み込みの速さで見分けられるようにする */
+/** 回線の問題に使う回線は、出題年の既定の回線よりこの倍率以上速いものに限る */
 export const LINE_SPEEDUP_MIN = 10;
 
 /** トピックを指定しないとき、回線の問題を出す割合（回線の問題を出せる年に限る） */
@@ -34,7 +34,6 @@ interface QuestionBase {
   displaySource: string;
   /** 表示モードで、年に関係なく描く機能（答えの技術だけ） */
   allowFeatures: readonly FeatureId[];
-  /** 読み込みに使う回線 */
   lineKey: LineKey;
   topic: TopicId;
 }

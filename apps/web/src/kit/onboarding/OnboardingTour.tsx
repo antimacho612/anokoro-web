@@ -108,7 +108,6 @@ type TypedTextProps = {
   isInstant: boolean;
 };
 
-/** 1 文字ずつ打ち出す。まだ出ていない文字も透明にして置き、吹き出しの大きさと読み上げを変えない */
 function TypedText({ id, text, isInstant }: TypedTextProps) {
   const [count, setCount] = useState(isInstant ? text.length : 0);
   useEffect(() => {

@@ -27,6 +27,7 @@ export {
   MAX_YEAR,
   MIN_YEAR,
   YEARS,
+  clampYear,
   inRange,
   isYear,
   type Source,
@@ -41,3 +42,4 @@ export {
   type SiteKindEntry,
   type SiteKindId,
 } from "./site-kinds.ts";
+export { TOPIC_IDS, type TopicId } from "./topics.ts";

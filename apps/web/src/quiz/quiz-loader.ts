@@ -5,7 +5,6 @@ import type { Question } from "@anokoro/quiz";
 import type { NetFrameWriter } from "../kit/line/frame-page.ts";
 import { completeMessage } from "../kit/line/net-controller.ts";
 
-/** お題のカウンターに入れる数 */
 export const QUIZ_COUNTER = 1234;
 
 export interface QuizLoadCallbacks {
@@ -13,7 +12,6 @@ export interface QuizLoadCallbacks {
   onProgress: (ratio: number) => void;
   /** 文書を開き直した直後。クリックの受け付けはここから付け直す */
   onOpen: () => void;
-  /** HTML を書き終えた */
   onHtmlDone: () => void;
   onComplete: () => void;
 }

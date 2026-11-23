@@ -6,5 +6,6 @@ export {
   requestPersistence,
   type SiteStore,
 } from "./site-store.ts";
+export { isSiteId, parseSiteId, siteIdSchema, type SiteId } from "./site-id.ts";
 export type { LocalPage, LocalSite } from "./types.ts";
 export { createUlid, type RandomByte } from "./ulid.ts";

@@ -1,7 +1,6 @@
 import type { TopicId } from "@anokoro/era-checker";
 import {
-  MAX_YEAR,
-  MIN_YEAR,
+  clampYear,
   defaultLineForYear,
   resolutionPeriodForYear,
   type LineKey,
@@ -36,7 +35,6 @@ export interface KitState {
   year: Year;
   /** メモ帳で開いているページ */
   pagePath: string;
-  /** 疑似ブラウザの履歴 */
   history: BrowserHistory;
   /** 疑似ブラウザで開けなかった URL。開けたページを表示しているときは null */
   notFoundUrl: string | null;
@@ -75,7 +73,6 @@ export interface KitState {
   replace: (source: string) => void;
   /** 別のページをメモ帳と疑似ブラウザで開く */
   loadPage: (page: { path: string; html: string; history: BrowserHistory }) => void;
-  /** 疑似ブラウザに「ページが見つかりません」を出す */
   showNotFound: (url: string, history: BrowserHistory) => void;
   setResolution: (resolution: Resolution) => void;
   setSound: (sound: boolean) => void;
@@ -86,10 +83,6 @@ export interface KitState {
   openInfo: (dialog: InfoDialog) => void;
   closeInfo: () => void;
   markNewsSeen: (date: string) => void;
-}
-
-function clampYear(year: number): Year {
-  return Math.min(MAX_YEAR, Math.max(MIN_YEAR, Math.trunc(year)));
 }
 
 export type KitStore = StoreApi<KitState>;

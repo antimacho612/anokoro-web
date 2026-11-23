@@ -1,3 +1,4 @@
+import type { Year } from "@anokoro/era-data";
 import { ManualClock } from "@anokoro/netsim";
 import { describe, expect, it } from "vite-plus/test";
 import { createKitStore, type KitStore } from "../store.ts";
@@ -23,7 +24,7 @@ function recordingPage() {
 
 const flush = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
-function setup(year: number, store: KitStore = createKitStore({ year, source: SOURCE })) {
+function setup(year: Year, store: KitStore = createKitStore({ year, source: SOURCE })) {
   const clock = new ManualClock();
   const recorder = recordingPage();
   const modem = { played: 0, stopped: 0 };

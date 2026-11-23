@@ -5,7 +5,6 @@ import { isLineSelectable } from "./line-choice.ts";
 
 const LINE_KEY = "anokoro:line";
 const SOUND_KEY = "anokoro:sound";
-/** M1 で使っていたローカルカウンター。いまはサイトに保存し、最初のサイトを作るときにだけ読む */
 const LEGACY_COUNTER_KEY = "anokoro:counter";
 
 function read(storage: StorageAccess, key: string): string | null {
@@ -32,7 +31,6 @@ export function restoreNetSettings(store: KitStore, storage: StorageAccess): voi
   if (Number.isSafeInteger(counter) && counter >= 0) store.setState({ counter });
 }
 
-/** 接続音の ON/OFF だけを戻す。閲覧画面では回線をサイトの年の既定にするため */
 export function restoreSound(store: KitStore, storage: StorageAccess): void {
   const sound = read(storage, SOUND_KEY);
   if (sound === "on" || sound === "off") store.setState({ sound: sound === "on" });

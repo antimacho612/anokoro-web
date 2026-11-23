@@ -11,7 +11,6 @@ export interface QuizSlot {
   kind: SlotKind;
 }
 
-/** 組み立てた問題のソース */
 export interface AssembledQuiz {
   source: string;
   /** 仕掛けを入れた行（1 始まり）。仕掛けがなければ null */
@@ -72,7 +71,6 @@ export function slotKindOf(insert: TrickInsert): SlotKind {
   }
 }
 
-/** その仕掛けを入れられる差し込み口 */
 export function slotsFor(page: QuizPage, trick: QuizTrick): QuizSlot[] {
   const kind = slotKindOf(trick.insert);
   return listSlots(page).filter((s) => s.kind === kind);

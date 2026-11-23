@@ -147,3 +147,30 @@ describe("回線の問題", () => {
     expect(futureLinesFor(2010)).toEqual([]);
   });
 });
+
+describe("E2E（apps/web/e2e/quiz.spec.ts）で使うシード", () => {
+  it("26 は 2005 年のネットショップに border-radius で、表示モードで答えられる", () => {
+    const q = questionOf(26);
+    expect(q).toMatchObject({ kind: "trick", year: 2005, page: { kind: "shop" } });
+    expect(q.kind === "trick" && q.trick.id).toBe("border-radius");
+    expect(q.kind === "trick" && q.displayable).toBe(true);
+  });
+
+  it("2 は 2010 年の企業サイトの <style> に :is() で、表示モードで答えられる", () => {
+    const q = questionOf(2);
+    expect(q).toMatchObject({ kind: "trick", year: 2010, page: { kind: "corporate" } });
+    expect(q.kind === "trick" && q.trick.id).toBe("is");
+    expect(q.kind === "trick" && q.displayable).toBe(true);
+  });
+
+  it("157 は 1999 年の掲示板に position:sticky で、ソース表示モードだけで答える", () => {
+    const q = questionOf(157);
+    expect(q).toMatchObject({ kind: "trick", year: 1999, page: { kind: "bbs" } });
+    expect(q.kind === "trick" && q.trick.id).toBe("sticky");
+    expect(q.kind === "trick" && q.displayable).toBe(false);
+  });
+
+  it("52 は 1999 年に光ファイバーで読み込む回線の問題", () => {
+    expect(questionOf(52)).toMatchObject({ kind: "line", year: 1999, lineKey: "hikari" });
+  });
+});

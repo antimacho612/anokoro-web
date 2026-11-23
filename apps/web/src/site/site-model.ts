@@ -1,13 +1,13 @@
 import type { SiteKindId, Year } from "@anokoro/era-data";
 import type { SharedSite } from "@anokoro/share-codec";
 import { MAX_PAGES, PAGE_PATH_PATTERN, type SiteCategoryId, type SitePage } from "@anokoro/shared";
-import type { LocalPage, LocalSite } from "@anokoro/site-store";
+import type { LocalPage, LocalSite, SiteId } from "@anokoro/site-store";
 
 export const INDEX_PAGE = "index.html";
 export const INITIAL_COUNTER = 774;
 
 export interface NewSiteInput {
-  id: string;
+  id: SiteId;
   name: string;
   year: Year;
   genre: SiteKindId;
@@ -87,7 +87,6 @@ export function nextPagePath(site: LocalSite): string {
   }
 }
 
-/** 新しく足したページの中身 */
 export function newPageHtml(path: string): string {
   return `<html>
 <head>
@@ -138,7 +137,7 @@ export function toShared(site: LocalSite): SharedSite {
   };
 }
 
-export function fromShared(shared: SharedSite, id: string, now: number): LocalSite {
+export function fromShared(shared: SharedSite, id: SiteId, now: number): LocalSite {
   return createSite({ ...shared, id, now });
 }
 
@@ -159,7 +158,6 @@ export function overwriteWithShared(site: LocalSite, shared: SharedSite, now: nu
   };
 }
 
-/** 書き出しをすすめるまでの日数 */
 export const EXPORT_REMINDER_DAYS = 7;
 const DAY_MS = 24 * 60 * 60 * 1000;
 

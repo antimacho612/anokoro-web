@@ -65,7 +65,6 @@ export function quizUrl(base: string, { seed, topic }: QuizUrlOptions = {}): str
   return `${base}quiz/${query === "" ? "" : `?${query}`}`;
 }
 
-/** その年の作成キットの URL */
 export function kitUrl(base: string, year: Year): string {
   return `${base}kit/?year=${year}`;
 }

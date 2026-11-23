@@ -16,7 +16,12 @@ const attackSite: SharedSite = {
   ],
 };
 
-/** スクリプトが動いた痕跡（攻撃文字列からの通信と、ダイアログ）を集める */
+test("攻撃文字列とサイト名には通信先のパスがそのまま現れない（スクリプトが動いたときだけ届く）", () => {
+  for (const text of [...ATTACK_STRINGS, attackPage(), attackSite.name]) {
+    expect(text).not.toContain(PWNED_PATH);
+  }
+});
+
 function watchExecution(page: Page): string[] {
   const traces: string[] = [];
   page.on("request", (request) => {

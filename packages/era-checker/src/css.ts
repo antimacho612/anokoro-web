@@ -95,7 +95,6 @@ function keepSelector(ctx: CheckContext, selector: Selector): boolean {
   return true;
 }
 
-/** 規則を選別する。残すなら true */
 function keepRule(ctx: CheckContext, rule: Rule, inKeyframes: boolean): boolean {
   if (!inKeyframes) {
     if (rule.prelude.type !== "SelectorList") return false;
@@ -113,14 +112,12 @@ function filterBlockRules(ctx: CheckContext, block: Block, inKeyframes = false):
   block.children = filterRuleList(ctx, block.children, inKeyframes);
 }
 
-/** @ ルールを選別する。残すなら true */
 function keepAtrule(ctx: CheckContext, at: Atrule): boolean {
   const name = at.name.toLowerCase();
   const loc = toLocation(at.loc);
   const block = at.block;
 
   if (!block) {
-    // @charset は害がないので黙って捨てる。@import などはここに来る
     if (name !== "charset") ctx.warn("css.import", "note", AT_RULE_MESSAGES.import, "css", loc);
     return false;
   }
@@ -172,7 +169,6 @@ function filterRuleList(
   });
 }
 
-/** 1997 年より前は CSS そのものを使えない */
 function cssBlocked(ctx: CheckContext, start: CssStart): boolean {
   return ctx.blocked("css.basic", "css.basic", CSS_BASIC_MESSAGE, "css", start);
 }
@@ -193,7 +189,6 @@ export function filterStyleAttribute(ctx: CheckContext, text: string, start: Css
   return generate(ast);
 }
 
-/** style 要素の中身を選別する */
 export function filterStyleSheet(ctx: CheckContext, text: string, start: CssStart): string {
   if (text.trim() === "") return "";
   if (cssBlocked(ctx, start)) return "";

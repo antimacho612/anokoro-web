@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 import { createKitStore } from "../store.ts";
-import { persistNetSettings, restoreNetSettings, saveLine } from "./net-settings.ts";
+import { persistNetSettings, restoreNetSettings, restoreSound, saveLine } from "./net-settings.ts";
 
 function memoryStorage(initial: Record<string, string> = {}) {
   const data = new Map(Object.entries(initial));
@@ -12,7 +12,7 @@ function memoryStorage(initial: Record<string, string> = {}) {
 }
 
 describe("restoreNetSettings", () => {
-  it("保存した回線、接続音、カウンターを読み込む", () => {
+  it("保存した回線、接続音、M1 で保存したローカルカウンターを読み込む", () => {
     const store = createKitStore({ year: 2003 });
     const { access } = memoryStorage({
       "anokoro:line": "isdn",
@@ -40,6 +40,19 @@ describe("restoreNetSettings", () => {
       throw new Error("denied");
     });
     expect(store.getState().lineKey).toBe("adsl12");
+  });
+});
+
+describe("restoreSound", () => {
+  it("閲覧画面では回線をサイトの年の既定にするため、接続音だけを戻す", () => {
+    const store = createKitStore({ year: 2003 });
+    const { access } = memoryStorage({
+      "anokoro:line": "isdn",
+      "anokoro:sound": "off",
+      "anokoro:counter": "998",
+    });
+    restoreSound(store, access);
+    expect(store.getState()).toMatchObject({ lineKey: "adsl12", sound: false, counter: 774 });
   });
 });
 

@@ -35,6 +35,30 @@ test("はじめて開くと、ウィンドウを順に案内し、最後まで�
   await expect(page.locator("textarea").first()).toBeFocused();
 });
 
+test("1 文字ずつ打ち出す間も、吹き出しの大きさと読み上げる本文は変わらない", async ({ page }) => {
+  await page.goto("/kit/?year=2003");
+  const full = ONBOARDING_STEPS[0]?.body ?? "";
+  const body = page
+    .getByRole("dialog", { name: "あのころ Web へようこそ" })
+    .locator("p")
+    .filter({ hasText: full });
+  const snapshot = () =>
+    body.evaluate((el) => ({
+      isTyping: el.querySelector("[aria-hidden=true]") !== null,
+      text: el.textContent,
+      width: el.getBoundingClientRect().width,
+      height: el.getBoundingClientRect().height,
+    }));
+
+  await expect(body.locator("[aria-hidden=true]")).toHaveCount(1);
+  const typing = await snapshot();
+  await expect(body.locator("[aria-hidden=true]")).toHaveCount(0);
+  const typed = await snapshot();
+
+  expect(typing).toMatchObject({ isTyping: true, text: full });
+  expect(typed).toEqual({ ...typing, isTyping: false });
+});
+
 test("Esc でとばすと、同じタブでは二度と出さない", async ({ page }) => {
   await page.goto("/kit/?year=2003");
   await expect(tour(page)).toBeVisible();

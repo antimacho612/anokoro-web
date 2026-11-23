@@ -1,11 +1,9 @@
 import type { FeatureId } from "@anokoro/era-data";
 import type { CssNode, Selector } from "css-tree";
 
-/** 判定に使う宣言の情報 */
 export interface DeclInfo {
   /** 小文字のプロパティ名 */
   prop: string;
-  /** 値の文字列 */
   value: string;
   /** 値に含まれる関数名（小文字） */
   functions: ReadonlySet<string>;
@@ -194,7 +192,6 @@ const PSEUDO_CLASS_FEATURES: readonly (readonly [prefix: string, feature: Featur
   ["empty", "css.selector.structural"],
 ];
 
-/** a 以外の要素に付いた :hover があるか */
 function hoverOnNonAnchor(selector: Selector): boolean {
   let type: string | null = null;
   for (const node of nodesOf(selector)) {

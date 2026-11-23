@@ -27,7 +27,6 @@ import blog2008 from "./pages/blog-2008.html?raw";
 import blog2011 from "./pages/blog-2011.html?raw";
 import type { QuizPage } from "./types.ts";
 
-/** お題。種類ごとに、年の範囲が重ならないように並べる */
 export const QUIZ_PAGES: readonly QuizPage[] = [
   {
     id: "personal-1995",

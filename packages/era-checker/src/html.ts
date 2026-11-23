@@ -61,7 +61,7 @@ type LinkKind = "relative" | "external" | "mailto" | "blocked";
 
 /** リンク先の種類。ブラウザと同じく、先頭の制御文字と途中のタブ・改行を無視してスキームを見る */
 function linkKind(href: string): LinkKind {
-  // oxlint-disable-next-line no-control-regex -- ブラウザの URL 解析に合わせて制御文字を除く
+  // eslint-disable-next-line no-control-regex -- ブラウザの URL 解析に合わせて制御文字を除く
   const s = href.replace(/[\t\n\r]/g, "").replace(/^[\u0000- ]+/, "");
   const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(s)?.[1]?.toLowerCase();
   if (scheme === undefined) return /^[\\/]{2}/.test(s) ? "external" : "relative";
@@ -128,7 +128,6 @@ function processTag(ctx: CheckContext, el: Element, tag: string): Action | null 
         ctx.warn("html.meta-refresh", "note", MESSAGES.refresh, "html", loc);
         return "remove";
       }
-      // 公開版は UTF-8 で配信するので、文字コードの指定を外す
       if (
         ctx.mode === "publish" &&
         (equiv === "content-type" || getAttr(el, "charset") !== undefined)
@@ -205,8 +204,7 @@ function processBackground(
 }
 
 function processAttributes(ctx: CheckContext, el: Element, tag: string): void {
-  // removeAttr は el.attrs を新しい配列に差し替えるので、元の配列をそのまま回せる
-  for (const { name, value } of el.attrs) {
+  for (const { name, value } of el.attrs.slice()) {
     const loc = attrLocation(el, name);
     if (name.startsWith("on")) {
       ctx.warn("html.event-attr", "note", MESSAGES.eventAttr, "js", loc);
@@ -334,7 +332,6 @@ function processComment(ctx: CheckContext, node: T.CommentNode, digits: string):
 
 /** 要素を処理し、その場所に入るノードを返す */
 function walkElement(ctx: CheckContext, el: Element, depth: number, digits: string): ChildNode[] {
-  // 深い入れ子は直列化でスタックを使い切るので、上限より下は文字だけにする
   if (depth >= MAX_DEPTH && childrenOf(el).some((n) => isElement(n))) flatten(ctx, el);
   const action = processElement(ctx, el);
   if (action === "remove") return [];
@@ -367,7 +364,6 @@ export function walkChildren(
   for (const n of next) kids.push(n);
 }
 
-/** ルートの html 要素を処理する */
 export function walkRoot(ctx: CheckContext, root: Element, digits: string): void {
   processAttributes(ctx, root, "html");
   walkChildren(ctx, root, 1, digits);

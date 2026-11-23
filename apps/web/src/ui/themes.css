@@ -1,5 +1,3 @@
-/* data-ui-theme の値は @anokoro/era-data の UiThemeId */
-
 :root,
 :root[data-ui-theme="gray-bevel"] {
   --font-ui: "MS UI Gothic", "Meiryo", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;

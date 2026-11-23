@@ -1,4 +1,4 @@
-import { MAX_YEAR, MIN_YEAR, YEARS } from "@anokoro/era-data";
+import { MAX_YEAR, MIN_YEAR, YEARS, type Year } from "@anokoro/era-data";
 import { describe, expect, test } from "vite-plus/test";
 import {
   PHASE_MS,
@@ -18,7 +18,7 @@ import {
   yearChangeTimes,
 } from "./boot-timeline.ts";
 
-const timelineTo = (to: number) => fullTimeline(journeyFor(to, 2026));
+const timelineTo = (to: Year) => fullTimeline(journeyFor(to, 2026));
 
 describe("場面の長さ", () => {
   test.each(YEARS)("%i 年へ向かう演出は 10 秒以内に収める", (to) => {
@@ -98,7 +98,7 @@ describe("止まる年", () => {
 });
 
 describe("年カウンター", () => {
-  test.each([MIN_YEAR, 2003, 2014, MAX_YEAR])("%i 年へ向かうとき", (to) => {
+  test.each<Year>([MIN_YEAR, 2003, 2014, MAX_YEAR])("%i 年へ向かうとき", (to) => {
     const timeline = timelineTo(to);
     const warpStart = phaseStartMs(timeline, "warp")!;
     const arriveStart = phaseStartMs(timeline, "arrive")!;

@@ -1,7 +1,7 @@
 import { ASSETS, type AssetEntry } from "@anokoro/assets";
 import { describe, expect, it } from "vite-plus/test";
 import { checkEra } from "@anokoro/era-checker";
-import { SITE_KINDS, SITE_KIND_IDS } from "@anokoro/era-data";
+import { MAX_YEAR, SITE_KINDS, SITE_KIND_IDS } from "@anokoro/era-data";
 import { PARTS, assetSnippet, partAvailability, partsForKind, type Part } from "./parts.ts";
 
 function part(label: string): Part {
@@ -60,7 +60,7 @@ describe("種類ごとのパーツ", () => {
     const from = SITE_KINDS[kind].availableFrom;
     for (const p of PARTS.filter((x) => x.kinds?.includes(kind))) {
       const html = `<html><body>${p.code}</body></html>`;
-      for (const year of [from, 2015]) {
+      for (const year of [from, MAX_YEAR]) {
         expect(checkEra(html, { year, mode: "local" }).warnings.map((w) => w.ruleId)).toEqual([]);
       }
     }

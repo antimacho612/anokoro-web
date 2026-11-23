@@ -10,7 +10,7 @@ export interface LineEntry {
   key: LineKey;
   /** 表示名 */
   name: string;
-  /** 実効速度（バイト/秒）。公称速度ではなく体感を優先した調整値 */
+  /** 実効速度（バイト/秒） */
   bytesPerSec: number;
   /** 応答遅延（ms） */
   latencyMs: number;
@@ -109,7 +109,6 @@ export function linesForYear(year: Year): LineEntry[] {
   return LINES.filter((line) => inRange(year, line.availableYears));
 }
 
-/** その年の既定の回線 */
 export function defaultLineForYear(year: Year): LineEntry {
   const line = LINES.find((l) => l.defaultYears !== null && inRange(year, l.defaultYears));
   if (!line) throw new Error(`${year} 年の既定の回線がありません`);

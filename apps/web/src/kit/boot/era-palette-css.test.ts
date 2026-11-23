@@ -1,5 +1,13 @@
 import { UI_THEMES, type UiThemeId } from "@anokoro/era-data";
-import { generate, parse, walk, type CssNode, type Declaration, type Rule } from "css-tree";
+import {
+  generate,
+  parse,
+  walk,
+  type AttributeSelector,
+  type CssNode,
+  type Declaration,
+  type Rule,
+} from "css-tree";
 import { describe, expect, test } from "vite-plus/test";
 import css from "../../ui/themes.css?inline";
 import { THEME_CSS_ORIGIN, THEMES, type CssColorRef, type Rgb } from "./era-palette.ts";
@@ -97,4 +105,20 @@ describe.each(UI_THEMES.map((t) => t.id))("%s のトンネルの色は themes.cs
   test("rounded", () => {
     expect(isRounded(id)).toBe(THEMES[id].rounded);
   });
+});
+
+function themeAttributeValues(): Set<string> {
+  const values = new Set<string>();
+  walk(ast, {
+    visit: "AttributeSelector",
+    enter(node: AttributeSelector) {
+      if (node.name.name !== "data-ui-theme" || node.value === null) return;
+      values.add(node.value.type === "String" ? node.value.value : node.value.name);
+    },
+  });
+  return values;
+}
+
+test("themes.css の data-ui-theme の値は外観の ID と一致する", () => {
+  expect([...themeAttributeValues()].sort()).toEqual(UI_THEMES.map((t) => t.id).sort());
 });

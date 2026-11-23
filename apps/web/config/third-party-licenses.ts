@@ -2,7 +2,6 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { Plugin } from "vite-plus";
 
-/** ビルドに出力する、同梱したサードパーティ製パッケージのライセンス表記のファイル名 */
 export const THIRD_PARTY_LICENSES_FILE = "third-party-licenses.txt";
 
 export interface PackageNotice {
@@ -16,7 +15,6 @@ export interface PackageNotice {
 
 const LICENSE_FILE = /^licen[cs]e(?:[.-].*)?$/i;
 
-/** モジュールの ID が node_modules 内のファイルなら、そのファイルのパスを返す */
 function nodeModulesPath(id: string): string | null {
   const path = id
     .replace(/^\0/, "")
@@ -25,7 +23,6 @@ function nodeModulesPath(id: string): string | null {
   return path.includes("/node_modules/") ? path : null;
 }
 
-/** ファイルから上へたどり、name と version を持つ package.json のある場所を返す */
 function findPackageRoot(file: string): string | null {
   for (let dir = dirname(file); dir.includes("/node_modules/"); dir = dirname(dir)) {
     const manifest = join(dir, "package.json");
@@ -36,7 +33,6 @@ function findPackageRoot(file: string): string | null {
   return null;
 }
 
-/** パッケージのディレクトリから、ライセンスの情報を読む */
 export function readPackageNotice(root: string): PackageNotice {
   const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
     name: string;
@@ -52,7 +48,6 @@ export function readPackageNotice(root: string): PackageNotice {
   };
 }
 
-/** バンドルに含まれたモジュールの ID から、同梱したパッケージのライセンス情報を集める */
 export function collectNotices(moduleIds: Iterable<string>): PackageNotice[] {
   const roots = new Set<string>();
   for (const id of moduleIds) {
@@ -70,7 +65,6 @@ export function collectNotices(moduleIds: Iterable<string>): PackageNotice[] {
   );
 }
 
-/** ライセンス表記のテキストを組み立てる */
 export function formatNotices(notices: readonly PackageNotice[]): string {
   const header = [
     "あのころ Web が同梱しているサードパーティ製ソフトウェアのライセンス表記",

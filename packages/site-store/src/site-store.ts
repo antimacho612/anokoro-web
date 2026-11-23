@@ -1,5 +1,6 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 import { localSiteSchema } from "./schema.ts";
+import type { SiteId } from "./site-id.ts";
 import type { LocalSite } from "./types.ts";
 
 export const DB_NAME = "anokoro";
@@ -13,9 +14,9 @@ interface AnokoroDb extends DBSchema {
 export interface SiteStore {
   /** 更新日時の新しい順。読めないレコードは飛ばす */
   list(): Promise<LocalSite[]>;
-  get(id: string): Promise<LocalSite | undefined>;
+  get(id: SiteId): Promise<LocalSite | undefined>;
   put(site: LocalSite): Promise<void>;
-  delete(id: string): Promise<void>;
+  delete(id: SiteId): Promise<void>;
   close(): void;
 }
 

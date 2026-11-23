@@ -1,5 +1,5 @@
 import { defaultLineForYear } from "@anokoro/era-data";
-import { createMemorySiteStore } from "@anokoro/site-store";
+import { createMemorySiteStore, createUlid, parseSiteId } from "@anokoro/site-store";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/themes.css";
@@ -27,7 +27,7 @@ async function start(): Promise<void> {
   const source = await loadViewSource(window.location.search, window.location.hash);
   if (source.kind !== "error") {
     const store = createMemorySiteStore();
-    await store.put(fromShared(source.site, "view", Date.now()));
+    await store.put(fromShared(source.site, parseSiteId(createUlid()), Date.now()));
     await viewer.init({
       open: async () => store,
       firstSite: {

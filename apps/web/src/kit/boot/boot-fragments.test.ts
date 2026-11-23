@@ -1,4 +1,12 @@
-import { FEATURES, MAX_YEAR, MIN_YEAR, YEARS, featureStatus } from "@anokoro/era-data";
+import {
+  FEATURES,
+  MAX_YEAR,
+  MIN_YEAR,
+  YEARS,
+  clampYear,
+  featureStatus,
+  type Year,
+} from "@anokoro/era-data";
 import { describe, expect, test } from "vite-plus/test";
 import {
   planFragments,
@@ -49,18 +57,18 @@ describe("その年のもの", () => {
   test("新しく出てきたものの年は機能年表に合わせる", () => {
     const year = FEATURES["html5.video"].availableFrom!;
     expect(texts(tokensIntroducedIn(year))).toContain("<video>");
-    expect(texts(tokensIntroducedIn(year - 1))).not.toContain("<video>");
+    expect(texts(tokensIntroducedIn(clampYear(year - 1)))).not.toContain("<video>");
   });
 });
 
 describe("planFragments", () => {
-  const timelineTo = (to: number) => fullTimeline(journeyFor(to, 2026));
+  const timelineTo = (to: Year) => fullTimeline(journeyFor(to, 2026));
 
-  test.each([MIN_YEAR, 2003, MAX_YEAR])("%i 年へ向かうときも、飛んでくるものがある", (to) => {
+  test.each<Year>([MIN_YEAR, 2003, MAX_YEAR])("%i 年へ向かうときも、飛んでくるものがある", (to) => {
     expect(planFragments(timelineTo(to), 1).length).toBeGreaterThan(5);
   });
 
-  test.each([MIN_YEAR, 2003, MAX_YEAR])(
+  test.each<Year>([MIN_YEAR, 2003, MAX_YEAR])(
     "%i 年へ向かうとき、飛び出した時点の年（対象の最終年より後は最終年）に使われていたものだけを出す",
     (to) => {
       const timeline = timelineTo(to);
@@ -78,7 +86,7 @@ describe("planFragments", () => {
     },
   );
 
-  test.each([MIN_YEAR, 2003, MAX_YEAR])(
+  test.each<Year>([MIN_YEAR, 2003, MAX_YEAR])(
     "%i 年へ向かうとき、跳躍の最後の 1 割には新しく出さない",
     (to) => {
       const timeline = timelineTo(to);

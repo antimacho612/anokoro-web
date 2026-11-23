@@ -1,9 +1,17 @@
 import type { SharedSite } from "@anokoro/share-codec";
-import { createMemorySiteStore, type SiteStore } from "@anokoro/site-store";
+import {
+  createMemorySiteStore,
+  parseSiteId,
+  type SiteId,
+  type SiteStore,
+} from "@anokoro/site-store";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vite-plus/test";
 import { createSite } from "../../site/site-model.ts";
 import { createKitStore, type KitStore } from "../store.ts";
-import { Workspace, type LastOpened } from "./workspace.ts";
+import { Workspace, type LastOpened, type NewSite } from "./workspace.ts";
+
+const testId = (n: number): SiteId => parseSiteId(`01J${String(n).padStart(23, "0")}`);
+const SAVED_ID = testId(900);
 
 const FIRST = { name: "マイホームページ", genre: "personal", category: "diary" } as const;
 
@@ -23,14 +31,14 @@ function setup(
   const ws = new Workspace({
     kit,
     now: () => 1000,
-    newId: () => `id${++id}`,
+    newId: () => testId(++id),
     rememberLastOpened: (v) => remembered.push(v),
   });
   return { kit, ws, store, remembered };
 }
 
 const twoPageSite = createSite({
-  id: "saved",
+  id: SAVED_ID,
   name: "保存済み",
   year: 2005,
   genre: "blog",
@@ -58,14 +66,14 @@ describe("初めて使うとき", () => {
     await ws.init({ open: async () => store, firstSite: FIRST });
     const [site] = await store.list();
     expect(site).toMatchObject({
-      id: "id1",
+      id: testId(1),
       name: "マイホームページ",
       year: 2001,
       counter: 50,
       pages: [{ path: "index.html", html: "<p>kit</p>" }],
     });
-    expect(ws.state.getState()).toMatchObject({ phase: "ready", currentId: "id1" });
-    expect(remembered).toEqual([{ siteId: "id1", path: "index.html" }]);
+    expect(ws.state.getState()).toMatchObject({ phase: "ready", currentId: testId(1) });
+    expect(remembered).toEqual([{ siteId: testId(1), path: "index.html" }]);
   });
 
   test("IndexedDB が開けなければメモリに置く", async () => {
@@ -89,7 +97,7 @@ describe("保存済みのサイトがあるとき", () => {
     await ws.init({
       open: async () => store,
       firstSite: FIRST,
-      lastOpened: { siteId: "saved", path: "diary.html" },
+      lastOpened: { siteId: SAVED_ID, path: "diary.html" },
     });
     expect(kit.getState()).toMatchObject({
       year: 2005,
@@ -106,7 +114,7 @@ describe("保存済みのサイトがあるとき", () => {
     await ws.init({ open: async () => store, firstSite: FIRST, urlYear: 2010 });
     expect(kit.getState().year).toBe(2010);
     await vi.runAllTimersAsync();
-    expect((await store.get("saved"))?.year).toBe(2010);
+    expect((await store.get(SAVED_ID))?.year).toBe(2010);
   });
 });
 
@@ -126,9 +134,9 @@ describe("自動保存", () => {
     await vi.advanceTimersByTimeAsync(500);
     kit.getState().edit("<p>ab</p>");
     await vi.advanceTimersByTimeAsync(999);
-    expect((await store.get("saved"))?.pages[0]?.html).toBe("<p>top</p>");
+    expect((await store.get(SAVED_ID))?.pages[0]?.html).toBe("<p>top</p>");
     await vi.advanceTimersByTimeAsync(1);
-    expect((await store.get("saved"))?.pages[0]?.html).toBe("<p>ab</p>");
+    expect((await store.get(SAVED_ID))?.pages[0]?.html).toBe("<p>ab</p>");
     expect(ws.state.getState().dirty).toBe(false);
   });
 
@@ -143,7 +151,7 @@ describe("自動保存", () => {
     const { kit, ws, store } = await ready();
     kit.getState().edit("<p>now</p>");
     await ws.flush();
-    expect((await store.get("saved"))?.pages[0]?.html).toBe("<p>now</p>");
+    expect((await store.get(SAVED_ID))?.pages[0]?.html).toBe("<p>now</p>");
   });
 
   test("年とカウンターもサイトに保存する", async () => {
@@ -151,7 +159,7 @@ describe("自動保存", () => {
     kit.getState().setYear(2008);
     kit.setState({ counter: 2000 });
     await vi.runAllTimersAsync();
-    expect(await store.get("saved")).toMatchObject({ year: 2008, counter: 2000 });
+    expect(await store.get(SAVED_ID)).toMatchObject({ year: 2008, counter: 2000 });
   });
 
   test("ページを切り替える前に保存する", async () => {
@@ -159,7 +167,7 @@ describe("自動保存", () => {
     kit.getState().edit("<p>edited</p>");
     ws.openPage("diary.html");
     await ws.flush();
-    expect((await store.get("saved"))?.pages.map((p) => p.html)).toEqual([
+    expect((await store.get(SAVED_ID))?.pages.map((p) => p.html)).toEqual([
       "<p>edited</p>",
       "<p>diary</p>",
     ]);
@@ -221,7 +229,7 @@ describe("サイトとページの管理", () => {
       "新しいサイト",
     ]);
     expect(kit.getState()).toMatchObject({ year: 2003, source: "<p>shop</p>", counter: 774 });
-    expect(ws.state.getState().currentId).toBe("id2");
+    expect(ws.state.getState().currentId).toBe(testId(2));
   });
 
   test("ページの追加、名前変更、削除", async () => {
@@ -238,13 +246,13 @@ describe("サイトとページの管理", () => {
 
   test("開いているサイトを消すと、残りのサイトか新しいサイトを開く", async () => {
     const { ws, store } = await ready();
-    const fallback = {
+    const fallback: NewSite = {
       ...FIRST,
       name: "代わり",
       year: 1995,
       pages: [{ path: "index.html", html: "" }],
     };
-    await ws.deleteSite("id1", fallback);
+    await ws.deleteSite(testId(1), fallback);
     expect((await store.list()).map((s) => s.name)).toEqual(["代わり"]);
     expect(ws.current()?.name).toBe("代わり");
   });
@@ -262,15 +270,15 @@ describe("サイトとページの管理", () => {
     };
     await ws.importShared(shared, { kind: "new" });
     expect(await store.list()).toHaveLength(2);
-    await ws.importShared({ ...shared, year: 2000 }, { kind: "overwrite", id: "id1" });
-    const overwritten = await store.get("id1");
+    await ws.importShared({ ...shared, year: 2000 }, { kind: "overwrite", id: testId(1) });
+    const overwritten = await store.get(testId(1));
     expect(overwritten).toMatchObject({ year: 2000, genre: "bbs" });
-    expect(ws.state.getState().currentId).toBe("id1");
+    expect(ws.state.getState().currentId).toBe(testId(1));
   });
 
   test("書き出した日時を残す", async () => {
     const { ws, store } = await ready();
-    await ws.markExported("id1");
-    expect((await store.get("id1"))?.lastExportedAt).toBe(1000);
+    await ws.markExported(testId(1));
+    expect((await store.get(testId(1)))?.lastExportedAt).toBe(1000);
   });
 });

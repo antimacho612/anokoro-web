@@ -11,8 +11,7 @@ import {
 } from "./desk-geometry.ts";
 import { useSvgIds, type Paint } from "./use-svg-ids.ts";
 
-/** 机に寝かせた物の、奥行きの縮み方。キーボードの見え方に合わせる */
-const SQUASH = 0.44;
+const DESK_DEPTH_SQUASH = 0.44;
 
 const shift =
   (dx: number, dy: number) =>
@@ -366,7 +365,7 @@ export function LampBeam() {
   );
 }
 
-const CD_PLANE = deskPlane({ x: -50, y: 555, angleDeg: 8, squash: SQUASH });
+const CD_PLANE = deskPlane({ x: -50, y: 555, angleDeg: 8, squash: DESK_DEPTH_SQUASH });
 const CD_CASE: readonly Point[] = roundedRect(176, 154, 2.5, 2);
 
 type TileProps = { x: number; y: number; paint: Paint };
@@ -618,7 +617,7 @@ export function CdCase() {
   );
 }
 
-const DISC_PLANE = deskPlane({ x: -178, y: 630, angleDeg: 0, squash: SQUASH });
+const DISC_PLANE = deskPlane({ x: -178, y: 630, angleDeg: 0, squash: DESK_DEPTH_SQUASH });
 const DISC_R = 70;
 
 export function Disc() {
@@ -687,7 +686,7 @@ export function Disc() {
         cx={DISC_PLANE.toScene(0, 0)[0]}
         cy={DISC_PLANE.toScene(0, 0)[1]}
         rx="7.5"
-        ry={7.5 * SQUASH}
+        ry={7.5 * DESK_DEPTH_SQUASH}
         fill="none"
         stroke="#3b2a1c"
         strokeOpacity="0.6"
@@ -836,7 +835,7 @@ export function FloppyStack() {
       {FLOPPIES.map(({ x, y, angle, body, label, accent }) => (
         <Floppy
           key={label}
-          plane={deskPlane({ x, y, angleDeg: angle, squash: SQUASH })}
+          plane={deskPlane({ x, y, angleDeg: angle, squash: DESK_DEPTH_SQUASH })}
           body={body}
           label={label}
           accent={accent}
@@ -1028,7 +1027,7 @@ export function Mug() {
   );
 }
 
-const PAD_PLANE = deskPlane({ x: 842, y: 648, angleDeg: -5, squash: SQUASH });
+const PAD_PLANE = deskPlane({ x: 842, y: 648, angleDeg: -5, squash: DESK_DEPTH_SQUASH });
 const PAD: readonly Point[] = roundedRect(250, 214, 12, 4);
 const MOUSE = { x: 848, y: 630, angle: -7 } as const;
 

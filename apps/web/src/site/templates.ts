@@ -25,7 +25,6 @@ export function siteTemplate(kind: SiteKindId, year: Year): string {
   return quizTemplate(kind, year) ?? BLANK;
 }
 
-/** サイトの種類の解説トピック */
 export function kindTopic(kind: SiteKindId): TopicId {
   return SITE_KINDS[kind].topic;
 }
