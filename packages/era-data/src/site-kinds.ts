@@ -28,32 +28,73 @@ export const SITE_KINDS = {
     label: "企業・お店の公式サイト",
     availableFrom: 1996,
     topic: "corporate",
-    sources: [wikipediaJa("ウェブサイト")],
+    sources: [
+      {
+        title: "総務省: 平成27年版 情報通信白書 企業ホームページの普及",
+        url: "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/h27/html/nc121220.html",
+      },
+    ],
   },
   portal: {
     label: "ディレクトリ型ポータル",
     availableFrom: 1996,
     endsAfter: 2005,
     topic: "portal",
-    sources: [wikipediaJa("ポータルサイト"), wikipediaJa("ディレクトリ型検索エンジン")],
+    sources: [
+      {
+        title: "LINEヤフー: 沿革（Yahoo! JAPAN）",
+        url: "https://www.lycorp.co.jp/ja/company/history/yahoo/",
+      },
+      {
+        title: "ヤフー: 検索結果表示の刷新（2005年10月3日）",
+        url: "https://www.lycorp.co.jp/news/archive/Y/ja/ja20051003_A.pdf",
+      },
+    ],
   },
   bbs: {
     label: "掲示板",
     availableFrom: 1996,
     topic: "bbs",
-    sources: [wikipediaJa("電子掲示板")],
+    sources: [
+      {
+        title: "INTERNET Watch: ホームページに掲示板を設置する方法（1999年6月21日）",
+        url: "https://internet.watch.impress.co.jp/www/article/1999/0621/special.htm",
+      },
+      {
+        title: "総務省: 令和元年版 情報通信白書 インターネット上のコミュニケーションの変遷",
+        url: "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r01/html/nd111120.html",
+      },
+    ],
   },
   shop: {
     label: "ネットショップ",
     availableFrom: 1999,
     topic: "shop",
-    sources: [wikipediaJa("オンラインショップ")],
+    sources: [
+      {
+        title: "Wayback Machine: 楽天市場のトップページ（1999年4月27日）",
+        url: "https://web.archive.org/web/19990427022639/http://www.rakuten.co.jp:80/",
+      },
+      {
+        title: "ASCII: Yahoo!ショッピングの開設（1999年9月10日）",
+        url: "https://ascii.jp/elem/000/000/305/305123/",
+      },
+    ],
   },
   blog: {
     label: "ブログ",
     availableFrom: 2003,
     topic: "blog",
-    sources: [wikipediaJa("ブログ")],
+    sources: [
+      {
+        title: "INTERNET Watch: ココログの開始（2003年12月2日）",
+        url: "https://internet.watch.impress.co.jp/cda/news/2003/12/02/1331.html",
+      },
+      {
+        title: "INTERNET Watch: livedoor Blog の正式開始（2003年12月19日）",
+        url: "https://internet.watch.impress.co.jp/cda/news/2003/12/19/1575.html",
+      },
+    ],
   },
 } as const satisfies Record<string, SiteKindEntry>;
 
