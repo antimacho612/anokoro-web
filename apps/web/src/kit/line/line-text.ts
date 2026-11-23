@@ -16,10 +16,10 @@ export function feeText(line: LineEntry, connectedAtMs: number | null, localNow:
   if (connectedAtMs === null) {
     return teleho
       ? "いまはテレホーダイの時間帯（23時〜翌8時は定額）"
-      : "通話料：3分ごとに10円かかります";
+      : "当時の通話料：3分ごとに10円";
   }
   const sec = Math.max(0, Math.floor((localNow.getTime() - connectedAtMs) / 1000));
-  return `接続時間 ${formatHms(sec)}　${teleho ? "テレホーダイ適用中（定額）" : `通話料 約${callFee(sec)}円`}`;
+  return `接続時間 ${formatHms(sec)}　${teleho ? "テレホーダイ適用中（定額）" : `当時なら通話料 約${callFee(sec)}円`}`;
 }
 
 export function lastLoadText({ elapsedMs, totalBytes, lineName }: LastLoad): string {

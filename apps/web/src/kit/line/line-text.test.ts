@@ -11,16 +11,16 @@ describe("feeText", () => {
   });
 
   it("未接続では料金の仕組みを出す", () => {
-    expect(feeText(getLine("m56"), null, noon)).toBe("通話料：3分ごとに10円かかります");
+    expect(feeText(getLine("m56"), null, noon)).toBe("当時の通話料：3分ごとに10円");
     expect(feeText(getLine("m56"), null, midnight)).toBe(
       "いまはテレホーダイの時間帯（23時〜翌8時は定額）",
     );
   });
 
-  it("接続中は接続時間と通話料を出し、テレホーダイの時間帯は金額を出さない", () => {
+  it("接続中は接続時間と当時の通話料を出し、テレホーダイの時間帯は金額を出さない", () => {
     const since = (date: Date, sec: number) => date.getTime() - sec * 1000;
     expect(feeText(getLine("m56"), since(noon, 181), noon)).toBe(
-      "接続時間 00:03:01　通話料 約20円",
+      "接続時間 00:03:01　当時なら通話料 約20円",
     );
     expect(feeText(getLine("isdn"), since(midnight, 3600), midnight)).toBe(
       "接続時間 01:00:00　テレホーダイ適用中（定額）",
