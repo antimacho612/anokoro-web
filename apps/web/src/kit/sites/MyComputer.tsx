@@ -1,9 +1,20 @@
 import { SITE_KINDS } from "@anokoro/era-data";
 import { SITE_CATEGORIES } from "@anokoro/shared";
 import type { LocalSite } from "@anokoro/site-store";
-import { useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { DECODE_ERROR_MESSAGES, type SharedSite } from "@anokoro/share-codec";
+import {
+  useRef,
+  useState,
+  type ChangeEvent,
+  type DragEvent,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
 import {
   canAddPage,
+  findSameSite,
+  needsExportReminder,
   newPageHtml,
   nextPagePath,
   normalizePagePath,
@@ -11,7 +22,7 @@ import {
 } from "../../site/site-model.ts";
 import { kindTopic, siteTemplate } from "../../site/templates.ts";
 import { HelpButton } from "../help/HelpButton.tsx";
-import { ConfirmDialog } from "../../ui/Dialog.tsx";
+import { ConfirmDialog, Dialog, dialogClass } from "../../ui/Dialog.tsx";
 import { Window } from "../../ui/Window/Window.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
@@ -22,13 +33,16 @@ import { useWorkspace, workspace } from "./instance.ts";
 import styles from "./MyComputer.module.css";
 import { ShareDialog } from "./ShareDialog.tsx";
 import { NewSiteDialog, PageNameDialog, SiteInfoDialog } from "./SiteDialogs.tsx";
-import type { NewSite } from "./workspace.ts";
+import { downloadFile, readSiteFile, siteFile } from "./site-file.ts";
+import type { ImportMode, NewSite } from "./workspace.ts";
 
 type Modal =
   | { kind: "new-site" }
   | { kind: "site-info"; site: LocalSite }
   | { kind: "delete-site"; site: LocalSite }
   | { kind: "share"; site: LocalSite }
+  | { kind: "import-conflict"; shared: SharedSite; existing: LocalSite }
+  | { kind: "message"; title: string; message: string }
   | { kind: "new-page" }
   | { kind: "rename-page"; path: string }
   | { kind: "delete-page"; path: string };
@@ -124,6 +138,8 @@ export function MyComputer() {
   const [folderId, setFolderId] = useState<string | null>(null);
   const [selectedPage, setSelectedPage] = useState<string | null>(null);
   const [modal, setModal] = useState<Modal | null>(null);
+  const [openedAt] = useState(() => Date.now());
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const showsSamples = folderId === SAMPLES_FOLDER;
   const folder = showsSamples
@@ -132,6 +148,11 @@ export function MyComputer() {
   const isCurrent = folder?.id === currentId;
   const selected = folder?.pages.some((p) => p.path === selectedPage) ? selectedPage : null;
   const close = (): void => setModal(null);
+  const currentSite = sites.find((s) => s.id === currentId);
+  const showsExportReminder =
+    target === "indexeddb" &&
+    currentSite !== undefined &&
+    needsExportReminder(currentSite, openedAt);
 
   const selectFolder = (id: string): void => {
     setFolderId(id);
@@ -156,6 +177,53 @@ export function MyComputer() {
     });
   };
 
+  const exportSite = (id: string): void => {
+    void workspace.flush().then(async () => {
+      const site = workspace.state.getState().sites.find((s) => s.id === id);
+      if (!site) return;
+      downloadFile(siteFile(site));
+      await workspace.markExported(id);
+    });
+  };
+
+  const importAs = async (shared: SharedSite, mode: ImportMode): Promise<void> => {
+    close();
+    const site = await workspace.importShared(shared, mode);
+    if (site) selectFolder(site.id);
+  };
+
+  const importFile = async (file: File): Promise<void> => {
+    const result = await readSiteFile(file);
+    if (!result.ok) {
+      setModal({
+        kind: "message",
+        title: "フロッピーから開く",
+        message: DECODE_ERROR_MESSAGES[result.error],
+      });
+      return;
+    }
+    const existing = findSameSite(workspace.state.getState().sites, result.site);
+    if (existing) setModal({ kind: "import-conflict", shared: result.site, existing });
+    else await importAs(result.site, { kind: "new" });
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const file = e.currentTarget.files?.[0];
+    e.currentTarget.value = "";
+    if (file) void importFile(file);
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>): void => {
+    if (e.dataTransfer.types.includes("Files")) e.preventDefault();
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>): void => {
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    e.preventDefault();
+    void importFile(file);
+  };
+
   const confirmDeleteSite = (site: LocalSite): void => {
     close();
     setFolderId(null);
@@ -164,126 +232,149 @@ export function MyComputer() {
 
   return (
     <Window title="マイコンピュータ" controls={["_", "□", "×"]} className={slotClass.computer}>
-      <div className={styles.toolbar}>
-        <button type="button" className="btn" onClick={() => setModal({ kind: "new-site" })}>
-          新しいサイト
-        </button>
-      </div>
-      {target === "memory" && (
-        <p className={styles.notice} role="status">
-          このブラウザでは、サイトを保存できません。ページを閉じると消えるので、ファイルに書き出してください。
-        </p>
-      )}
-      <div className={styles.explorer}>
-        <div className={`${styles.pane} ${styles.folders} sunken`}>
-          <ul className={styles.icons} aria-label="サイト">
-            {sites.map((site) => (
-              <li key={site.id}>
+      <div onDragOver={handleDragOver} onDrop={handleDrop}>
+        <div className={styles.toolbar}>
+          <button type="button" className="btn" onClick={() => setModal({ kind: "new-site" })}>
+            新しいサイト
+          </button>
+          <button type="button" className="btn" onClick={() => fileInputRef.current?.click()}>
+            フロッピーから開く
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,application/json"
+            aria-label="開くファイル"
+            hidden
+            onChange={handleFileChange}
+          />
+        </div>
+        {showsExportReminder && (
+          <p className={styles.notice} role="status">
+            ブラウザのデータを消すとサイトも消えます。フロッピーに保存しましょう
+          </p>
+        )}
+        {target === "memory" && (
+          <p className={styles.notice} role="status">
+            このブラウザでは、サイトを保存できません。ページを閉じると消えるので、ファイルに書き出してください。
+          </p>
+        )}
+        <div className={styles.explorer}>
+          <div className={`${styles.pane} ${styles.folders} sunken`}>
+            <ul className={styles.icons} aria-label="サイト">
+              {sites.map((site) => (
+                <li key={site.id}>
+                  <IconButton
+                    label={site.name}
+                    icon={<FolderIcon isOpen={site.id === folder?.id} />}
+                    isSelected={site.id === folder?.id}
+                    onSelect={() => selectFolder(site.id)}
+                    onOpen={() => {
+                      selectFolder(site.id);
+                      if (site.id !== currentId) workspace.openSite(site.id);
+                    }}
+                  />
+                </li>
+              ))}
+              <li>
                 <IconButton
-                  label={site.name}
-                  icon={<FolderIcon isOpen={site.id === folder?.id} />}
-                  isSelected={site.id === folder?.id}
-                  onSelect={() => selectFolder(site.id)}
-                  onOpen={() => {
-                    selectFolder(site.id);
-                    if (site.id !== currentId) workspace.openSite(site.id);
-                  }}
+                  label="見本サイト"
+                  icon={<SampleFolderIcon />}
+                  isSelected={showsSamples}
+                  onSelect={() => selectFolder(SAMPLES_FOLDER)}
+                  onOpen={() => selectFolder(SAMPLES_FOLDER)}
                 />
               </li>
-            ))}
-            <li>
-              <IconButton
-                label="見本サイト"
-                icon={<SampleFolderIcon />}
-                isSelected={showsSamples}
-                onSelect={() => selectFolder(SAMPLES_FOLDER)}
-                onOpen={() => selectFolder(SAMPLES_FOLDER)}
-              />
-            </li>
-          </ul>
-        </div>
-        {showsSamples && <SamplesFolder />}
-        {folder && (
-          <div className={styles.contents}>
-            <div className={styles.address}>
-              アドレス
-              <div className="sunken">{`マイコンピュータ\\${folder.name}`}</div>
-            </div>
-            <p className={styles.props}>
-              {folder.year} 年 ／ {SITE_KINDS[folder.genre].label} ／{" "}
-              {SITE_CATEGORIES[folder.category]} ／ {folder.pages.length} ページ
-              {isCurrent ? "（作成キットで開いています）" : ""}{" "}
-              <HelpButton topic={kindTopic(folder.genre)} />
-            </p>
-            <div className={styles.toolbar}>
-              <button
-                type="button"
-                className="btn"
-                onClick={() => setModal({ kind: "site-info", site: folder })}
-              >
-                プロパティ
-              </button>
-              <button type="button" className="btn" onClick={() => openShare(folder.id)}>
-                URL で共有
-              </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={() => setModal({ kind: "delete-site", site: folder })}
-              >
-                サイトを削除
-              </button>
-            </div>
-            <div className={`${styles.pane} sunken`}>
-              <ul className={styles.icons} aria-label={`${folder.name} のページ`}>
-                {folder.pages.map((page) => (
-                  <li key={page.path}>
-                    <IconButton
-                      label={page.path}
-                      icon={<PageIcon />}
-                      isSelected={
-                        selected === page.path || (isCurrent && !selected && page.path === pagePath)
-                      }
-                      onSelect={() => setSelectedPage(page.path)}
-                      onOpen={() => openPage(folder, page.path)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className={styles.toolbar}>
-              <button
-                type="button"
-                className="btn"
-                disabled={!isCurrent || !canAddPage(folder)}
-                onClick={() => setModal({ kind: "new-page" })}
-              >
-                新しいページ
-              </button>
-              <button
-                type="button"
-                className="btn"
-                disabled={!isCurrent || selected === null}
-                onClick={() => selected && setModal({ kind: "rename-page", path: selected })}
-              >
-                名前の変更
-              </button>
-              <button
-                type="button"
-                className="btn"
-                disabled={!isCurrent || selected === null || folder.pages.length <= 1}
-                onClick={() => selected && setModal({ kind: "delete-page", path: selected })}
-              >
-                ページを削除
-              </button>
-            </div>
-            {!isCurrent && (
-              <p className="hint">
-                ページをダブルクリックすると、このサイトを作成キットで開きます。
-              </p>
-            )}
+            </ul>
           </div>
-        )}
+          {showsSamples && <SamplesFolder />}
+          {folder && (
+            <div className={styles.contents}>
+              <div className={styles.address}>
+                アドレス
+                <div className="sunken">{`マイコンピュータ\\${folder.name}`}</div>
+              </div>
+              <p className={styles.props}>
+                {folder.year} 年 ／ {SITE_KINDS[folder.genre].label} ／{" "}
+                {SITE_CATEGORIES[folder.category]} ／ {folder.pages.length} ページ
+                {isCurrent ? "（作成キットで開いています）" : ""}{" "}
+                <HelpButton topic={kindTopic(folder.genre)} />
+              </p>
+              <div className={styles.toolbar}>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => setModal({ kind: "site-info", site: folder })}
+                >
+                  プロパティ
+                </button>
+                <button type="button" className="btn" onClick={() => openShare(folder.id)}>
+                  URL で共有
+                </button>
+                <button type="button" className="btn" onClick={() => exportSite(folder.id)}>
+                  フロッピーに保存
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => setModal({ kind: "delete-site", site: folder })}
+                >
+                  サイトを削除
+                </button>
+              </div>
+              <div className={`${styles.pane} sunken`}>
+                <ul className={styles.icons} aria-label={`${folder.name} のページ`}>
+                  {folder.pages.map((page) => (
+                    <li key={page.path}>
+                      <IconButton
+                        label={page.path}
+                        icon={<PageIcon />}
+                        isSelected={
+                          selected === page.path ||
+                          (isCurrent && !selected && page.path === pagePath)
+                        }
+                        onSelect={() => setSelectedPage(page.path)}
+                        onOpen={() => openPage(folder, page.path)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className={styles.toolbar}>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={!isCurrent || !canAddPage(folder)}
+                  onClick={() => setModal({ kind: "new-page" })}
+                >
+                  新しいページ
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={!isCurrent || selected === null}
+                  onClick={() => selected && setModal({ kind: "rename-page", path: selected })}
+                >
+                  名前の変更
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={!isCurrent || selected === null || folder.pages.length <= 1}
+                  onClick={() => selected && setModal({ kind: "delete-page", path: selected })}
+                >
+                  ページを削除
+                </button>
+              </div>
+              {!isCurrent && (
+                <p className="hint">
+                  ページをダブルクリックすると、このサイトを作成キットで開きます。
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+        <p className="hint">ファイル（.anokoro.json）をここにドロップしても開けます。</p>
       </div>
 
       {modal?.kind === "new-site" && (
@@ -308,6 +399,46 @@ export function MyComputer() {
         />
       )}
       {modal?.kind === "share" && <ShareDialog site={modal.site} onClose={close} />}
+      {modal?.kind === "import-conflict" && (
+        <Dialog title="フロッピーから開く" onClose={close}>
+          <div className={dialogClass.body}>
+            「{modal.existing.name}」はもうあります。上書きしますか？ 別のサイトとして追加しますか？
+          </div>
+          <div className={dialogClass.buttons}>
+            <button
+              type="button"
+              className="btn"
+              onClick={() =>
+                void importAs(modal.shared, { kind: "overwrite", id: modal.existing.id })
+              }
+            >
+              上書き
+            </button>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => void importAs(modal.shared, { kind: "new" })}
+            >
+              別のサイトとして追加
+            </button>
+            <button type="button" className="btn" onClick={close}>
+              キャンセル
+            </button>
+          </div>
+        </Dialog>
+      )}
+      {modal?.kind === "message" && (
+        <Dialog title={modal.title} onClose={close}>
+          <div className={dialogClass.body} role="alert">
+            {modal.message}
+          </div>
+          <div className={dialogClass.buttons}>
+            <button type="button" className="btn" onClick={close}>
+              OK
+            </button>
+          </div>
+        </Dialog>
+      )}
       {modal?.kind === "new-page" && folder && (
         <PageNameDialog
           title="新しいページ"
