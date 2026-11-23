@@ -9,7 +9,8 @@ import {
   normalizePagePath,
   pagePathProblem,
 } from "../../site/site-model.ts";
-import { siteTemplate } from "../../site/templates.ts";
+import { kindTopic, siteTemplate } from "../../site/templates.ts";
+import { HelpButton } from "../help/HelpButton.tsx";
 import { ConfirmDialog } from "../../ui/Dialog.tsx";
 import { Window } from "../../ui/Window/Window.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
@@ -150,7 +151,8 @@ export function MyComputer() {
             <p className={styles.props}>
               {folder.year} 年 ／ {SITE_KINDS[folder.genre].label} ／{" "}
               {SITE_CATEGORIES[folder.category]} ／ {folder.pages.length} ページ
-              {isCurrent ? "（作成キットで開いています）" : ""}
+              {isCurrent ? "（作成キットで開いています）" : ""}{" "}
+              <HelpButton topic={kindTopic(folder.genre)} />
             </p>
             <div className={styles.toolbar}>
               <button

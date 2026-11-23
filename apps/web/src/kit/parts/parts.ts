@@ -1,6 +1,12 @@
 import type { AssetEntry } from "@anokoro/assets";
 import type { TopicId } from "@anokoro/era-checker";
-import { FEATURES, featureStatus, type FeatureId, type Year } from "@anokoro/era-data";
+import {
+  FEATURES,
+  featureStatus,
+  type FeatureId,
+  type SiteKindId,
+  type Year,
+} from "@anokoro/era-data";
 
 export interface Part {
   label: string;
@@ -9,9 +15,103 @@ export interface Part {
   tipTopic: TopicId;
   /** パーツが頼る機能。その機能が使えない年は灰色にする。なければどの年でも使える */
   feature?: FeatureId;
+  /** その種類のサイトでだけ出すパーツ。なければどの種類でも出す */
+  kinds?: readonly SiteKindId[];
 }
 
 export const PARTS: readonly Part[] = [
+  {
+    label: "ようこそ",
+    code: `<center><font size="5" color="#003399"><b>ようこそ ほげほげ商事のホームページへ</b></font></center>
+`,
+    tip: "トップに「ようこそ」と大きく書くのが、企業サイトの第一声でした",
+    tipTopic: "corporate",
+    kinds: ["corporate"],
+  },
+  {
+    label: "最終更新日",
+    code: `<hr>
+<font size="2">最終更新日：2003年11月18日<br>Copyright (C) Hogehoge Co., Ltd. All Rights Reserved.</font>
+`,
+    tip: "ページの下に最終更新日と著作権表示を置くのが決まりごとでした",
+    tipTopic: "corporate",
+    kinds: ["corporate"],
+  },
+  {
+    label: "カテゴリ一覧",
+    code: `<table border="0" cellpadding="4" width="500">
+<tr>
+<td><b><a href="art.html">芸術と人文</a></b><br><font size="2">文学、写真、美術館...</font></td>
+<td><b><a href="hobby.html">趣味とスポーツ</a></b><br><font size="2">音楽、釣り、ゲーム...</font></td>
+</tr>
+</table>
+`,
+    tip: "カテゴリをたどってサイトを探すのが、ディレクトリ型の使い方でした",
+    tipTopic: "portal",
+    kinds: ["portal"],
+  },
+  {
+    label: "サイト登録",
+    code: `<font size="2">あなたのホームページを載せませんか？ <a href="regist.html">ご登録はこちら</a></font><br>
+`,
+    tip: "登録されるとアクセスが一気に増えるので、申請する人が絶えませんでした",
+    tipTopic: "portal",
+    kinds: ["portal"],
+  },
+  {
+    label: "書き込み",
+    code: `<dl>
+<dt>1 名前：<b>名無しさん</b> 投稿日：2003/11/18 21:40
+<dd>はじめまして。いつも見ています。<br><br>
+</dl>
+`,
+    tip: "名前の欄を空にすると「名無しさん」と表示されるのが、匿名掲示板の作法でした",
+    tipTopic: "bbs",
+    kinds: ["bbs"],
+  },
+  {
+    label: "スレッド一覧",
+    code: `<b>■スレッド一覧</b><br>
+<font size="2">1: <a href="#1">雑談スレ (128)</a> 2: <a href="#2">初心者質問スレ (45)</a></font><br>
+`,
+    tip: "話題ごとのスレッドに書き込みが積み重なっていきました",
+    tipTopic: "bbs",
+    kinds: ["bbs"],
+  },
+  {
+    label: "値段",
+    code: `<font color="#CC0000" size="6"><b>1,980円</b></font><font size="2">（税込）</font> <font color="#CC0000"><b>★送料無料★</b></font><br>
+`,
+    tip: "赤くて大きな値段と「送料無料」が、ネットショップの顔でした",
+    tipTopic: "shop",
+    kinds: ["shop"],
+  },
+  {
+    label: "特定商取引法",
+    code: `<font size="2"><a href="law.html">特定商取引法に基づく表記</a> ｜ <a href="guide.html">ご利用ガイド</a></font><br>
+`,
+    tip: "通信販売では、販売者の名前や連絡先などを表示することが法律で決められています",
+    tipTopic: "shop",
+    kinds: ["shop"],
+  },
+  {
+    label: "記事の終わり",
+    code: `<div align="right"><font size="1">投稿者 はなこ 21:40 ｜ <a href="comment.html">コメント (3)</a> ｜ <a href="tb.html">トラックバック (1)</a></font></div>
+`,
+    tip: "記事の下には、コメントとトラックバックの件数が並びました",
+    tipTopic: "blog",
+    kinds: ["blog"],
+  },
+  {
+    label: "最近の記事",
+    code: `<b>最近の記事</b><br>
+<font size="2"><a href="1120.html">ホットケーキを焼きました</a><br>
+<a href="1115.html">駅前のケーキ屋さん</a></font><br>
+`,
+    tip: "サイドバーにはプロフィール、カレンダー、最近の記事などが並びました",
+    tipTopic: "blog",
+    kinds: ["blog"],
+  },
   {
     label: "マーキー",
     code: `<marquee behavior="alternate"><font color="#FF00FF">★☆★ ようこそ ★☆★</font></marquee>\n`,
@@ -70,6 +170,13 @@ export const PARTS: readonly Part[] = [
     tipTopic: "css",
   },
 ];
+
+/** そのサイトの種類で出すパーツ。種類に合わせたパーツを先に並べる */
+export function partsForKind(kind: SiteKindId): Part[] {
+  const own = PARTS.filter((p) => p.kinds?.includes(kind));
+  const common = PARTS.filter((p) => p.kinds === undefined);
+  return [...own, ...common];
+}
 
 export type PartAvailability = { usable: true } | { usable: false; label: string };
 

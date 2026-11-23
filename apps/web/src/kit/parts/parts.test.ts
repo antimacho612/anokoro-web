@@ -1,6 +1,8 @@
 import { ASSETS, type AssetEntry } from "@anokoro/assets";
 import { describe, expect, it } from "vite-plus/test";
-import { PARTS, assetSnippet, partAvailability, type Part } from "./parts.ts";
+import { checkEra } from "@anokoro/era-checker";
+import { SITE_KINDS, SITE_KIND_IDS } from "@anokoro/era-data";
+import { PARTS, assetSnippet, partAvailability, partsForKind, type Part } from "./parts.ts";
 
 function part(label: string): Part {
   const found = PARTS.find((p) => p.label === label);
@@ -43,5 +45,24 @@ describe("assetSnippet", () => {
     expect(assetSnippet(asset("line.gif"))).toBe(
       '<img src="line.gif" width="400" height="8"><br>\n',
     );
+  });
+});
+
+describe("種類ごとのパーツ", () => {
+  it("その種類のパーツを先に並べ、ほかの種類のパーツは出さない", () => {
+    const shop = partsForKind("shop");
+    expect(shop.slice(0, 2).map((p) => p.label)).toEqual(["値段", "特定商取引法"]);
+    expect(shop.some((p) => p.kinds?.includes("blog"))).toBe(false);
+    expect(shop.some((p) => p.label === "マーキー")).toBe(true);
+  });
+
+  it.each(SITE_KIND_IDS)("%s のパーツは、その種類がある年から警告なしで使える", (kind) => {
+    const from = SITE_KINDS[kind].availableFrom;
+    for (const p of PARTS.filter((x) => x.kinds?.includes(kind))) {
+      const html = `<html><body>${p.code}</body></html>`;
+      for (const year of [from, 2015]) {
+        expect(checkEra(html, { year, mode: "local" }).warnings.map((w) => w.ruleId)).toEqual([]);
+      }
+    }
   });
 });

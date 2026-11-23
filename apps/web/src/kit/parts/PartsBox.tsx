@@ -5,7 +5,8 @@ import { HelpButton } from "../help/HelpButton.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import styles from "./PartsBox.module.css";
-import { PARTS, assetSnippet, partAvailability, type Part } from "./parts.ts";
+import { useWorkspace } from "../sites/instance.ts";
+import { assetSnippet, partAvailability, partsForKind, type Part } from "./parts.ts";
 
 const THUMBNAILS = ASSETS.map((asset) => ({ asset, uri: toDataUri(asset.svg) }));
 
@@ -16,13 +17,14 @@ type PartsBoxProps = {
 export function PartsBox({ onInsert }: PartsBoxProps) {
   const year = useKit((s) => s.year);
   const [lastPart, setLastPart] = useState<Part | null>(null);
+  const kind = useWorkspace((s) => s.sites.find((x) => x.id === s.currentId)?.genre ?? "personal");
 
   return (
     <Window title="素材・パーツ箱" className={slotClass.parts}>
       <div className="group">
         <b>パーツ（カーソル位置に挿入）</b>
         <div className={styles.parts}>
-          {PARTS.map((part) => {
+          {partsForKind(kind).map((part) => {
             const availability = partAvailability(part, year);
             return (
               <button

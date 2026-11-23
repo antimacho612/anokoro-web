@@ -11,6 +11,8 @@ export interface SiteKindEntry {
   availableFrom: Year;
   /** よく見かけた最後の年。ないものは対象の最終年まで続く */
   endsAfter?: Year;
+  /** この種類の解説トピックの ID */
+  topic: string;
   sources: readonly Source[];
 }
 
@@ -19,32 +21,38 @@ export const SITE_KINDS = {
   personal: {
     label: "個人ホームページ",
     availableFrom: 1995,
+    topic: "culture",
     sources: [wikipediaJa("個人サイト")],
   },
   corporate: {
     label: "企業・お店の公式サイト",
     availableFrom: 1996,
+    topic: "corporate",
     sources: [wikipediaJa("ウェブサイト")],
   },
   portal: {
     label: "ディレクトリ型ポータル",
     availableFrom: 1996,
     endsAfter: 2005,
+    topic: "portal",
     sources: [wikipediaJa("ポータルサイト"), wikipediaJa("ディレクトリ型検索エンジン")],
   },
   bbs: {
     label: "掲示板",
     availableFrom: 1996,
+    topic: "bbs",
     sources: [wikipediaJa("電子掲示板")],
   },
   shop: {
     label: "ネットショップ",
     availableFrom: 1999,
+    topic: "shop",
     sources: [wikipediaJa("オンラインショップ")],
   },
   blog: {
     label: "ブログ",
     availableFrom: 2003,
+    topic: "blog",
     sources: [wikipediaJa("ブログ")],
   },
 } as const satisfies Record<string, SiteKindEntry>;
