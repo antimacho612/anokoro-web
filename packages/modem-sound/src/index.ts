@@ -1,4 +1,3 @@
-export { createRandom, type Random } from "./random.ts";
 export {
   MODEM_SEGMENTS,
   SAMPLE_RATE,

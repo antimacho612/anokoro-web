@@ -24,6 +24,17 @@ export interface Placement {
   slot: number;
 }
 
+/**
+ * 表示モードで答えの要素を見分けるために付ける属性。ソース表示には出さない。
+ * お題の id や class とぶつからず、時代チェッカーが取り除かない名前にする
+ */
+export const ANSWER_ATTRIBUTE = "anokoro-quiz-answer";
+
+export interface AssembleOptions {
+  /** 仕掛けを入れた要素に ANSWER_ATTRIBUTE を付ける */
+  markAnswer?: boolean;
+}
+
 function isSlotKind(value: string | undefined): value is SlotKind {
   return (
     value === "block" ||
@@ -68,16 +79,19 @@ function escapeAttribute(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 }
 
-function renderInsert(insert: TrickInsert): string {
+function renderInsert(insert: TrickInsert, markAnswer: boolean): string {
+  const marker = markAnswer ? ` ${ANSWER_ATTRIBUTE}` : "";
   switch (insert.kind) {
     case "element":
-      return insert.html;
+      return markAnswer
+        ? insert.html.replace(/^<[a-z][a-z0-9]*/i, (tag) => tag + marker)
+        : insert.html;
     case "attribute":
       return insert.value === undefined
-        ? ` ${insert.name}`
-        : ` ${insert.name}="${escapeAttribute(insert.value)}"`;
+        ? `${marker} ${insert.name}`
+        : `${marker} ${insert.name}="${escapeAttribute(insert.value)}"`;
     case "style":
-      return ` style="${escapeAttribute(insert.declarations)}"`;
+      return `${marker} style="${escapeAttribute(insert.declarations)}"`;
     default: {
       const exhaustive: never = insert;
       return exhaustive;
@@ -89,7 +103,11 @@ function renderInsert(insert: TrickInsert): string {
  * お題に仕掛けを入れ、差し込み口の目印を取り除いたソースを返す。
  * placement を省くと仕掛けなしのソースになる。
  */
-export function assembleQuiz(page: QuizPage, placement?: Placement): AssembledQuiz {
+export function assembleQuiz(
+  page: QuizPage,
+  placement?: Placement,
+  { markAnswer = false }: AssembleOptions = {},
+): AssembledQuiz {
   if (placement !== undefined) {
     const slot = listSlots(page)[placement.slot];
     if (slot === undefined || slot.kind !== slotKindOf(placement.trick.insert)) {
@@ -109,7 +127,7 @@ export function assembleQuiz(page: QuizPage, placement?: Placement): AssembledQu
       const index = slotIndex++;
       if (placement?.slot !== index) return "";
       hit = true;
-      return renderInsert(placement.trick.insert);
+      return renderInsert(placement.trick.insert, markAnswer);
     });
     if (!hit && SLOT_ONLY_LINE.test(line)) continue;
     out.push(replaced);

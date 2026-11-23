@@ -8,3 +8,4 @@ export {
   isTelehoTime,
 } from "./call-fee.ts";
 export { isKiriban } from "./kiriban.ts";
+export { createRandom, type Random } from "./random.ts";

@@ -1,4 +1,4 @@
-import { createRandom, type Random } from "./random.ts";
+import { createRandom, type Random } from "@anokoro/shared";
 
 export const SAMPLE_RATE = 22050;
 

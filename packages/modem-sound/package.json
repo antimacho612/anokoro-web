@@ -9,6 +9,9 @@
   "scripts": {
     "test": "vp test"
   },
+  "dependencies": {
+    "@anokoro/shared": "workspace:*"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
     "typescript": "catalog:",

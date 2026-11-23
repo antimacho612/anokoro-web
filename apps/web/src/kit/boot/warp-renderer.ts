@@ -1,4 +1,4 @@
-import { createRandom } from "@anokoro/modem-sound";
+import { createRandom } from "@anokoro/shared";
 import type { FragmentAsset, FragmentToken, PlannedFragment } from "./boot-fragments.ts";
 import { eraPalette, rgba, type EraPalette } from "./era-palette.ts";
 import type { OutlineFrame } from "./reveal-plan.ts";

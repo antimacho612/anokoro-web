@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { assembleQuiz, listSlots, slotsFor } from "./assemble.ts";
+import { ANSWER_ATTRIBUTE, assembleQuiz, listSlots, slotsFor } from "./assemble.ts";
 import { pageAvailableIn, trickAvailableIn, trickDisplayable } from "./eligibility.ts";
 import type { QuizPage, QuizTrick } from "./types.ts";
 
@@ -87,6 +87,20 @@ describe("assembleQuiz", () => {
     const { source, answerLine } = assembleQuiz(page, { trick: dataAttr, slot: 3 });
     expect(source).toContain('<a data-x="a&quot;b" href="a.html">');
     expect(answerLine).toBe(4);
+  });
+
+  it("markAnswer では仕掛けを入れたタグに答えの目印を付ける", () => {
+    const mark = { markAnswer: true };
+    const lineOf = (source: string, index: number): string | undefined => source.split("\n")[index];
+    expect(lineOf(assembleQuiz(page, { trick: radius, slot: 0 }, mark).source, 1)).toBe(
+      `<p ${ANSWER_ATTRIBUTE} style="border-radius:10px">あいさつ</p>`,
+    );
+    expect(lineOf(assembleQuiz(page, { trick: section, slot: 1 }, mark).source, 2)).toBe(
+      `<section ${ANSWER_ATTRIBUTE}>お知らせ</section>`,
+    );
+    expect(assembleQuiz(page, { trick: dataAttr, slot: 3 }, mark).source).toContain(
+      `<a ${ANSWER_ATTRIBUTE} data-x=`,
+    );
   });
 
   it("合わない差し込み口を指定するとエラー", () => {

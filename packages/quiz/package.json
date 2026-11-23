@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@anokoro/era-checker": "workspace:*",
-    "@anokoro/era-data": "workspace:*"
+    "@anokoro/era-data": "workspace:*",
+    "@anokoro/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",

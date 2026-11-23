@@ -11,7 +11,7 @@ import {
   type LineKey,
   type Year,
 } from "@anokoro/era-data";
-import { createRandom } from "@anokoro/modem-sound";
+import { createRandom } from "@anokoro/shared";
 import { displayYear, phaseStartMs, yearValueAt, type BootTimeline } from "./boot-timeline.ts";
 
 export type FragmentToken =

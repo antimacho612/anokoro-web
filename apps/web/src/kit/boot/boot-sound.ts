@@ -1,4 +1,4 @@
-import { createRandom, type Random } from "@anokoro/modem-sound";
+import { createRandom, type Random } from "@anokoro/shared";
 import {
   phaseStartMs,
   totalMs,
