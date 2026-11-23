@@ -25,7 +25,7 @@ export function notFoundPage(url: string): string {
 <p>アドレス: <tt>${escapeHtml(url)}</tt></p>
 <p>・アドレスをもう一度たしかめてください。<br>
 ・「戻る」ボタンで前のページに戻れます。</p>
-<p><font color="#808080">ネットサーファーでは、ホームページ作成キットで作ったサイトの中だけを見られます。</font></p>
+<p><font color="#808080">ネットサーファーでは、作成キットで作ったサイトの中だけを見られます。</font></p>
 </font>
 </td></tr></table>
 </body>

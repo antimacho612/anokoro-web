@@ -60,7 +60,7 @@ export function KitApp() {
     <>
       <KitTaskbar />
       <header className={styles.top}>
-        <h1 className="dot">あのころ Web ホームページ作成キット</h1>
+        <h1 className="dot">あのころ Web 作成キット</h1>
       </header>
       <TimeMachineBar />
       <main>
