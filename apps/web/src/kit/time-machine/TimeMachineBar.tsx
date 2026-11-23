@@ -1,4 +1,5 @@
 import { MAX_YEAR, MIN_YEAR } from "@anokoro/era-data";
+import { quizUrl } from "../../quiz/quiz-params.ts";
 import { HelpToggle } from "../help/HelpToggle.tsx";
 import { useKit } from "../store.ts";
 import styles from "./TimeMachineBar.module.css";
@@ -47,6 +48,9 @@ export function TimeMachineBar() {
         {year}年
       </output>
       <HelpToggle className={`btn ${styles.help}`}>この年の解説</HelpToggle>
+      <a className={`btn ${styles.quiz}`} href={quizUrl(import.meta.env.BASE_URL)}>
+        まちがいさがし
+      </a>
     </div>
   );
 }

@@ -34,3 +34,10 @@
 .help {
   font-weight: bold;
 }
+
+.quiz {
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}

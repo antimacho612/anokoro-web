@@ -262,6 +262,9 @@ importers:
       '@anokoro/netsim':
         specifier: workspace:*
         version: link:../../packages/netsim
+      '@anokoro/quiz':
+        specifier: workspace:*
+        version: link:../../packages/quiz
       '@anokoro/shared':
         specifier: workspace:*
         version: link:../../packages/shared

@@ -1,0 +1,181 @@
+.top {
+  color: #fff;
+  margin: 2px 2px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.top h1 {
+  font-size: 26px;
+  margin: 0;
+  letter-spacing: 1px;
+  text-shadow: var(--desktop-text-shadow);
+}
+
+.links {
+  display: flex;
+  gap: 6px;
+}
+
+.links a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  gap: 10px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.modeSwitch {
+  display: flex;
+  gap: 2px;
+  margin-right: 6px;
+}
+
+.viewport:focus-visible {
+  outline: 2px dotted #000;
+  outline-offset: 1px;
+}
+
+.source {
+  list-style: none;
+  margin: 0;
+  padding: 2px 0;
+  max-height: 560px;
+  overflow: auto;
+  font-family: "MS Gothic", "Courier New", monospace;
+  font-size: 12px;
+}
+
+.sourceLine {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  padding: 1px 6px 1px 0;
+  cursor: pointer;
+  color: #000;
+}
+
+.sourceLine:hover {
+  background: #e8f0ff;
+}
+
+.sourceLine:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -1px;
+}
+
+.sourceLine code {
+  font: inherit;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.lineNumber {
+  flex: none;
+  width: 3.5em;
+  text-align: right;
+  color: #808080;
+  border-right: 1px solid #c0c0c0;
+  padding-right: 6px;
+  user-select: none;
+}
+
+.sourceLine.lineMiss {
+  background: #ffd8d8;
+  text-decoration: line-through #e00000;
+}
+
+.sourceLine.lineHit {
+  background: #d0f5d0;
+  font-weight: bold;
+}
+
+.sourceLine.lineReveal {
+  background: #ffd0f5;
+  font-weight: bold;
+  animation: reveal 0.8s steps(1) 5;
+}
+
+@keyframes reveal {
+  50% {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sourceLine.lineReveal {
+    animation: none;
+  }
+}
+
+.answer {
+  min-width: 0;
+}
+
+.year {
+  margin: 4px 2px;
+  font-size: 14px;
+}
+
+.year span {
+  font-size: 22px;
+  color: var(--accent);
+  margin-right: 2px;
+}
+
+.tries {
+  margin: 8px 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tryLeft {
+  color: #e00000;
+}
+
+.tryUsed {
+  color: #c0c0c0;
+}
+
+.result {
+  min-height: 72px;
+  margin: 8px 0;
+  padding: 6px 8px;
+  line-height: 1.6;
+}
+
+.message {
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.note {
+  margin: 4px 0 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

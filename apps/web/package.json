@@ -16,6 +16,7 @@
     "@anokoro/help": "workspace:*",
     "@anokoro/modem-sound": "workspace:*",
     "@anokoro/netsim": "workspace:*",
+    "@anokoro/quiz": "workspace:*",
     "@anokoro/shared": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",

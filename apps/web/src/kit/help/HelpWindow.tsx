@@ -1,10 +1,22 @@
-import { resolveTopic, topicHtml, topicsForYear } from "@anokoro/help";
-import { useEffect, useRef } from "react";
-import { topics } from "virtual:anokoro-help";
-import { Window } from "../../ui/Window/Window.tsx";
-import { useDialogFocus } from "../../ui/Window/useDialogFocus.ts";
+import { quizTopics } from "@anokoro/quiz";
+import type { TopicId } from "@anokoro/era-checker";
+import { quizUrl } from "../../quiz/quiz-params.ts";
 import { useKit } from "../store.ts";
+import { HelpDialogView } from "./HelpDialogView.tsx";
 import styles from "./HelpWindow.module.css";
+
+const QUIZ_TOPICS = quizTopics();
+
+function QuizLink({ topic }: { topic: TopicId }) {
+  if (!QUIZ_TOPICS.has(topic)) return null;
+  return (
+    <p className={styles.quizLink}>
+      <a className="btn" href={quizUrl(import.meta.env.BASE_URL, { topic })}>
+        この技術でまちがいさがし
+      </a>
+    </p>
+  );
+}
 
 export function HelpWindow() {
   const helpOpen = useKit((s) => s.helpOpen);
@@ -16,54 +28,14 @@ function HelpDialog() {
   const wantedHelpTopic = useKit((s) => s.wantedHelpTopic);
   const selectHelpTopic = useKit((s) => s.selectHelpTopic);
   const closeHelp = useKit((s) => s.closeHelp);
-  const dialogRef = useRef<HTMLElement>(null);
-  const bodyRef = useRef<HTMLDivElement>(null);
-
-  const shown = topicsForYear(topics, year);
-  const topic = resolveTopic(topics, year, wantedHelpTopic);
-
-  useDialogFocus(dialogRef, closeHelp);
-
-  useEffect(() => {
-    if (bodyRef.current) bodyRef.current.scrollTop = 0;
-  }, [topic?.id]);
 
   return (
-    <Window
-      ref={dialogRef}
-      role="dialog"
-      tabIndex={-1}
-      title="ヘルプ - あのころのWeb解説"
-      controls={["?", "×"]}
-      className={styles.dialog}
+    <HelpDialogView
+      year={year}
+      wantedTopic={wantedHelpTopic}
+      onSelectTopic={selectHelpTopic}
       onClose={closeHelp}
-    >
-      <div className={styles.tabs} role="group" aria-label="解説のトピック">
-        {shown.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            className={t.id === topic?.id ? "btn on" : "btn"}
-            aria-pressed={t.id === topic?.id}
-            onClick={() => selectHelpTopic(t.id)}
-          >
-            {t.title}
-          </button>
-        ))}
-      </div>
-      {topic && (
-        <div
-          ref={bodyRef}
-          className={`${styles.body} sunken`}
-          data-topic={topic.id}
-          aria-label={topic.title}
-          role="document"
-          tabIndex={0}
-        >
-          <h3>{topic.title}</h3>
-          <div dangerouslySetInnerHTML={{ __html: topicHtml(topic, year) }} />
-        </div>
-      )}
-    </Window>
+      footer={(topic) => <QuizLink topic={topic} />}
+    />
   );
 }

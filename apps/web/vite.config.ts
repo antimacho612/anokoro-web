@@ -14,6 +14,7 @@ export default defineConfig({
       input: {
         kit: resolve(root, "kit/index.html"),
         view: resolve(root, "view/index.html"),
+        quiz: resolve(root, "quiz/index.html"),
       },
     },
   },

@@ -1,7 +1,7 @@
 import { formatResolution, resolutionPeriodForYear } from "@anokoro/era-data";
-import { useEffect, useState, type RefCallback } from "react";
+import { useElementWidth } from "../../ui/use-element-width.ts";
 import { Window } from "../../ui/Window/Window.tsx";
-import { HelpToggle } from "../help/HelpToggle.tsx";
+import { HelpMenu } from "../help/HelpMenu.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
 import { BLANK_PAGE } from "../line/frame-page.ts";
 import { frameSlot, netController } from "../line/net.ts";
@@ -15,19 +15,6 @@ type BrowserWindowProps = {
   html: string;
   pageTitle: string;
 };
-
-/** 表示領域の幅を見張る。縮小率の計算に使う */
-function useElementWidth(): [RefCallback<HTMLElement>, number] {
-  const [element, setElement] = useState<HTMLElement | null>(null);
-  const [width, setWidth] = useState(0);
-  useEffect(() => {
-    if (!element) return;
-    const observer = new ResizeObserver(() => setWidth(element.clientWidth));
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [element]);
-  return [setElement, width];
-}
 
 function AdBanner({ isLoading }: { isLoading: boolean }) {
   if (isLoading) return <span className={styles.adLoading}>広告を読み込んでいます...</span>;
@@ -76,7 +63,7 @@ export function BrowserWindow({ html, pageTitle }: BrowserWindowProps) {
         <span>表示(V)</span>
         <span>お気に入り(A)</span>
         <span>ツール(T)</span>
-        <HelpToggle className="menuLink">ヘルプ(H)</HelpToggle>
+        <HelpMenu />
       </div>
       <div className={styles.navrow}>
         <button type="button" className="btn" disabled>
