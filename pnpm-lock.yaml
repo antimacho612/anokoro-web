@@ -448,6 +448,28 @@ importers:
         specifier: 'catalog:'
         version: 1.7.0(@types/node@24.19.2)(@vitest/ui@5.1.0)(playwright@1.65.1)(typescript@7.0.2)(yaml@2.9.1)
 
+  packages/share-codec:
+    dependencies:
+      '@anokoro/era-data':
+        specifier: workspace:*
+        version: link:../era-data
+      '@anokoro/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.2
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vite-plus:
+        specifier: 'catalog:'
+        version: 1.7.0(@types/node@24.19.2)(@vitest/ui@5.1.0)(playwright@1.65.1)(typescript@7.0.2)(yaml@2.9.1)
+
   packages/shared:
     dependencies:
       '@anokoro/era-data':
