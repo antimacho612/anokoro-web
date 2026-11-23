@@ -36,6 +36,7 @@ export {
 export {
   SITE_KINDS,
   SITE_KIND_IDS,
+  isSiteKindId,
   siteKindYears,
   type SiteKindEntry,
   type SiteKindId,

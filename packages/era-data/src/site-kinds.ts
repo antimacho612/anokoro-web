@@ -65,3 +65,7 @@ export function siteKindYears(id: SiteKindId): YearRange {
   const kind: SiteKindEntry = SITE_KINDS[id];
   return [kind.availableFrom, kind.endsAfter ?? MAX_YEAR];
 }
+
+export function isSiteKindId(value: unknown): value is SiteKindId {
+  return typeof value === "string" && Object.hasOwn(SITE_KINDS, value);
+}
