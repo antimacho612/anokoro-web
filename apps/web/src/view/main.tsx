@@ -19,6 +19,7 @@ restoreSound(kitStore, storage);
 restoreNewsSeen(kitStore, storage);
 persistNewsSeen(kitStore, storage);
 netController.stopOnEditOrYearChange();
+window.addEventListener("hashchange", () => window.location.reload());
 
 const viewer = new Workspace({ kit: kitStore });
 

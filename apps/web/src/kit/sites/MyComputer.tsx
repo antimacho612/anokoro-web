@@ -20,6 +20,7 @@ import { sampleUrl } from "../../view/view-source.ts";
 import { FolderIcon, PageIcon, SampleFolderIcon } from "./icons.tsx";
 import { useWorkspace, workspace } from "./instance.ts";
 import styles from "./MyComputer.module.css";
+import { ShareDialog } from "./ShareDialog.tsx";
 import { NewSiteDialog, PageNameDialog, SiteInfoDialog } from "./SiteDialogs.tsx";
 import type { NewSite } from "./workspace.ts";
 
@@ -27,6 +28,7 @@ type Modal =
   | { kind: "new-site" }
   | { kind: "site-info"; site: LocalSite }
   | { kind: "delete-site"; site: LocalSite }
+  | { kind: "share"; site: LocalSite }
   | { kind: "new-page" }
   | { kind: "rename-page"; path: string }
   | { kind: "delete-page"; path: string };
@@ -147,6 +149,13 @@ export function MyComputer() {
     void workspace.createSite(site).then((created) => selectFolder(created.id));
   };
 
+  const openShare = (id: string): void => {
+    void workspace.flush().then(() => {
+      const site = workspace.state.getState().sites.find((s) => s.id === id);
+      if (site) setModal({ kind: "share", site });
+    });
+  };
+
   const confirmDeleteSite = (site: LocalSite): void => {
     close();
     setFolderId(null);
@@ -213,6 +222,9 @@ export function MyComputer() {
                 onClick={() => setModal({ kind: "site-info", site: folder })}
               >
                 プロパティ
+              </button>
+              <button type="button" className="btn" onClick={() => openShare(folder.id)}>
+                URL で共有
               </button>
               <button
                 type="button"
@@ -295,6 +307,7 @@ export function MyComputer() {
           onCancel={close}
         />
       )}
+      {modal?.kind === "share" && <ShareDialog site={modal.site} onClose={close} />}
       {modal?.kind === "new-page" && folder && (
         <PageNameDialog
           title="新しいページ"
