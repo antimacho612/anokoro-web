@@ -1,10 +1,12 @@
 import type { QuizPick, QuizProgress, Question } from "@anokoro/quiz";
 import { useEffect, useRef } from "react";
+import { SOURCE_FONT_PX, type SourceFontSize } from "../ui/source-font-size.ts";
 import styles from "./QuizApp.module.css";
 
 type SourceViewProps = {
   question: Question;
   progress: QuizProgress;
+  fontSize: SourceFontSize;
   onPick: (pick: QuizPick) => void;
 };
 
@@ -13,7 +15,7 @@ function answerLinesOf(question: Question): readonly number[] {
 }
 
 /** お題のソースを行番号付きで出す。行を選んで答える。編集はできない */
-export function SourceView({ question, progress, onPick }: SourceViewProps) {
+export function SourceView({ question, progress, fontSize, onPick }: SourceViewProps) {
   const listRef = useRef<HTMLOListElement>(null);
   const lines = question.source.split("\n");
   const missed = new Set(progress.misses.flatMap((m) => (m.kind === "line" ? [m.line] : [])));
@@ -26,7 +28,12 @@ export function SourceView({ question, progress, onPick }: SourceViewProps) {
   }, [progress.kind]);
 
   return (
-    <ol ref={listRef} className={`${styles.source} sunken`} aria-label="お題のソース">
+    <ol
+      ref={listRef}
+      className={`${styles.source} sunken`}
+      aria-label="お題のソース"
+      style={{ fontSize: SOURCE_FONT_PX[fontSize] }}
+    >
       {lines.map((text, i) => {
         const line = i + 1;
         const classes = [

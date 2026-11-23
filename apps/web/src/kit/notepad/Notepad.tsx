@@ -1,5 +1,7 @@
 import { useEffect, useState, type KeyboardEvent, type RefObject } from "react";
 import { flushSync } from "react-dom";
+import { FontSizeMenu } from "../../ui/FontSizeMenu.tsx";
+import { SOURCE_FONT_PX, useSourceFontSize } from "../../ui/source-font-size.ts";
 import { Window } from "../../ui/Window/Window.tsx";
 import { HelpMenu } from "../help/HelpMenu.tsx";
 import { slotClass } from "../layout/KitLayout.tsx";
@@ -63,6 +65,7 @@ export function Notepad({ textareaRef }: NotepadProps) {
   const show = useKit((s) => s.show);
   const replace = useKit((s) => s.replace);
   const [wrap, setWrap] = useState(true);
+  const [fontSize, setFontSize] = useSourceFontSize();
   const [confirm, setConfirm] = useState<PendingConfirm | null>(null);
 
   useEffect(() => {
@@ -88,6 +91,7 @@ export function Notepad({ textareaRef }: NotepadProps) {
         <span>ファイル(F)</span>
         <span>編集(E)</span>
         <span>書式(O)</span>
+        <FontSizeMenu size={fontSize} onChange={setFontSize} />
         <HelpMenu />
         <label>
           <input
@@ -101,7 +105,7 @@ export function Notepad({ textareaRef }: NotepadProps) {
       <textarea
         ref={textareaRef}
         className={`${styles.src} sunken`}
-        style={{ whiteSpace: wrap ? "pre-wrap" : "pre" }}
+        style={{ whiteSpace: wrap ? "pre-wrap" : "pre", fontSize: SOURCE_FONT_PX[fontSize] }}
         wrap={wrap ? "soft" : "off"}
         value={source}
         onChange={(e) => edit(e.currentTarget.value)}

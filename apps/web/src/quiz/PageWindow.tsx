@@ -3,6 +3,11 @@ import type { LoadHandle } from "@anokoro/netsim";
 import { ANSWER_ATTRIBUTE, type QuizPick, type QuizProgress, type Question } from "@anokoro/quiz";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useElementWidth } from "../ui/use-element-width.ts";
+import {
+  SOURCE_FONT_SIZES,
+  SOURCE_FONT_SIZE_LABELS,
+  useSourceFontSize,
+} from "../ui/source-font-size.ts";
 import { Window } from "../ui/Window/Window.tsx";
 import browserStyles from "../kit/browser/BrowserWindow.module.css";
 import { stageLayout } from "../kit/browser/stage-layout.ts";
@@ -84,6 +89,7 @@ export function PageWindow({ question, progress, mode, onModeChange, onPick }: P
   const [progressRatio, setProgressRatio] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [focusLabel, setFocusLabel] = useState("");
+  const [fontSize, setFontSize] = useSourceFontSize();
   const [viewportRef, viewportWidth] = useElementWidth();
   const docRef = useRef<Document | null>(null);
   const handleRef = useRef<LoadHandle | null>(null);
@@ -224,6 +230,23 @@ export function PageWindow({ question, progress, mode, onModeChange, onPick }: P
             ソース
           </button>
         </div>
+        {!isDisplay && (
+          <div className={styles.modeSwitch} role="group" aria-label="文字の大きさ">
+            文字
+            {SOURCE_FONT_SIZES.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={option === fontSize ? "btn on" : "btn"}
+                aria-pressed={option === fontSize}
+                aria-label={`文字の大きさ：${SOURCE_FONT_SIZE_LABELS[option]}`}
+                onClick={() => setFontSize(option)}
+              >
+                {SOURCE_FONT_SIZE_LABELS[option]}
+              </button>
+            ))}
+          </div>
+        )}
         <button type="button" className="btn" disabled={!isLoading} onClick={handleStop}>
           中止
         </button>
@@ -265,7 +288,9 @@ export function PageWindow({ question, progress, mode, onModeChange, onPick }: P
           />
         </div>
       </div>
-      {!isDisplay && <SourceView question={question} progress={progress} onPick={onPick} />}
+      {!isDisplay && (
+        <SourceView question={question} progress={progress} fontSize={fontSize} onPick={onPick} />
+      )}
       <div className={browserStyles.statusbar}>
         <div className={browserStyles.statusMain} role="status">
           {isDisplay && focusLabel !== "" ? focusLabel : status}
