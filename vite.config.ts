@@ -8,6 +8,7 @@ export default defineConfig({
       "packages/era-checker/test/golden/**",
       "packages/quiz/src/pages/**",
       ".claude/**",
+      ".vscode/**",
     ],
   },
   lint: {
@@ -31,7 +32,7 @@ export default defineConfig({
     options: { typeAware: true, typeCheck: true, reportUnusedDisableDirectives: "error" },
   },
   test: {
-    exclude: ["**/node_modules/**", "**/dist/**", "apps/web/e2e/**", ".claude/**"],
+    exclude: ["**/node_modules/**", "**/dist/**", "apps/web/e2e/**", ".claude/**", ".vscode/**"],
     css: { include: [/themes\.css/] },
   },
   run: {
