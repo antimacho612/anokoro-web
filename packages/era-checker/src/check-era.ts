@@ -37,7 +37,7 @@ export function checkEra(source: string, opts: CheckOptions): CheckResult {
   if (!isYear(opts.year)) throw new RangeError(`対象外の年です: ${String(opts.year)}`);
   if (!MODES.includes(opts.mode)) throw new RangeError(`未知のモードです: ${String(opts.mode)}`);
 
-  const ctx = new CheckContext(source, opts.year, opts.mode);
+  const ctx = new CheckContext(source, opts.year, opts.mode, opts.allowFeatures);
   const doc = parse(source, { sourceCodeLocationInfo: true, scriptingEnabled: false });
   const root = doc.childNodes.find((n): n is Element => isElement(n) && n.tagName === "html");
   if (!root) throw new Error("html 要素がありません");

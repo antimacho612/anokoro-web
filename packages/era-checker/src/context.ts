@@ -1,5 +1,11 @@
 import { BROKEN_IMAGE, FAKE_BYTES, findAsset, toDataUri } from "@anokoro/assets";
-import { FEATURES, featureStatus, type FeatureId, type Year } from "@anokoro/era-data";
+import {
+  FEATURES,
+  featureStatus,
+  type FeatureId,
+  type FeatureStatus,
+  type Year,
+} from "@anokoro/era-data";
 import type { AssetRef, Mode, SourceLocation, TopicId, Warning, WarningLevel } from "./types.ts";
 
 /** IE 以外の一部のブラウザだけが先に対応していた期間の警告文 */
@@ -23,9 +29,11 @@ export class CheckContext {
   readonly #source: string;
   readonly #lineStarts: number[];
   readonly #warnings = new Map<string, Warning>();
+  readonly #allowed: ReadonlySet<FeatureId>;
 
-  constructor(source: string, year: Year, mode: Mode) {
+  constructor(source: string, year: Year, mode: Mode, allowFeatures: readonly FeatureId[] = []) {
     this.#source = source;
+    this.#allowed = new Set(allowFeatures);
     this.year = year;
     this.mode = mode;
     this.#lineStarts = [0];
@@ -55,6 +63,11 @@ export class CheckContext {
     if (loc) w.locations.push(loc);
   }
 
+  /** 選んだ年での機能の状態。allowFeatures に入れた機能は常に使える */
+  statusOf(feature: FeatureId): FeatureStatus {
+    return this.#allowed.has(feature) ? "available" : featureStatus(feature, this.year);
+  }
+
   /**
    * 機能年表で判定し、選んだ年に使えなければ警告を出して true を返す。
    * outdatedMessage を渡すと、古い書き方になった年に note を出す（取り除かない）。
@@ -67,7 +80,7 @@ export class CheckContext {
     loc?: SourceLocation,
     outdatedMessage?: string,
   ): boolean {
-    const status = featureStatus(feature, this.year);
+    const status = this.statusOf(feature);
     if (status === "future") {
       this.warn(ruleId, "future", message, topic, loc);
       return true;

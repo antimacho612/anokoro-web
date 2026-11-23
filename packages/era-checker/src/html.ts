@@ -1,5 +1,4 @@
 import { FAKE_BYTES, PENDING_IMAGE, toDataUri } from "@anokoro/assets";
-import { featureStatus } from "@anokoro/era-data";
 import type { DefaultTreeAdapterTypes as T } from "parse5";
 import { SCHEME_MESSAGE, type CheckContext } from "./context.ts";
 import { filterStyleAttribute, filterStyleSheet } from "./css.ts";
@@ -158,7 +157,7 @@ function processTag(ctx: CheckContext, el: Element, tag: string): Action | null 
     const message = HTML5_TAGS.has(tag)
       ? MESSAGES.html5Tag(tag, ctx.year)
       : MESSAGES.unknownTag(tag, ctx.year);
-    const status = featureStatus(feature, ctx.year);
+    const status = ctx.statusOf(feature);
     if (status === "future" || status === "partial") precheckStyle(ctx, el);
     if (
       ctx.blocked(feature, `html.element.${tag}`, message, "html", loc, MESSAGES.outdatedTag(tag))

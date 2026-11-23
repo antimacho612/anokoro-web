@@ -1,4 +1,4 @@
-import type { Year } from "@anokoro/era-data";
+import type { FeatureId, Year } from "@anokoro/era-data";
 
 /**
  * 解説トピックの ID。
@@ -29,6 +29,8 @@ export interface CheckOptions {
   mode: Mode;
   /** local と net で <!--COUNTER--> に入れる数 */
   counter?: number;
+  /** 年に関係なく使えるものとして扱う機能。時代まちがいさがしで、答えの技術を表示モードに描くために使う */
+  allowFeatures?: readonly FeatureId[];
 }
 
 export type WarningLevel = "future" | "note";

@@ -212,3 +212,29 @@ describe("入力の検証", () => {
     expect(checkEra(`<title>  a \n b </title>`, { year: 2003, mode: "local" }).title).toBe("a b");
   });
 });
+
+describe("allowFeatures", () => {
+  it("指定した機能は年に関係なく残し、警告も出さない", () => {
+    const source = page('<p style="filter:grayscale(1)">a</p><mark>b</mark>');
+    const allowed = checkEra(source, {
+      year: 2003,
+      mode: "local",
+      allowFeatures: ["css.filter", "html5.semantic"],
+    });
+    expect(allowed.html).toContain("filter:grayscale(1)");
+    expect(allowed.html).toContain("<mark>");
+    expect(allowed.warnings.filter((w) => w.level === "future")).toHaveLength(0);
+  });
+
+  it("指定しない機能はこれまでどおり取り除く", () => {
+    const html = run('<p style="filter:grayscale(1);border-radius:4px">a</p>', {
+      allowFeatures: ["css.filter"],
+    });
+    expect(html).toContain("filter:grayscale(1)");
+    expect(html).not.toContain("border-radius");
+  });
+
+  it("許しても危険な要素は残さない", () => {
+    expectInert(run('<svg onload="x()"><circle r="1"/></svg>', { allowFeatures: ["html5.svg"] }));
+  });
+});
