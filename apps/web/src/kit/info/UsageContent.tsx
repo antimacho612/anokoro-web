@@ -1,6 +1,21 @@
+import { flushSync } from "react-dom";
+import { onboardingStore } from "../onboarding/onboarding-store.ts";
+import { useKit } from "../store.ts";
+
 export function UsageContent() {
+  const closeInfo = useKit((s) => s.closeInfo);
+  const handleReplayTour = (): void => {
+    flushSync(closeInfo);
+    const opener = document.activeElement;
+    onboardingStore.getState().start(opener instanceof HTMLElement ? opener : null);
+  };
   return (
     <>
+      <p>
+        <button type="button" className="btn" onClick={handleReplayTour}>
+          ツアーをもう一度見る
+        </button>
+      </p>
       <h3>あのころ Web ホームページ作成キット</h3>
       <p>
         メモ帳にHTMLを書くと、選んだ年のブラウザでの見え方を再現します。時代に合わないタグやCSSは「時代チェッカー」が見つけて無効化します。

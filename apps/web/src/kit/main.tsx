@@ -11,6 +11,7 @@ import { netController, storage } from "./line/net.ts";
 import { persistNetSettings, restoreNetSettings } from "./line/net-settings.ts";
 import { openSiteStore, requestPersistence } from "@anokoro/site-store";
 import { loadDraft } from "./notepad/draft-storage.ts";
+import { autoStartOnboardingAfterBoot, onboardingStore } from "./onboarding/onboarding-store.ts";
 import { workspace } from "./sites/instance.ts";
 import { kitStore } from "./store.ts";
 import { hasYearParam } from "./time-machine/year-param.ts";
@@ -38,6 +39,10 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") void workspace.flush();
 });
 if (!hasBooted(browserSession)) bootStore.getState().open();
+autoStartOnboardingAfterBoot(bootStore, onboardingStore, {
+  session: browserSession,
+  local: storage,
+});
 
 const container = document.getElementById("root");
 if (container) {
