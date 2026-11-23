@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite-plus";
 import { resolveBase } from "./config/base.ts";
 import { securityMeta } from "./config/csp.ts";
+import { thirdPartyLicenses } from "./config/third-party-licenses.ts";
 
 const root = import.meta.dirname;
 
@@ -14,6 +15,7 @@ export default defineConfig({
     react(),
     siteFavicon(),
     securityMeta(),
+    thirdPartyLicenses(),
     helpContent({ dir: resolve(root, "../../content/help") }),
   ],
   build: {
