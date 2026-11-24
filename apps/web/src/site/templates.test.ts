@@ -73,6 +73,7 @@ describe("templateSample", () => {
     expect(templateSample("textsite", 2005)?.id).toBe("hogenews");
     expect(templateSample("material", 2000)?.id).toBe("sozaikan");
     expect(templateSample("material", 2008)?.id).toBe("sozaikobo");
+    expect(templateSample("web20", 2009)?.id).toBe("hogememo");
     expect(templateSample("portal", 2010)).toBeUndefined();
   });
 });

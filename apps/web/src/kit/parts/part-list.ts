@@ -517,6 +517,58 @@ Q2. 苦手な食べ物は？<br>A. セロリ<br>
     category: "social",
     kinds: ["material"],
   },
+  {
+    label: "ベータ版のバッジ",
+    code: `<font size="6" color="#6BB33A"><b>ほげメモ</b></font> <img src="badge-beta.png" align="top"><br>
+`,
+    tip: "「ベータ版」の表示も、Web 2.0 風の特徴の一つに数えられました",
+    tipTopic: "web20",
+    era: { kind: "siteKind", siteKind: "web20" },
+    category: "deco",
+    kinds: ["web20"],
+  },
+  {
+    label: "大きなキャッチコピー",
+    code: `<p align="center" style="font-size: 30px; font-weight: bold; color: #334444;">メモを、みんなで育てよう。</p>
+<p align="center" style="font-size: 15px; color: #778888;">ブラウザだけで使える、無料のメモ帳です。</p>
+`,
+    tip: "大きな文字と、白ややわらかい色の背景、中央寄せのすっきりした配置が、Web 2.0 風のデザインの特徴でした",
+    tipTopic: "web20",
+    era: { kind: "siteKind", siteKind: "web20" },
+    category: "layout",
+    kinds: ["web20"],
+  },
+  {
+    label: "つやつやの登録ボタン",
+    code: `<p align="center"><a href="signup.html"><img src="btn-glossy.png" border="0" alt="無料で登録する"></a><br>
+<a href="signup.html"><b>無料で登録する</b></a>（30 秒で終わります）</p>
+`,
+    tip: "つやつやした光沢や、ボタンのような見た目も、Web 2.0 風の特徴でした",
+    tipTopic: "web20",
+    era: { kind: "siteKind", siteKind: "web20" },
+    category: "navi",
+    kinds: ["web20"],
+  },
+  {
+    label: "線で丸めた角の箱",
+    code: `<div>
+<b style="display: block; height: 1px; overflow: hidden; margin: 0 5px; background-color: #EAF5FC;"></b>
+<b style="display: block; height: 1px; overflow: hidden; margin: 0 3px; background-color: #EAF5FC;"></b>
+<b style="display: block; height: 1px; overflow: hidden; margin: 0 2px; background-color: #EAF5FC;"></b>
+<b style="display: block; height: 2px; overflow: hidden; margin: 0 1px; background-color: #EAF5FC;"></b>
+<div style="background-color: #EAF5FC; padding: 8px 16px;">お知らせ：API を公開しました</div>
+<b style="display: block; height: 2px; overflow: hidden; margin: 0 1px; background-color: #EAF5FC;"></b>
+<b style="display: block; height: 1px; overflow: hidden; margin: 0 2px; background-color: #EAF5FC;"></b>
+<b style="display: block; height: 1px; overflow: hidden; margin: 0 3px; background-color: #EAF5FC;"></b>
+<b style="display: block; height: 1px; overflow: hidden; margin: 0 5px; background-color: #EAF5FC;"></b>
+</div>
+`,
+    tip: "このころのブラウザの多くは、CSS で角丸を描けません。この箱は、幅を少しずつ変えた細い線を重ねて、角を丸く見せています",
+    tipTopic: "web20",
+    era: { kind: "siteKind", siteKind: "web20" },
+    category: "deco",
+    kinds: ["web20"],
+  },
 
   {
     label: "マーキー",

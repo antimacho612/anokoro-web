@@ -229,10 +229,11 @@ describe("サイトの種類", () => {
     expectSources(kind.sources);
   });
 
-  it("ディレクトリ型ポータルとテキストサイトは 2005 年まで、素材サイトは 2008 年まで、ブログは 2015 年まで", () => {
+  it("ディレクトリ型ポータルとテキストサイトは 2005 年まで、素材サイトは 2008 年まで、Web 2.0 風は 2009 年まで、ブログは 2015 年まで", () => {
     expect(siteKindYears("portal")).toEqual([1996, 2005]);
     expect(siteKindYears("textsite")).toEqual([2000, 2005]);
     expect(siteKindYears("material")).toEqual([2000, 2008]);
+    expect(siteKindYears("web20")).toEqual([2006, 2009]);
     expect(siteKindYears("blog")).toEqual([2003, 2015]);
   });
 });

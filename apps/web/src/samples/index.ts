@@ -275,6 +275,16 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
       "つやつやボタン、光るライン、細いストライプの背景。素材ランキングに参加する 2000 年代半ばの素材サイト",
     loadPages: () => import("./material-2005.ts").then((m) => m.pages),
   },
+  {
+    id: "hogememo",
+    name: "ほげメモ β",
+    years: [2006, 2009],
+    genre: "web20",
+    category: "other",
+    description:
+      "ベータ版のバッジ、大きなキャッチコピー、つやつやの登録ボタン、細い線で丸めた角。タグと API のメモサービス",
+    loadPages: () => import("./web20-2006.ts").then((m) => m.pages),
+  },
 ];
 
 export function findSample(id: string): SampleSite | undefined {

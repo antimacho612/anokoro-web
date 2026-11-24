@@ -127,6 +127,30 @@ export const SITE_KINDS = {
       },
     ],
   },
+  web20: {
+    label: "Web 2.0 風",
+    availableFrom: 2006,
+    endsAfter: 2009,
+    topic: "web20",
+    sources: [
+      {
+        title: "ITmedia: 2006年の振り返り（2006年12月27日）",
+        url: "https://www.itmedia.co.jp/news/article/0612/27/1061227048/",
+      },
+      {
+        title: "GIGAZINE: Web2.0風のロゴ（2006年7月26日）",
+        url: "https://gigazine.net/news/20060726_web20logo/",
+      },
+      {
+        title: "GIGAZINE: Web2.0風サイトのデザイン（2006年11月11日）",
+        url: "https://gigazine.net/news/20061111_web20_design",
+      },
+      {
+        title: "The Next Web: 3 ways to go beyond Web 2.0 design（2008年1月19日）",
+        url: "https://thenextweb.com/news/3-ways-to-go-beyond-web-20-design",
+      },
+    ],
+  },
 } as const satisfies Record<string, SiteKindEntry>;
 
 export type SiteKindId = keyof typeof SITE_KINDS;
@@ -140,6 +164,7 @@ export const SITE_KIND_IDS: readonly SiteKindId[] = [
   "blog",
   "textsite",
   "material",
+  "web20",
 ];
 
 export function siteKindYears(id: SiteKindId): YearRange {
