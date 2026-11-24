@@ -1,4 +1,6 @@
-import { useEffect, useState, type KeyboardEvent, type RefObject } from "react";
+import { hostingSpaceForYear, type Year } from "@anokoro/era-data";
+import type { SitePage } from "@anokoro/shared";
+import { useEffect, useMemo, useState, type KeyboardEvent, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import { FontSizeMenu } from "../../../features/source-font-size/index.ts";
 import { SOURCE_FONT_PX, useSourceFontSize } from "../../../features/source-font-size/index.ts";
@@ -14,19 +16,38 @@ import {
   pagePathProblem,
   canAddPage,
 } from "../../../entities/site/index.ts";
-import { siteTemplate } from "../../../entities/site/index.ts";
+import { siteUsageBytes } from "../../../entities/site/index.ts";
+import { loadTemplatePages, templatePageHtml } from "../../../entities/sample/index.ts";
 import { menuItemClass, MenuBarMenu } from "../../../shared/ui/menu-bar-menu/index.ts";
 import { useWorkspace, workspace } from "../../../features/site-workspace/index.ts";
 import { PageNameDialog } from "../../../features/site-workspace/index.ts";
 import { BLANK } from "../../../entities/site/index.ts";
-import { byteLength, formatUsage, insertText, offsetOf } from "../lib/text-edit.ts";
+import { formatUsage, insertText, offsetOf } from "../lib/text-edit.ts";
 
 /** 入力が止まってからローカル表示を更新するまでの時間 */
 const SHOW_DELAY_MS = 350;
 
 interface PendingConfirm {
   message: string;
-  source: string;
+  source: Promise<string>;
+}
+
+type SiteUsageProps = {
+  pages: readonly SitePage[];
+  year: Year;
+};
+
+/** サイト全体の使用容量と、その年の無料ホームページの容量 */
+function SiteUsage({ pages, year }: SiteUsageProps) {
+  const bytes = useMemo(() => siteUsageBytes(pages, year), [pages, year]);
+  const limit = hostingSpaceForYear(year).bytes;
+  const isOver = bytes > limit;
+  return (
+    <span className={isOver ? `${styles.size} ${styles.over}` : styles.size}>
+      {formatUsage(bytes, limit)}
+      {isOver && <span className={styles.overNote}>容量オーバー（当時なら公開できません）</span>}
+    </span>
+  );
 }
 
 /** メモ帳の選択範囲に text を入れ、カーソルを挿入した文字の後ろに置く */
@@ -74,14 +95,26 @@ export function Notepad({ textareaRef }: NotepadProps) {
   const year = useKit((s) => s.year);
   const isDirty = useWorkspace((s) => s.dirty);
   const site = useWorkspace((s) => s.sites.find((x) => x.id === s.currentId));
+  const usagePages = useMemo(
+    () => [
+      ...(site?.pages ?? []).filter((p) => p.path !== pagePath),
+      { path: pagePath, html: shownSource },
+    ],
+    [site, pagePath, shownSource],
+  );
 
   const askReset = (): void =>
     setConfirm({
       message: "いま書いている内容は消えます。テンプレートに戻しますか？",
-      source: siteTemplate(site?.genre ?? "personal", year),
+      source: loadTemplatePages(site?.genre ?? "personal", year).then((pages) =>
+        templatePageHtml(pages, pagePath),
+      ),
     });
   const askClear = (): void =>
-    setConfirm({ message: "いま書いている内容は消えます。白紙から書きますか？", source: BLANK });
+    setConfirm({
+      message: "いま書いている内容は消えます。白紙から書きますか？",
+      source: Promise.resolve(BLANK),
+    });
 
   useEffect(() => {
     if (source === shownSource) return;
@@ -101,7 +134,7 @@ export function Notepad({ textareaRef }: NotepadProps) {
   };
 
   const accept = (): void => {
-    if (confirm) replace(confirm.source);
+    if (confirm) void confirm.source.then(replace, () => undefined);
     setConfirm(null);
   };
 
@@ -194,7 +227,7 @@ export function Notepad({ textareaRef }: NotepadProps) {
         <button type="button" className="btn" onClick={askClear}>
           白紙から書く
         </button>
-        <span className={styles.size}>{formatUsage(byteLength(source))}</span>
+        <SiteUsage pages={usagePages} year={year} />
       </div>
       {confirm && (
         <div className="group" role="alertdialog" aria-label="確認">

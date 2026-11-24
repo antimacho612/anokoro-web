@@ -14,7 +14,8 @@ import {
   type SiteCategoryId,
 } from "@anokoro/shared";
 import { useId, useState, type FormEvent } from "react";
-import { BLANK, siteTemplate } from "../../../entities/site/index.ts";
+import { BLANK, INDEX_PAGE } from "../../../entities/site/index.ts";
+import { loadTemplatePages } from "../../../entities/sample/index.ts";
 import { Dialog, dialogClass } from "../../../shared/ui/dialog/index.ts";
 import type { NewSite, SiteInfo } from "../model/workspace.ts";
 import styles from "./SiteDialogs.module.css";
@@ -115,6 +116,7 @@ export function NewSiteDialog({ initialYear, onCreate, onCancel }: NewSiteDialog
   const [genre, setGenre] = useState<SiteKindId>("personal");
   const [category, setCategory] = useState<SiteCategoryId>("diary");
   const [content, setContent] = useState<"template" | "blank">("template");
+  const [isCreating, setIsCreating] = useState(false);
   const yearId = useId();
   const contentName = useId();
   const trimmed = name.trim();
@@ -126,9 +128,16 @@ export function NewSiteDialog({ initialYear, onCreate, onCancel }: NewSiteDialog
 
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
-    if (trimmed === "") return;
-    const html = content === "template" ? siteTemplate(genre, year) : BLANK;
-    onCreate({ name: trimmed, year, genre, category, pages: [{ path: "index.html", html }] });
+    if (trimmed === "" || isCreating) return;
+    setIsCreating(true);
+    const pages =
+      content === "template"
+        ? loadTemplatePages(genre, year)
+        : Promise.resolve([{ path: INDEX_PAGE, html: BLANK }]);
+    void pages.then(
+      (loaded) => onCreate({ name: trimmed, year, genre, category, pages: loaded }),
+      () => setIsCreating(false),
+    );
   };
 
   return (
@@ -178,7 +187,7 @@ export function NewSiteDialog({ initialYear, onCreate, onCancel }: NewSiteDialog
           </fieldset>
         </div>
         <div className={dialogClass.buttons}>
-          <button type="submit" className="btn" disabled={trimmed === ""}>
+          <button type="submit" className="btn" disabled={trimmed === "" || isCreating}>
             作成
           </button>
           <button type="button" className="btn" onClick={onCancel}>

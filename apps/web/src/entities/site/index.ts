@@ -32,5 +32,6 @@ export {
   toShared,
   updatePageHtml,
 } from "./model/site-model.ts";
+export { siteUsageBytes } from "./model/site-usage.ts";
 export { BLANK } from "./model/starter-html.ts";
-export { kindTopic, siteTemplate } from "./model/templates.ts";
+export { kindTopic } from "./model/kind-topic.ts";

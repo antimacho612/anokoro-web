@@ -43,3 +43,18 @@ export {
   type SiteKindId,
 } from "./site-kinds.ts";
 export { TOPIC_IDS, type TopicId } from "./topics.ts";
+export {
+  HOSTING_SPACE_PERIODS,
+  formatBytes,
+  hostingSpaceForYear,
+  type HostingSpacePeriod,
+} from "./hosting-space.ts";
+export { TRENDS, type TrendEntry, type TrendId } from "./trends.ts";
+export { eraRefSources, eraRefYears, type EraRef } from "./era-refs.ts";
+export {
+  ASSET_ERAS,
+  assetEraSources,
+  assetEraYears,
+  type AssetEraEntry,
+  type AssetEraId,
+} from "./asset-eras.ts";

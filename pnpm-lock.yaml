@@ -340,6 +340,10 @@ importers:
         version: 1.7.0(@types/node@24.19.2)(@vitest/ui@5.1.0)(playwright@1.65.1)(typescript@7.0.2)(yaml@2.9.1)
 
   packages/assets:
+    dependencies:
+      '@anokoro/era-data':
+        specifier: workspace:*
+        version: link:../era-data
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

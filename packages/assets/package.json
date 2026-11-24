@@ -11,6 +11,9 @@
   "scripts": {
     "test": "vp test"
   },
+  "dependencies": {
+    "@anokoro/era-data": "workspace:*"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
     "typescript": "catalog:",

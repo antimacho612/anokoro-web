@@ -95,6 +95,100 @@ export const SITE_KINDS = {
       },
     ],
   },
+  textsite: {
+    label: "テキストサイト",
+    availableFrom: 2000,
+    endsAfter: 2005,
+    topic: "textsite",
+    sources: [
+      {
+        title: "INTERNET Watch: 人気の個人サイト（2001年7月30日）",
+        url: "https://internet.watch.impress.co.jp/www/article/2001/0730/megahit.htm",
+      },
+      {
+        title: "ITmedia: 更新を知らせるアンテナ（2004年4月19日）",
+        url: "https://www.itmedia.co.jp/news/articles/0404/19/news013.html",
+      },
+      {
+        title: "INTERNET Watch: ココログの開始（2003年12月2日）",
+        url: "https://internet.watch.impress.co.jp/cda/news/2003/12/02/1331.html",
+      },
+    ],
+  },
+  material: {
+    label: "素材サイト",
+    availableFrom: 2000,
+    endsAfter: 2008,
+    topic: "material",
+    sources: [
+      {
+        title: "ねとらぼ（2019年9月21日）素材屋の元管理人の回顧",
+        url: "https://nlab.itmedia.co.jp/cont/articles/3295709/",
+      },
+    ],
+  },
+  web20: {
+    label: "Web 2.0 風",
+    availableFrom: 2006,
+    endsAfter: 2009,
+    topic: "web20",
+    sources: [
+      {
+        title: "ITmedia: 2006年の振り返り（2006年12月27日）",
+        url: "https://www.itmedia.co.jp/news/article/0612/27/1061227048/",
+      },
+      {
+        title: "GIGAZINE: Web2.0風のロゴ（2006年7月26日）",
+        url: "https://gigazine.net/news/20060726_web20logo/",
+      },
+      {
+        title: "GIGAZINE: Web2.0風サイトのデザイン（2006年11月11日）",
+        url: "https://gigazine.net/news/20061111_web20_design",
+      },
+      {
+        title: "The Next Web: 3 ways to go beyond Web 2.0 design（2008年1月19日）",
+        url: "https://thenextweb.com/news/3-ways-to-go-beyond-web-20-design",
+      },
+    ],
+  },
+  sns: {
+    label: "SNS・プロフ",
+    availableFrom: 2005,
+    topic: "sns",
+    sources: [
+      {
+        title: "INTERNET Watch: mixi のユーザー数が 1,000 万人に（2007年5月21日）",
+        url: "https://internet.watch.impress.co.jp/cda/news/2007/05/21/15772.html",
+      },
+      {
+        title: "総務省: 平成18年版 情報通信白書（SNS の登録者数）",
+        url: "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/h18/html/i1510000.html",
+      },
+      {
+        title: "ITmedia: ケータイのプロフ（2007年11月7日）",
+        url: "https://www.itmedia.co.jp/news/article/0711/07/1071107067/",
+      },
+    ],
+  },
+  matome: {
+    label: "まとめサイト",
+    availableFrom: 2012,
+    topic: "matome",
+    sources: [
+      {
+        title: "ITmedia: まとめブログとステマ騒動（2012年1月13日）",
+        url: "https://www.itmedia.co.jp/news/articles/1201/13/news070.html",
+      },
+      {
+        title: "J-CAST ニュース: 掲示板の転載禁止の広がり（2014年3月4日）",
+        url: "https://www.j-cast.com/2014/03/04198334.html",
+      },
+      {
+        title: "ねとらぼ: 掲示板が転載禁止を選んだ理由（2014年3月6日）",
+        url: "https://nlab.itmedia.co.jp/cont/articles/3233815/",
+      },
+    ],
+  },
 } as const satisfies Record<string, SiteKindEntry>;
 
 export type SiteKindId = keyof typeof SITE_KINDS;
@@ -106,6 +200,11 @@ export const SITE_KIND_IDS: readonly SiteKindId[] = [
   "bbs",
   "shop",
   "blog",
+  "textsite",
+  "material",
+  "web20",
+  "sns",
+  "matome",
 ];
 
 export function siteKindYears(id: SiteKindId): YearRange {

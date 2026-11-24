@@ -87,3 +87,33 @@ test("新しいサイトを種類と年を選んで作り、まだない種類�
   await expect(computer.getByText(/1997 年 ／ 掲示板/)).toBeVisible();
   await expect(page.getByRole("region", { name: /^時代チェッカー/ })).toContainText("再現度 100%");
 });
+
+test("廃れた種類も選べ、テンプレートはその年の見本サイトのページ一式になる", async ({ page }) => {
+  await page.goto("/kit/?year=2003");
+  const computer = page.getByRole("region", { name: "マイコンピュータ" });
+  await computer.getByRole("button", { name: "新しいサイト" }).click();
+  const dialog = page.getByRole("dialog", { name: "新しいサイト" });
+  const year = dialog.getByRole("combobox", { name: "年" });
+  await year.selectOption("2010");
+  await expect(dialog.getByRole("radio", { name: /テキストサイト/ })).toBeEnabled();
+  await expect(dialog.getByRole("radio", { name: /まとめサイト/ })).toBeDisabled();
+  await expect(dialog.getByText("（2012 年から）")).toBeVisible();
+
+  await year.selectOption("2003");
+  await dialog.getByRole("radio", { name: /テキストサイト/ }).check();
+  await dialog.getByRole("radio", { name: "その種類と年らしいテンプレート" }).check();
+  await dialog.getByRole("textbox", { name: "サイト名" }).fill("ほげ雑記");
+  await dialog.getByRole("button", { name: "作成" }).click();
+
+  await expect(computer.getByRole("button", { name: "ほげ雑記" })).toBeVisible();
+  await expect(computer.getByText(/2003 年 ／ テキストサイト ／ .* ／ 8 ページ/)).toBeVisible();
+  await expect(computer.getByRole("button", { name: "zatsubun.html" })).toBeVisible();
+  await expect(frame(page).getByRole("link", { name: "ほげほげニュース" })).toBeVisible();
+  await expect(page.getByRole("region", { name: /^時代チェッカー/ })).toContainText("再現度 100%");
+
+  const parts = page.getByRole("region", { name: "素材・パーツ箱" });
+  await expect(parts.getByRole("heading", { name: "テキストサイトのパーツ" })).toBeVisible();
+  await expect(parts.getByRole("button", { name: "雑文の見出し" })).toBeEnabled();
+  await parts.getByText(/^まだないパーツ（\d+）$/).click();
+  await expect(parts.getByRole("button", { name: /（20\d\d年から）$/ }).first()).toBeDisabled();
+});

@@ -20,6 +20,7 @@
   font-family: "MS Gothic", monospace;
   font-size: 11px;
   color: #000;
+  overflow-wrap: anywhere;
 }
 
 .asset:hover,
@@ -48,4 +49,23 @@
 
 .tip > span {
   flex: 1;
+}
+
+.partGroup + .partGroup {
+  margin-top: 6px;
+}
+
+.heading {
+  margin: 4px 0 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+summary.heading {
+  cursor: pointer;
+}
+
+.bytes {
+  display: block;
+  color: #555;
 }

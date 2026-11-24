@@ -44,7 +44,7 @@ describe("sitePagesSchema", () => {
 describe("種類とカテゴリ", () => {
   test("未知の値は既定に読み替える", () => {
     expect(genreSchema.parse("blog")).toBe("blog");
-    expect(genreSchema.parse("sns")).toBe("personal");
+    expect(genreSchema.parse("metaverse")).toBe("personal");
     expect(categorySchema.parse("game")).toBe("game");
     expect(categorySchema.parse("toString")).toBe("other");
   });

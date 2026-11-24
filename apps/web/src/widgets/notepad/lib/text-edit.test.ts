@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { byteLength, formatUsage, insertText, offsetOf } from "./text-edit.ts";
+import { formatUsage, insertText, offsetOf } from "./text-edit.ts";
 
 describe("insertText", () => {
   it("カーソル位置に挿入し、カーソルを挿入した文字の後ろに置く", () => {
@@ -17,14 +17,10 @@ describe("insertText", () => {
 });
 
 describe("容量の表示", () => {
-  it("UTF-8 のバイト数で数える", () => {
-    expect(byteLength("abc")).toBe(3);
-    expect(byteLength("あ")).toBe(3);
-  });
-
-  it("KB を小数 1 桁で表示する", () => {
-    expect(formatUsage(0)).toBe("使用容量 0.0KB / 50MB");
-    expect(formatUsage(1536)).toBe("使用容量 1.5KB / 50MB");
+  it("使用量と、その年の容量の相場を並べる", () => {
+    expect(formatUsage(0, 2 * 1024 * 1024)).toBe("使用容量 0.0KB / 2MB");
+    expect(formatUsage(1536, 50 * 1024 * 1024)).toBe("使用容量 1.5KB / 50MB");
+    expect(formatUsage(2.5 * 1024 * 1024, 2 * 1024 * 1024)).toBe("使用容量 2.5MB / 2MB");
   });
 });
 

@@ -20,13 +20,13 @@ import {
   normalizePagePath,
   pagePathProblem,
 } from "../../../entities/site/index.ts";
-import { kindTopic, siteTemplate } from "../../../entities/site/index.ts";
+import { kindTopic } from "../../../entities/site/index.ts";
 import { HelpButton } from "../../../features/help/index.ts";
 import { ConfirmDialog, Dialog, dialogClass } from "../../../shared/ui/dialog/index.ts";
 import { Window } from "../../../shared/ui/window/index.ts";
 import { slotClass } from "../../../shared/ui/kit-layout/index.ts";
 import { useKit } from "../../../entities/kit-state/index.ts";
-import { SAMPLE_SITES } from "../../../entities/sample/index.ts";
+import { loadTemplatePages, SAMPLE_SITES } from "../../../entities/sample/index.ts";
 import { sampleUrl } from "../../../shared/routes/index.ts";
 import { FolderIcon, PageIcon, SampleFolderIcon } from "./icons.tsx";
 import { useWorkspace, workspace } from "../../../features/site-workspace/index.ts";
@@ -108,7 +108,7 @@ function SamplesFolder() {
           {SAMPLE_SITES.map((sample) => (
             <li key={sample.id}>
               <IconButton
-                label={`${sample.name}（${sample.year}年）`}
+                label={`${sample.name}（${sample.years[0]}年）`}
                 icon={<FolderIcon />}
                 isSelected={selected === sample.id}
                 onSelect={() => setSelected(sample.id)}
@@ -123,13 +123,13 @@ function SamplesFolder() {
   );
 }
 
-function fallbackSite(year: Year): NewSite {
+async function fallbackSite(year: Year): Promise<NewSite> {
   return {
     name: "マイホームページ",
     year,
     genre: "personal",
     category: "diary",
-    pages: [{ path: "index.html", html: siteTemplate("personal", year) }],
+    pages: await loadTemplatePages("personal", year),
   };
 }
 
@@ -231,7 +231,7 @@ export function MyComputer() {
   const confirmDeleteSite = (site: LocalSite): void => {
     close();
     setFolderId(null);
-    void workspace.deleteSite(site.id, fallbackSite(year));
+    void workspace.deleteSite(site.id, () => fallbackSite(year));
   };
 
   return (

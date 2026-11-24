@@ -1,7 +1,13 @@
-import { encodeSharedSite } from "@anokoro/share-codec";
+import { encodeSharedSite, type SharedSite } from "@anokoro/share-codec";
 import { describe, expect, test } from "vite-plus/test";
-import { personalSample } from "../../../entities/sample/index.ts";
-import { loadViewSource, sampleToShared } from "./view-source.ts";
+import { findSample } from "../../../entities/sample/index.ts";
+import { loadSampleSite, loadViewSource } from "./view-source.ts";
+
+async function personalSite(): Promise<SharedSite> {
+  const sample = findSample("personal");
+  if (!sample) throw new Error("見本サイトがありません");
+  return loadSampleSite(sample);
+}
 
 describe("loadViewSource", () => {
   test("見本サイトを id で開く", async () => {
@@ -13,7 +19,7 @@ describe("loadViewSource", () => {
   });
 
   test("共有されたサイトを展開する", async () => {
-    const site = sampleToShared(personalSample);
+    const site = await personalSite();
     const source = await loadViewSource("", `#s=${await encodeSharedSite(site)}`);
     expect(source).toEqual({ kind: "shared", site });
   });

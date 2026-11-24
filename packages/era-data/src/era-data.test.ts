@@ -19,9 +19,20 @@ import {
   siteKindYears,
   UI_THEMES,
   uiThemeForYear,
+  ASSET_ERAS,
+  TRENDS,
+  eraRefYears,
+  type TrendEntry,
+  type TrendId,
+  assetEraSources,
+  assetEraYears,
+  type AssetEraId,
   type FeatureEntry,
   type SiteKindEntry,
   type Source,
+  HOSTING_SPACE_PERIODS,
+  formatBytes,
+  hostingSpaceForYear,
 } from "./index.ts";
 
 function expectSources(sources: readonly Source[]): void {
@@ -218,8 +229,81 @@ describe("サイトの種類", () => {
     expectSources(kind.sources);
   });
 
-  it("ディレクトリ型ポータルは 2005 年まで、ほかは 2015 年まで", () => {
+  it("ディレクトリ型ポータルとテキストサイトは 2005 年まで、素材サイトは 2008 年まで、Web 2.0 風は 2009 年まで、ブログと SNS とまとめサイトは 2015 年まで", () => {
     expect(siteKindYears("portal")).toEqual([1996, 2005]);
+    expect(siteKindYears("textsite")).toEqual([2000, 2005]);
+    expect(siteKindYears("material")).toEqual([2000, 2008]);
+    expect(siteKindYears("web20")).toEqual([2006, 2009]);
     expect(siteKindYears("blog")).toEqual([2003, 2015]);
+    expect(siteKindYears("sns")).toEqual([2005, 2015]);
+    expect(siteKindYears("matome")).toEqual([2012, 2015]);
+  });
+});
+
+describe("素材の作風", () => {
+  const ids = Object.keys(ASSET_ERAS) as AssetEraId[];
+
+  it.each(ids)("%s: 年の範囲が対象の年に収まり、根拠がある", (id) => {
+    const years = assetEraYears(id);
+    expect(years).toBeDefined();
+    const [from, to] = years ?? [0, 0];
+    expect(inYears(from)).toBe(true);
+    expect(inYears(to)).toBe(true);
+    expect(from).toBeLessThanOrEqual(to);
+    expectSources(assetEraSources(id));
+  });
+
+  it("機能年表とサイトの種類の年に従う", () => {
+    expect(assetEraYears("gif")).toEqual([1995, 2015]);
+    expect(assetEraYears("gif-animation")).toEqual([1996, 2015]);
+    expect(assetEraYears("png-alpha")).toEqual([FEATURES["css.png-alpha"].availableFrom, 2015]);
+    expect(assetEraYears("portal")).toEqual(siteKindYears("portal"));
+    expect(assetEraYears("retina")).toEqual([2010, 2015]);
+  });
+});
+
+describe("流行", () => {
+  const ids = Object.keys(TRENDS).filter((id): id is TrendId => Object.hasOwn(TRENDS, id));
+
+  it.each(ids)("%s: 年が対象の年に収まり、根拠がある", (id) => {
+    const trend: TrendEntry = TRENDS[id];
+    expect(inYears(trend.from)).toBe(true);
+    if (trend.until !== undefined) {
+      expect(inYears(trend.until)).toBe(true);
+      expect(trend.from).toBeLessThanOrEqual(trend.until);
+    }
+    expectSources(trend.sources);
+  });
+
+  it("機能年表の行は、古い書き方になる前の年までをよく使われた年にする", () => {
+    expect(eraRefYears({ kind: "feature", feature: "html.marquee" })).toEqual([1996, 2007]);
+    expect(eraRefYears({ kind: "feature", feature: "html.basic" })).toEqual([1995, 2015]);
+    expect(eraRefYears({ kind: "feature", feature: "html5.math" })).toBeUndefined();
+    expect(eraRefYears({ kind: "trend", trend: "trackback" })).toEqual([2003, 2010]);
+    expect(eraRefYears({ kind: "trend", trend: "rss" })).toEqual([2004, 2015]);
+  });
+});
+
+describe("無料ホームページの容量", () => {
+  it("期間がすき間も重なりもなく全年を覆い、根拠がある", () => {
+    const covered = HOSTING_SPACE_PERIODS.flatMap(({ years: [from, to] }) =>
+      Array.from({ length: to - from + 1 }, (_, i) => from + i),
+    );
+    expect(covered).toEqual(YEARS);
+    for (const period of HOSTING_SPACE_PERIODS) expectSources(period.sources);
+  });
+
+  it("年とともに増える", () => {
+    expect(YEARS.map((year) => formatBytes(hostingSpaceForYear(year).bytes))).toEqual([
+      ...Array<string>(4).fill("2MB"),
+      ...Array<string>(5).fill("12MB"),
+      ...Array<string>(12).fill("50MB"),
+    ]);
+  });
+
+  it("1MB より小さければ KB で表示する", () => {
+    expect(formatBytes(0)).toBe("0.0KB");
+    expect(formatBytes(1536)).toBe("1.5KB");
+    expect(formatBytes(1.5 * 1024 * 1024)).toBe("1.5MB");
   });
 });

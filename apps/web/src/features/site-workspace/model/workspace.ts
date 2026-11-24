@@ -352,7 +352,7 @@ export class Workspace {
   }
 
   /** サイトを消す。開いていたサイトなら、残りのサイトか、新しく作ったサイトを開く */
-  async deleteSite(id: SiteId, fallback: NewSite): Promise<void> {
+  async deleteSite(id: SiteId, fallback: () => Promise<NewSite>): Promise<void> {
     await this.flush();
     this.state.setState(({ sites }) => ({ sites: sites.filter((s) => s.id !== id) }));
     this.#writing = this.#writing.then(() => this.#store.delete(id)).catch(() => undefined);
@@ -360,7 +360,7 @@ export class Workspace {
     if (this.state.getState().currentId !== id) return;
     const rest = this.state.getState().sites[0];
     if (rest) this.openSite(rest.id);
-    else await this.createSite(fallback);
+    else await this.createSite(await fallback());
   }
 
   async addPage(path: string, html: string): Promise<void> {

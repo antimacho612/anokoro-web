@@ -1,3 +1,5 @@
+import { formatBytes } from "@anokoro/era-data";
+
 export interface TextEdit {
   value: string;
   caret: number;
@@ -10,17 +12,8 @@ export function insertText(value: string, start: number, end: number, text: stri
   return { value: value.slice(0, from) + text + value.slice(to), caret: from + text.length };
 }
 
-const encoder = new TextEncoder();
-
-/** UTF-8 でのバイト数 */
-export function byteLength(text: string): number {
-  return encoder.encode(text).length;
-}
-
-const DECORATIVE_CAPACITY_LABEL = "50MB";
-
-export function formatUsage(bytes: number): string {
-  return `使用容量 ${(bytes / 1024).toFixed(1)}KB / ${DECORATIVE_CAPACITY_LABEL}`;
+export function formatUsage(bytes: number, limitBytes: number): string {
+  return `使用容量 ${formatBytes(bytes)} / ${formatBytes(limitBytes)}`;
 }
 
 export function offsetOf(value: string, line: number, col: number): number {

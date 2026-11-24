@@ -40,7 +40,7 @@ describe("URL の符号化", () => {
   });
 
   test("未知の種類とカテゴリは既定に読み替える", async () => {
-    const payload = await compress(JSON.stringify({ ...site, genre: "sns", category: "x" }));
+    const payload = await compress(JSON.stringify({ ...site, genre: "metaverse", category: "x" }));
     const result = await decodeSharedSite(payload);
     expect(result.ok && result.site.genre).toBe("personal");
     expect(result.ok && result.site.category).toBe("other");

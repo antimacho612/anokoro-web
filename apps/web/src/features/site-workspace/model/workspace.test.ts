@@ -252,7 +252,7 @@ describe("サイトとページの管理", () => {
       year: 1995,
       pages: [{ path: "index.html", html: "" }],
     };
-    await ws.deleteSite(testId(1), fallback);
+    await ws.deleteSite(testId(1), () => Promise.resolve(fallback));
     expect((await store.list()).map((s) => s.name)).toEqual(["代わり"]);
     expect(ws.current()?.name).toBe("代わり");
   });

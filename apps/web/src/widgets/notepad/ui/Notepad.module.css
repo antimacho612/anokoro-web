@@ -29,6 +29,16 @@
   margin-left: auto;
   align-self: center;
   font-size: 12px;
+  text-align: right;
+}
+
+.over {
+  color: #c00000;
+  font-weight: bold;
+}
+
+.overNote {
+  display: block;
 }
 
 .confirmMessage {
