@@ -15,7 +15,7 @@ import { resolveLink, type LinkTarget } from "../site/link-target.ts";
 import { SAMPLE_SITES, type SampleSite } from "./index.ts";
 
 /** 年代ごとのサイトを作り終えた種類 */
-const BUILT_KINDS: readonly SiteKindId[] = ["personal", "corporate", "portal", "bbs"];
+const BUILT_KINDS: readonly SiteKindId[] = ["personal", "corporate", "portal", "bbs", "shop"];
 
 const yearsOf = (site: SampleSite): Year[] => YEARS.filter((year) => inRange(year, site.years));
 
