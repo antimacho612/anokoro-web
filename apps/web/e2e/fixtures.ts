@@ -1,6 +1,6 @@
 import { test as base } from "@playwright/test";
-import { BOOTED_KEY } from "../src/kit/boot/boot-session.ts";
-import { ONBOARDED_KEY } from "../src/kit/onboarding/onboarding-session.ts";
+import { BOOTED_KEY } from "../src/entities/boot/model/boot-session.ts";
+import { ONBOARDED_KEY } from "../src/features/onboarding/model/onboarding-session.ts";
 
 export { expect } from "@playwright/test";
 

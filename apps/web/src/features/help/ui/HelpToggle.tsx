@@ -1,0 +1,23 @@
+import type { ReactNode } from "react";
+import { useKit } from "../../../entities/kit-state/index.ts";
+
+type HelpToggleProps = {
+  className: string;
+  children: ReactNode;
+};
+
+export function HelpToggle({ className, children }: HelpToggleProps) {
+  const helpOpen = useKit((s) => s.helpOpen);
+  const toggleHelp = useKit((s) => s.toggleHelp);
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-haspopup="dialog"
+      aria-expanded={helpOpen}
+      onClick={toggleHelp}
+    >
+      {children}
+    </button>
+  );
+}

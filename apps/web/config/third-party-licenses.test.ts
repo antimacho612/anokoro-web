@@ -13,7 +13,7 @@ describe("collectNotices", () => {
       zod,
       `${react}?commonjs-proxy`,
       `\0${react}`,
-      "/home/user/anokoro-web/apps/web/src/kit/main.tsx",
+      "/home/user/anokoro-web/apps/web/src/app/kit/main.tsx",
       "\0vite/modulepreload-polyfill.js",
     ]);
     expect(notices.map((n) => [n.name, n.license])).toEqual([
