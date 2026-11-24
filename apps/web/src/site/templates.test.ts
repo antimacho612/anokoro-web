@@ -39,9 +39,9 @@ describe("loadTemplatePages", () => {
   });
 
   test("見本サイトがない年は、時代まちがいさがしのお題を 1 ページにする", async () => {
-    const quizPage = QUIZ_PAGES.find((p) => p.id === "corporate-2006");
+    const quizPage = QUIZ_PAGES.find((p) => p.id === "bbs-2005");
     if (!quizPage) throw new Error("お題がありません");
-    expect(await loadTemplatePages("corporate", 2010)).toEqual([
+    expect(await loadTemplatePages("bbs", 2010)).toEqual([
       { path: "index.html", html: assembleQuiz(quizPage).source },
     ]);
   });
@@ -60,7 +60,9 @@ describe("templateSample", () => {
     expect(templateSample("personal", 1999)?.id).toBe("personal");
     expect(templateSample("personal", 2007)?.id).toBe("taro");
     expect(templateSample("personal", 2015)?.id).toBe("koharu");
-    expect(templateSample("corporate", 1997)).toBeUndefined();
+    expect(templateSample("corporate", 1997)?.id).toBe("denki");
+    expect(templateSample("corporate", 2010)?.id).toBe("jutaku");
+    expect(templateSample("portal", 1996)).toBeUndefined();
     expect(templateSample("blog", 2006)?.id).toBe("blog");
   });
 });
