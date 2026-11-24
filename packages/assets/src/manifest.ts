@@ -72,7 +72,6 @@ export interface AssetRights {
   license: "CC0-1.0";
 }
 
-/** wallpaper は body の background に、ほかは img 要素で貼る */
 export type AssetCategory = "button" | "banner" | "icon" | "line" | "wallpaper" | "photo";
 
 /** 素材集に並ぶ素材 */

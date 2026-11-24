@@ -4,11 +4,8 @@ import { BLANK, INDEX_PAGE } from "../../site/@x/sample.ts";
 import { SAMPLE_SITES } from "./catalog.ts";
 import type { SampleSite } from "./types.ts";
 
-/** その種類と年のテンプレートにする見本サイト。年が重なるときは、あとから作ったものを選ぶ */
 export function templateSample(kind: SiteKindId, year: Year): SampleSite | undefined {
-  return SAMPLE_SITES.filter((s) => s.genre === kind && inRange(year, s.years)).reduce<
-    SampleSite | undefined
-  >((best, s) => (best === undefined || s.years[0] > best.years[0] ? s : best), undefined);
+  return SAMPLE_SITES.find((s) => s.genre === kind && inRange(year, s.years));
 }
 
 async function quizTemplate(kind: SiteKindId, year: Year): Promise<string | undefined> {
@@ -35,7 +32,6 @@ export async function loadTemplatePages(
   return [{ path: INDEX_PAGE, html }];
 }
 
-/** 「テンプレートに戻す」で入れるページ。同じパスのページがなければ最初のページ */
 export function templatePageHtml(pages: readonly SitePage[], path: string): string {
   return (pages.find((p) => p.path === path) ?? pages[0])?.html ?? BLANK;
 }

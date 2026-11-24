@@ -6,7 +6,6 @@ export interface AssetSize {
   height: number;
 }
 
-/** 選んだ年の素材集に並ぶ素材。作風がまだない年には出さない */
 export function assetsForYear(year: Year): readonly AssetEntry[] {
   return ASSETS.filter((asset) => {
     const years = assetEraYears(asset.era);
@@ -14,7 +13,6 @@ export function assetsForYear(year: Year): readonly AssetEntry[] {
   });
 }
 
-/** svg 要素の width と height。どちらかがなければ undefined */
 export function assetSize(asset: AssetEntry): AssetSize | undefined {
   const root = /^<svg\b[^>]*>/.exec(asset.svg.trim())?.[0] ?? "";
   const width = Number(/\swidth="(\d+)"/.exec(root)?.[1]);

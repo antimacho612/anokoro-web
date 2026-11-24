@@ -1,6 +1,5 @@
 import type { SampleSite } from "./types.ts";
 
-/** 見本サイト。種類ごとに作った年の順に並べる */
 export const SAMPLE_SITES: readonly SampleSite[] = [
   {
     id: "hogeta",

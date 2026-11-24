@@ -49,3 +49,4 @@ vp build     # 本番ビルド
 - TODO と FIXME の検出（`eslint/no-warning-comments`）は入れない。チケット番号付きの TODO を許す区別ができず、一律に禁止することになるため
 - コメントアウトされたコードの検出（`sonarjs/no-commented-code`）は入れない。oxlint の JS プラグインではこのルールが検出せず、oxc の適合性テスト（`apps/oxlint/conformance/snapshots/sonarjs.md`）でも 18 件中 14 件が失敗しているため
 - `oxlint-disable` の理由の必須化は検査できない。`eslint-comments/require-description` は `eslint-disable` のコメントだけを対象にするため、抑制には `eslint-disable` の形で理由を書く
+- マジックナンバーの検出（`eslint/no-magic-numbers`）は入れない。年代データの年、見本サイトやパーツの寸法など、そのまま書くのが正しい数値が多く、除外の設定を保守しきれないため

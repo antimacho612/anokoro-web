@@ -13,7 +13,6 @@ export type ViewSource =
   | { kind: "shared"; site: SharedSite }
   | { kind: "error"; message: string };
 
-/** 見本サイトを、作った年のサイトとして読み込む */
 export async function loadSampleSite(sample: SampleSite): Promise<SharedSite> {
   const pages = await sample.loadPages();
   return {

@@ -24,7 +24,6 @@ export function assetEraYears(id: AssetEraId): YearRange | undefined {
   return eraRefYears(ASSET_ERAS[id]);
 }
 
-/** その作風の根拠 */
 export function assetEraSources(id: AssetEraId): readonly Source[] {
   return eraRefSources(ASSET_ERAS[id]);
 }

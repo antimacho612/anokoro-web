@@ -37,7 +37,6 @@ type SiteUsageProps = {
   year: Year;
 };
 
-/** サイト全体の使用容量と、その年の無料ホームページの容量 */
 function SiteUsage({ pages, year }: SiteUsageProps) {
   const bytes = useMemo(() => siteUsageBytes(pages, year), [pages, year]);
   const limit = hostingSpaceForYear(year).bytes;
