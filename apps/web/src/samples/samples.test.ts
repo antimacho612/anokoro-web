@@ -1,21 +1,11 @@
 import { assetsForYear, findAsset } from "@anokoro/assets";
 import { checkEra } from "@anokoro/era-checker";
-import {
-  SITE_KIND_IDS,
-  YEARS,
-  inRange,
-  siteKindYears,
-  type SiteKindId,
-  type Year,
-} from "@anokoro/era-data";
+import { SITE_KIND_IDS, YEARS, inRange, siteKindYears, type Year } from "@anokoro/era-data";
 import { sharedSiteSchema } from "@anokoro/share-codec";
 import type { SitePage } from "@anokoro/shared";
 import { describe, expect, test } from "vite-plus/test";
 import { resolveLink, type LinkTarget } from "../site/link-target.ts";
 import { SAMPLE_SITES, type SampleSite } from "./index.ts";
-
-/** 年代ごとのサイトを作り終えた種類 */
-const BUILT_KINDS: readonly SiteKindId[] = ["personal", "corporate", "portal", "bbs", "shop"];
 
 const yearsOf = (site: SampleSite): Year[] => YEARS.filter((year) => inRange(year, site.years));
 
@@ -98,7 +88,7 @@ describe("見本サイト", () => {
   });
 });
 
-describe.each(BUILT_KINDS)("%s の年代ごとのサイト", (kind) => {
+describe.each(SITE_KIND_IDS)("%s の年代ごとのサイト", (kind) => {
   const sites = SAMPLE_SITES.filter((s) => s.genre === kind);
 
   test("年の範囲が、その種類がある年をすき間も重なりもなく覆う", () => {

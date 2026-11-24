@@ -38,10 +38,10 @@ describe("loadTemplatePages", () => {
     expect((await loadTemplatePages("personal", 2003))[0]?.html).toBe(TEMPLATE);
   });
 
-  test("見本サイトがない年は、時代まちがいさがしのお題を 1 ページにする", async () => {
-    const quizPage = QUIZ_PAGES.find((p) => p.id === "blog-2003");
+  test("見本サイトがない年（種類が廃れた後）は、時代まちがいさがしのお題を 1 ページにする", async () => {
+    const quizPage = QUIZ_PAGES.find((p) => p.id === "portal-2003");
     if (!quizPage) throw new Error("お題がありません");
-    expect(await loadTemplatePages("blog", 2004)).toEqual([
+    expect(await loadTemplatePages("portal", 2010)).toEqual([
       { path: "index.html", html: assembleQuiz(quizPage).source },
     ]);
   });
@@ -67,8 +67,9 @@ describe("templateSample", () => {
     expect(templateSample("bbs", 2010)?.id).toBe("tsuri");
     expect(templateSample("shop", 2001)?.id).toBe("chaho");
     expect(templateSample("shop", 2015)?.id).toBe("coffee");
-    expect(templateSample("blog", 2004)).toBeUndefined();
+    expect(templateSample("blog", 2004)?.id).toBe("hogeo");
     expect(templateSample("blog", 2006)?.id).toBe("blog");
+    expect(templateSample("portal", 2010)).toBeUndefined();
   });
 });
 

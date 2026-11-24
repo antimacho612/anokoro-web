@@ -207,13 +207,33 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
     loadPages: () => import("./shop-2012.ts").then((m) => m.pages),
   },
   {
+    id: "hogeo",
+    name: "ほげおのブログ",
+    years: [2003, 2005],
+    genre: "blog",
+    category: "diary",
+    description:
+      "「ブログはじめました」。テンプレートの 2 段組み、コメントとトラックバック、携帯からの投稿",
+    loadPages: () => import("./blog-2003.ts").then((m) => m.pages),
+  },
+  {
     id: "blog",
     name: "はなこのおやつ日和",
-    years: [2006, 2007],
+    years: [2006, 2010],
     genre: "blog",
     category: "life",
-    description: "サイドバー、コメント、トラックバック。2000 年代半ばのブログ",
-    loadPages: () => import("./blog.ts").then((m) => m.pages),
+    description: "サイドバー、ブログパーツ、バトン、承認制のトラックバック。2000 年代半ばのブログ",
+    loadPages: () => import("./blog-2006.ts").then((m) => m.pages),
+  },
+  {
+    id: "cycling",
+    name: "週末サイクリング日記",
+    years: [2011, 2015],
+    genre: "blog",
+    category: "hobby",
+    description:
+      "HTML5 の記事、タグ、SNS でシェア、スマホ対応。トラックバックのない引っ越し先のブログ",
+    loadPages: () => import("./blog-2011.ts").then((m) => m.pages),
   },
 ];
 
