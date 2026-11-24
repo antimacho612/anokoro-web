@@ -235,6 +235,26 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
       "HTML5 の記事、タグ、SNS でシェア、スマホ対応。トラックバックのない引っ越し先のブログ",
     loadPages: () => import("./blog-2011.ts").then((m) => m.pages),
   },
+  {
+    id: "zakki",
+    name: "ほげほげ雑記帳",
+    years: [2000, 2002],
+    genre: "textsite",
+    category: "diary",
+    description:
+      "毎日の雑記、長めの読み物、読者メールへのお返事。文字が主役の、手で書いて FTP で上げる個人サイト",
+    loadPages: () => import("./textsite-2000.ts").then((m) => m.pages),
+  },
+  {
+    id: "hogenews",
+    name: "ほげほげニュース",
+    years: [2003, 2005],
+    genre: "textsite",
+    category: "other",
+    description:
+      "ほかのサイトの更新をひとことつきで紹介する個人ニュースサイト。ネタ募集、ランキング、アンテナ",
+    loadPages: () => import("./textsite-2003.ts").then((m) => m.pages),
+  },
 ];
 
 export function findSample(id: string): SampleSite | undefined {

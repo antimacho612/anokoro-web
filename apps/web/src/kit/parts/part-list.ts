@@ -409,6 +409,59 @@ Q2. 苦手な食べ物は？<br>A. セロリ<br>
     category: "social",
     kinds: ["blog"],
   },
+  {
+    label: "雑文の見出し",
+    code: `<b>■{{year}}年7月10日</b><br>
+<font size="3"><b>自動改札とのたたかい</b></font><br>
+定期券を入れたら、目の前で扉が閉まった。もう一回入れる。閉まる。<br>
+三回目、何も考えずに歩いたら、すっと通れた。<br>
+`,
+    tip: "人気のテキストサイトは、ほぼ毎日更新されていました。日付と小見出しをつけて、短い文章を書き足していきます",
+    tipTopic: "textsite",
+    era: { kind: "siteKind", siteKind: "textsite" },
+    category: "layout",
+    kinds: ["textsite"],
+  },
+  {
+    label: "読み物の目次",
+    code: `<b>■読み物</b>
+<dl>
+<dt><a href="yomimono1.html">駅そば全制覇の旅（前編）</a></dt>
+<dd><font size="2">駅の立ち食いそばを、端から全部食べてみました</font></dd>
+<dt><a href="yomimono2.html">目覚まし時計を5個かけた男の朝</a></dt>
+<dd><font size="2">5個でも起きられない。では何個なら起きられるのか</font></dd>
+</dl>
+`,
+    tip: "日記とは別に、長めの「読み物」を目次にまとめました。読み物を集めたランキングもありました",
+    tipTopic: "textsite",
+    era: { kind: "siteKind", siteKind: "textsite" },
+    category: "navi",
+    kinds: ["textsite"],
+  },
+  {
+    label: "メールのお返事",
+    code: `<b>■メールのお返事</b><br>
+<b>&gt; 電車の中で読んで吹き出しました。（Aさん）</b><br>
+ありがとうございます。電車の中で読むのは、やめたほうがいいと思います。<br>
+`,
+    tip: "人気のテキストサイトには、読者からたくさんのメールが届きました",
+    tipTopic: "textsite",
+    era: { kind: "siteKind", siteKind: "textsite" },
+    category: "social",
+    kinds: ["textsite"],
+  },
+  {
+    label: "個人ニュース",
+    code: `<b>■{{year}}年6月12日</b><br>
+・<a href="http://www.example.com/kansatsu/0612.html">駅の伝言板に書かれていた一番長い文章</a>（ほげスペース観察記）<br>
+　<font color="#AA3300">最後まで読んだ駅員さんもえらい</font><br>
+`,
+    tip: "ほかのサイトの更新や話題を、ひとことを添えて紹介する個人ニュースサイトが、2001年にはありました",
+    tipTopic: "textsite",
+    era: { kind: "trend", trend: "personal-news" },
+    category: "social",
+    kinds: ["textsite"],
+  },
 
   {
     label: "マーキー",

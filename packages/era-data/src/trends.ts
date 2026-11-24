@@ -174,6 +174,16 @@ export const TRENDS = {
       },
     ],
   },
+  "personal-news": {
+    label: "個人ニュースサイト",
+    from: 2001,
+    sources: [
+      {
+        title: "ねとらぼ（2017年5月3日）個人ニュースサイトとFlashの時代の回顧",
+        url: "https://nlab.itmedia.co.jp/cont/articles/3266637/",
+      },
+    ],
+  },
   antenna: {
     label: "アンテナ",
     from: 2002,

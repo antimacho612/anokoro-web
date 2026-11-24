@@ -229,8 +229,9 @@ describe("サイトの種類", () => {
     expectSources(kind.sources);
   });
 
-  it("ディレクトリ型ポータルは 2005 年まで、ほかは 2015 年まで", () => {
+  it("ディレクトリ型ポータルとテキストサイトは 2005 年まで、ブログは 2015 年まで", () => {
     expect(siteKindYears("portal")).toEqual([1996, 2005]);
+    expect(siteKindYears("textsite")).toEqual([2000, 2005]);
     expect(siteKindYears("blog")).toEqual([2003, 2015]);
   });
 });

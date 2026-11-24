@@ -1,5 +1,5 @@
 import { checkEra } from "@anokoro/era-checker";
-import { SITE_KIND_IDS, YEARS, siteKindYears, inRange, type Year } from "@anokoro/era-data";
+import { YEARS, siteKindYears, inRange, type SiteKindId, type Year } from "@anokoro/era-data";
 import { describe, expect, it } from "vite-plus/test";
 import { assembleQuiz, listSlots, slotsFor } from "./assemble.ts";
 import { pageAvailableIn, trickAvailableIn } from "./eligibility.ts";
@@ -8,6 +8,15 @@ import { QUIZ_TRICKS } from "./tricks.ts";
 import type { QuizPage } from "./types.ts";
 
 const yearsOf = (page: QuizPage): Year[] => YEARS.filter((y) => pageAvailableIn(page, y));
+
+const KINDS_WITH_QUIZ: readonly SiteKindId[] = [
+  "personal",
+  "corporate",
+  "portal",
+  "bbs",
+  "shop",
+  "blog",
+];
 
 describe("お題", () => {
   it("ID が重ならない", () => {
@@ -25,7 +34,7 @@ describe("お題", () => {
     },
   );
 
-  it.each(SITE_KIND_IDS)("%s: その種類がある年はどれもお題が 1 つだけある", (kind) => {
+  it.each(KINDS_WITH_QUIZ)("%s: その種類がある年はどれもお題が 1 つだけある", (kind) => {
     for (const year of YEARS) {
       const count = QUIZ_PAGES.filter((p) => p.kind === kind && pageAvailableIn(p, year)).length;
       expect(count, `${year} 年`).toBe(inRange(year, siteKindYears(kind)) ? 1 : 0);

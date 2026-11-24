@@ -95,6 +95,26 @@ export const SITE_KINDS = {
       },
     ],
   },
+  textsite: {
+    label: "テキストサイト",
+    availableFrom: 2000,
+    endsAfter: 2005,
+    topic: "textsite",
+    sources: [
+      {
+        title: "INTERNET Watch: 人気の個人サイト（2001年7月30日）",
+        url: "https://internet.watch.impress.co.jp/www/article/2001/0730/megahit.htm",
+      },
+      {
+        title: "ITmedia: 更新を知らせるアンテナ（2004年4月19日）",
+        url: "https://www.itmedia.co.jp/news/articles/0404/19/news013.html",
+      },
+      {
+        title: "INTERNET Watch: ココログの開始（2003年12月2日）",
+        url: "https://internet.watch.impress.co.jp/cda/news/2003/12/02/1331.html",
+      },
+    ],
+  },
 } as const satisfies Record<string, SiteKindEntry>;
 
 export type SiteKindId = keyof typeof SITE_KINDS;
@@ -106,6 +126,7 @@ export const SITE_KIND_IDS: readonly SiteKindId[] = [
   "bbs",
   "shop",
   "blog",
+  "textsite",
 ];
 
 export function siteKindYears(id: SiteKindId): YearRange {

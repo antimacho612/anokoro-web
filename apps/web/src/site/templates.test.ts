@@ -69,6 +69,8 @@ describe("templateSample", () => {
     expect(templateSample("shop", 2015)?.id).toBe("coffee");
     expect(templateSample("blog", 2004)?.id).toBe("hogeo");
     expect(templateSample("blog", 2006)?.id).toBe("blog");
+    expect(templateSample("textsite", 2000)?.id).toBe("zakki");
+    expect(templateSample("textsite", 2005)?.id).toBe("hogenews");
     expect(templateSample("portal", 2010)).toBeUndefined();
   });
 });
