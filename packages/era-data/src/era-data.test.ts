@@ -20,6 +20,10 @@ import {
   UI_THEMES,
   uiThemeForYear,
   ASSET_ERAS,
+  TRENDS,
+  eraRefYears,
+  type TrendEntry,
+  type TrendId,
   assetEraSources,
   assetEraYears,
   type AssetEraId,
@@ -247,5 +251,27 @@ describe("素材の作風", () => {
     expect(assetEraYears("png-alpha")).toEqual([FEATURES["css.png-alpha"].availableFrom, 2015]);
     expect(assetEraYears("portal")).toEqual(siteKindYears("portal"));
     expect(assetEraYears("retina")).toEqual([2010, 2015]);
+  });
+});
+
+describe("流行", () => {
+  const ids = Object.keys(TRENDS).filter((id): id is TrendId => Object.hasOwn(TRENDS, id));
+
+  it.each(ids)("%s: 年が対象の年に収まり、根拠がある", (id) => {
+    const trend: TrendEntry = TRENDS[id];
+    expect(inYears(trend.from)).toBe(true);
+    if (trend.until !== undefined) {
+      expect(inYears(trend.until)).toBe(true);
+      expect(trend.from).toBeLessThanOrEqual(trend.until);
+    }
+    expectSources(trend.sources);
+  });
+
+  it("機能年表の行は、古い書き方になる前の年までをよく使われた年にする", () => {
+    expect(eraRefYears({ kind: "feature", feature: "html.marquee" })).toEqual([1996, 2007]);
+    expect(eraRefYears({ kind: "feature", feature: "html.basic" })).toEqual([1995, 2015]);
+    expect(eraRefYears({ kind: "feature", feature: "html5.math" })).toBeUndefined();
+    expect(eraRefYears({ kind: "trend", trend: "trackback" })).toEqual([2003, 2010]);
+    expect(eraRefYears({ kind: "trend", trend: "rss" })).toEqual([2004, 2015]);
   });
 });

@@ -105,8 +105,10 @@ test("タイムマシンバーの「この年の解説」から、選んだ年�
 
   await yearHelp.click();
   await expect(openedTab(page, "年表")).toBeVisible();
-  await expect(helpDialog(page).getByRole("document")).toContainText("IE6 登場");
-  await expect(helpDialog(page).getByRole("document")).not.toContainText("はてなダイアリー");
+  await expect(helpDialog(page).getByRole("document")).toContainText(
+    "Internet Explorer 6の日本語版が公開される",
+  );
+  await expect(helpDialog(page).getByRole("document")).not.toContainText("ココログ");
 
   await yearHelp.click();
   await expect(helpDialog(page)).toHaveCount(0);
@@ -117,12 +119,12 @@ test("選んだ年より後の内容は出さない", async ({ page }) => {
   await openHelpFromNotepadMenu(page);
   const body = helpDialog(page).getByRole("document");
   await expect(openedTab(page, "年表")).toBeVisible();
-  await expect(body).toContainText("IE6 登場");
-  await expect(body).not.toContainText("はてなダイアリー");
+  await expect(body).toContainText("Internet Explorer 6の日本語版が公開される");
+  await expect(body).not.toContainText("ココログ");
 
   await page.goto("/kit/?year=1998");
   await openHelpFromNotepadMenu(page);
-  await expect(helpDialog(page).getByRole("button", { name: "年表" })).toHaveCount(0);
-  await expect(openedTab(page, "回線事情")).toBeVisible();
-  await expect(body).not.toContainText("ADSL");
+  await expect(openedTab(page, "年表")).toBeVisible();
+  await expect(body).toContainText("長野冬季五輪");
+  await expect(body).not.toContainText("ADSLの試験提供");
 });

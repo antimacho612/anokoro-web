@@ -43,6 +43,8 @@ export {
   type SiteKindId,
 } from "./site-kinds.ts";
 export { TOPIC_IDS, type TopicId } from "./topics.ts";
+export { TRENDS, type TrendEntry, type TrendId } from "./trends.ts";
+export { eraRefSources, eraRefYears, type EraRef } from "./era-refs.ts";
 export {
   ASSET_ERAS,
   assetEraSources,

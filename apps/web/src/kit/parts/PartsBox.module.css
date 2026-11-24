@@ -51,14 +51,18 @@
   flex: 1;
 }
 
-.assetGroup + .assetGroup {
+.partGroup + .partGroup {
   margin-top: 6px;
 }
 
-.assetHeading {
+.heading {
   margin: 4px 0 3px;
   font-size: 12px;
   font-weight: bold;
+}
+
+summary.heading {
+  cursor: pointer;
 }
 
 .bytes {
