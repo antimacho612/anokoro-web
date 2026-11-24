@@ -62,7 +62,9 @@ describe("templateSample", () => {
     expect(templateSample("personal", 2015)?.id).toBe("koharu");
     expect(templateSample("corporate", 1997)?.id).toBe("denki");
     expect(templateSample("corporate", 2010)?.id).toBe("jutaku");
-    expect(templateSample("portal", 1996)).toBeUndefined();
+    expect(templateSample("portal", 1996)?.id).toBe("hogesearch");
+    expect(templateSample("portal", 2005)?.id).toBe("hogenet");
+    expect(templateSample("shop", 2001)).toBeUndefined();
     expect(templateSample("blog", 2006)?.id).toBe("blog");
   });
 });

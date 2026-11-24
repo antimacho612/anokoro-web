@@ -103,13 +103,33 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
     loadPages: () => import("./corporate-2011.ts").then((m) => m.pages),
   },
   {
+    id: "hogesearch",
+    name: "ほげほげサーチ",
+    years: [1996, 1997],
+    genre: "portal",
+    category: "other",
+    description: "キーワードとジャンルで探す、できたばかりの検索サービス。ニュースと天気も読める",
+    loadPages: () => import("./portal-1996.ts").then((m) => m.pages),
+  },
+  {
     id: "portal",
     name: "ほげナビ",
     years: [1998, 2000],
     genre: "portal",
     category: "other",
-    description: "カテゴリをたどってサイトを探す、ディレクトリ型のポータル",
-    loadPages: () => import("./portal.ts").then((m) => m.pages),
+    description:
+      "カテゴリをたどってサイトを探す、ディレクトリ型のポータル。おすすめの印と登録の申請",
+    loadPages: () => import("./portal-1998.ts").then((m) => m.pages),
+  },
+  {
+    id: "hogenet",
+    name: "ほげほげネット",
+    years: [2001, 2005],
+    genre: "portal",
+    category: "other",
+    description:
+      "カテゴリとウェブ全体の検索、ニュース、天気、無料メール、オークション。なんでもそろう入口",
+    loadPages: () => import("./portal-2001.ts").then((m) => m.pages),
   },
   {
     id: "bbs",
