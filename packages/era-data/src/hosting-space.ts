@@ -64,7 +64,6 @@ export function hostingSpaceForYear(year: Year): HostingSpacePeriod {
   return period;
 }
 
-/** 容量の表示。1MB 以上は MB、それより小さければ KB で、小数 1 桁まで */
 export function formatBytes(bytes: number): string {
   if (bytes >= MB) return `${trimZero((bytes / MB).toFixed(1))}MB`;
   return `${(bytes / 1024).toFixed(1)}KB`;

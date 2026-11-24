@@ -33,6 +33,15 @@ describe("見本サイト", () => {
     expect(new Set(SAMPLE_SITES.map((s) => s.id)).size).toBe(SAMPLE_SITES.length);
   });
 
+  test("種類ごとにまとまり、その中では作った年の順に並ぶ（この順でマイコンピュータに出す）", () => {
+    const kindRuns = SAMPLE_SITES.map((s) => s.genre).filter((g, i, all) => all[i - 1] !== g);
+    expect(new Set(kindRuns).size).toBe(kindRuns.length);
+    for (const kind of SITE_KIND_IDS) {
+      const starts = SAMPLE_SITES.filter((s) => s.genre === kind).map((s) => s.years[0]);
+      expect(starts, kind).toEqual([...starts].sort((a, b) => a - b));
+    }
+  });
+
   test.each(SAMPLE_SITES)("$id の年は、その種類がある年に収まる", (site) => {
     const [from, to] = site.years;
     expect(from).toBeLessThanOrEqual(to);

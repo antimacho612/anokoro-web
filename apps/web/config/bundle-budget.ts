@@ -12,7 +12,6 @@ export interface BudgetChunk {
 
 export interface InitialJs {
   page: string;
-  /** 入口のチャンクと、静的に読み込むチャンクの圧縮後の合計 */
   gzipBytes: number;
 }
 

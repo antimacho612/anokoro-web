@@ -3,13 +3,16 @@ import type { Part, PartBase } from "./parts.ts";
 
 const WEEK_HEADER = ["日", "月", "火", "水", "木", "金", "土"];
 
-/** 選んだ年の 11 月のカレンダー */
-function novemberCalendar(year: Year): string {
-  const firstDay = new Date(Date.UTC(year, 10, 1)).getUTCDay();
+export const PART_DATE = { month: 11, day: 18 } as const;
+
+function partMonthCalendar(year: Year): string {
+  const { month, day } = PART_DATE;
+  const firstDay = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
   const cells = [
     ...Array.from({ length: firstDay }, () => "&nbsp;"),
-    ...Array.from({ length: 30 }, (_, i) =>
-      i + 1 === 18 ? `<a href="1118.html">18</a>` : `${i + 1}`,
+    ...Array.from({ length: daysInMonth }, (_, i) =>
+      i + 1 === day ? `<a href="${month}${day}.html">${day}</a>` : `${i + 1}`,
     ),
   ];
   const rows = Array.from({ length: Math.ceil(cells.length / 7) }, (_, row) =>
@@ -20,7 +23,7 @@ function novemberCalendar(year: Year): string {
     .map((row) => `<tr>${row.map((cell) => `<td align="right">${cell}</td>`).join("")}</tr>`)
     .join("\n");
   return `<table border="0" cellspacing="0" cellpadding="2">
-<tr><td colspan="7" align="center"><b>${year}年11月</b></td></tr>
+<tr><td colspan="7" align="center"><b>${year}年${month}月</b></td></tr>
 <tr>${head}</tr>
 ${body}
 </table>
@@ -354,7 +357,7 @@ TEL 03-0000-0000 ／ FAX 03-0000-0001</address>
   },
   {
     label: "カレンダー",
-    code: novemberCalendar,
+    code: partMonthCalendar,
     tip: "記事を書いた日にリンクが付くカレンダーです。曜日は選んだ年に合わせています",
     tipTopic: "blog",
     era: { kind: "siteKind", siteKind: "blog" },
@@ -1292,7 +1295,6 @@ a:hover { color: #FF6600; text-decoration: underline; }
   },
 ];
 
-/** どの年でも試せる、時代チェッカーの反応を見るためのパーツ */
 export const MODERN_CODE_PART: PartBase = {
   label: "2020年代のコード（違反例）",
   code: `<section style="display:flex; gap:16px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.2)">

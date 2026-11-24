@@ -8,12 +8,12 @@ import {
   type SiteKindId,
   type Year,
 } from "@anokoro/era-data";
-import { PARTS } from "./part-list.ts";
+import { PART_DATE, PARTS } from "./part-list.ts";
 
 export interface PartBase {
   label: string;
   /**
-   * 挿入する HTML。{{year}} は選んだ年、{{yy}} はその下 2 桁、{{weekday}} はその年の 11 月 18 日の曜日、
+   * 挿入する HTML。{{year}} は選んだ年、{{yy}} はその下 2 桁、{{weekday}} はその年の PART_DATE の曜日、
    * {{resolution}} はその年の既定の解像度に置き換える
    */
   code: string | ((year: Year) => string);
@@ -33,10 +33,10 @@ export interface Part extends PartBase {
 
 const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
 
-/** 選んだ年に合わせて、挿入する HTML を作る */
 export function partCode(part: PartBase, year: Year): string {
   const code = typeof part.code === "function" ? part.code(year) : part.code;
-  const weekday = WEEKDAYS[new Date(Date.UTC(year, 10, 18)).getUTCDay()] ?? "";
+  const date = new Date(Date.UTC(year, PART_DATE.month - 1, PART_DATE.day));
+  const weekday = WEEKDAYS[date.getUTCDay()] ?? "";
   return code
     .replaceAll("{{year}}", String(year))
     .replaceAll("{{yy}}", String(year % 100).padStart(2, "0"))
@@ -49,7 +49,6 @@ export type PartStatus =
   | { kind: "past"; label: string }
   | { kind: "future"; label: string };
 
-/** 選んだ年に、そのパーツがよく使われていたか */
 export function partStatus(part: Part, year: Year): PartStatus {
   const years = eraRefYears(part.era);
   if (!years) return { kind: "future", label: "まだ使えません" };
@@ -67,16 +66,12 @@ export interface PartGroup {
 
 export interface LabeledPart {
   part: Part;
-  /** 「〜2007年」「1996年から」のような年の表示 */
   label: string;
 }
 
 export interface PartShelf {
-  /** その年によく使われたパーツ。サイトの種類のパーツを先に並べる */
   popular: readonly PartGroup[];
-  /** 流行が過ぎたパーツ。挿入はできる */
   past: readonly LabeledPart[];
-  /** まだないパーツ。灰色にする */
   future: readonly LabeledPart[];
 }
 
@@ -97,7 +92,6 @@ export function partsForKind(kind: SiteKindId): Part[] {
   return [...own, ...common];
 }
 
-/** パーツ箱に並べる形。よく使われたものを種類ごとにまとめ、流行の前後を分ける */
 export function partShelf(kind: SiteKindId, year: Year): PartShelf {
   const popular: Part[] = [];
   const past: LabeledPart[] = [];
