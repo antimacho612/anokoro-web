@@ -5,7 +5,7 @@
  * timeline: 年表 / corporate: 企業サイトと Flash / portal: ポータルと検索 / bbs: 掲示板文化 /
  * shop: ネット通販 / blog: ブログ / mobile: ケータイとスマホ / media: 音と動画 / tools: 作り方の道具 /
  * textsite: テキストサイト / material: 素材サイト / web20: Web 2.0 /
- * sns: SNS とプロフ
+ * sns: SNS とプロフ / matome: まとめサイト
  */
 export const TOPIC_IDS = [
   "line",
@@ -30,6 +30,7 @@ export const TOPIC_IDS = [
   "material",
   "web20",
   "sns",
+  "matome",
 ] as const;
 
 export type TopicId = (typeof TOPIC_IDS)[number];

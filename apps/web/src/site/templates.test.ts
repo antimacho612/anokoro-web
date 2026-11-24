@@ -46,11 +46,12 @@ describe("loadTemplatePages", () => {
     ]);
   });
 
-  test("種類ごとに違うテンプレート", async () => {
+  test("その年にある種類どうしは、違うテンプレート", async () => {
+    const kinds = SITE_KIND_IDS.filter((kind) => inRange(2005, siteKindYears(kind)));
     const tops = await Promise.all(
-      SITE_KIND_IDS.map(async (kind) => (await loadTemplatePages(kind, 2005))[0]?.html),
+      kinds.map(async (kind) => (await loadTemplatePages(kind, 2005))[0]?.html),
     );
-    expect(new Set(tops).size).toBe(SITE_KIND_IDS.length);
+    expect(new Set(tops).size).toBe(kinds.length);
   });
 });
 
@@ -77,6 +78,8 @@ describe("templateSample", () => {
     expect(templateSample("sns", 2005)?.id).toBe("hogesns");
     expect(templateSample("sns", 2008)?.id).toBe("yuina");
     expect(templateSample("sns", 2015)?.id).toBe("hogelife");
+    expect(templateSample("matome", 2012)?.id).toBe("hogesoku");
+    expect(templateSample("matome", 2015)?.id).toBe("hogematome");
     expect(templateSample("portal", 2010)).toBeUndefined();
   });
 });

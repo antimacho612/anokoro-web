@@ -314,6 +314,26 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
     description: "スマートフォン時代の SNS。写真つきの投稿、♡ とコメント、フォロー、公開範囲の設定",
     loadPages: () => import("./sns-2012.ts").then((m) => m.pages),
   },
+  {
+    id: "hogesoku",
+    name: "ほげほげ速報",
+    years: [2012, 2013],
+    genre: "matome",
+    category: "other",
+    description:
+      "掲示板のスレッドから書き込みを抜き出したまとめブログ。記事の中の広告、関連記事、コメント",
+    loadPages: () => import("./matome-2012.ts").then((m) => m.pages),
+  },
+  {
+    id: "hogematome",
+    name: "ほげほげまとめ",
+    years: [2014, 2015],
+    genre: "matome",
+    category: "other",
+    description:
+      "掲示板の転載禁止のあと、短文投稿サービスの投稿と昔のスレッドをまとめるように切り替えたまとめサイト",
+    loadPages: () => import("./matome-2014.ts").then((m) => m.pages),
+  },
 ];
 
 export function findSample(id: string): SampleSite | undefined {

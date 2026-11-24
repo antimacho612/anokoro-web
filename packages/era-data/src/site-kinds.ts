@@ -170,6 +170,25 @@ export const SITE_KINDS = {
       },
     ],
   },
+  matome: {
+    label: "まとめサイト",
+    availableFrom: 2012,
+    topic: "matome",
+    sources: [
+      {
+        title: "ITmedia: まとめブログとステマ騒動（2012年1月13日）",
+        url: "https://www.itmedia.co.jp/news/articles/1201/13/news070.html",
+      },
+      {
+        title: "J-CAST ニュース: 掲示板の転載禁止の広がり（2014年3月4日）",
+        url: "https://www.j-cast.com/2014/03/04198334.html",
+      },
+      {
+        title: "ねとらぼ: 掲示板が転載禁止を選んだ理由（2014年3月6日）",
+        url: "https://nlab.itmedia.co.jp/cont/articles/3233815/",
+      },
+    ],
+  },
 } as const satisfies Record<string, SiteKindEntry>;
 
 export type SiteKindId = keyof typeof SITE_KINDS;
@@ -185,6 +204,7 @@ export const SITE_KIND_IDS: readonly SiteKindId[] = [
   "material",
   "web20",
   "sns",
+  "matome",
 ];
 
 export function siteKindYears(id: SiteKindId): YearRange {

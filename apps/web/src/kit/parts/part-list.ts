@@ -622,6 +622,52 @@ Q2. 苦手な食べ物は？<br>A. セロリ<br>
     category: "social",
     kinds: ["sns"],
   },
+  {
+    label: "スレッドの抜き出し",
+    code: `<div><font size="2" color="#228822">1：名無しのほげさん：{{year}}/08/12 18:20:11</font><br>
+<b><font color="#1A5DAB">駅前の喫茶店のナポリタン、今日から復活してた</font></b></div>
+<div><font size="2" color="#228822">2：名無しのほげさん：{{year}}/08/12 18:21:40</font><br>
+まじかよ</div>
+`,
+    tip: "まとめブログは、掲示板のスレッドから書き込みを選んで抜き出し、話題ごとに1つの記事にしました",
+    tipTopic: "matome",
+    era: { kind: "siteKind", siteKind: "matome" },
+    category: "layout",
+    kinds: ["matome"],
+  },
+  {
+    label: "記事の中の広告",
+    code: `<p align="center"><font size="1" color="#999999">スポンサーリンク</font><br>
+<img src="bn-ad.gif"></p>
+`,
+    tip: "まとめブログの多くは、アフィリエイト広告や検索連動広告で収入を得ていました",
+    tipTopic: "matome",
+    era: { kind: "siteKind", siteKind: "matome" },
+    category: "notice",
+    kinds: ["matome"],
+  },
+  {
+    label: "投稿のまとめ",
+    code: `<div style="border: 1px solid #E1E8ED; border-radius: 8px; padding: 10px 12px; margin: 10px 0;"><b>さくら</b> <font color="#888888">@sakura_hoge</font><br>
+駅前のバス乗り場、傘の行列ができてる</div>
+`,
+    tip: "2014年に掲示板の人気の板が転載禁止を決めると、まとめサイトは短文投稿サービスの書き込みもまとめるようになりました",
+    tipTopic: "matome",
+    era: { kind: "trend", trend: "repost-ban" },
+    category: "social",
+    kinds: ["matome"],
+  },
+  {
+    label: "昔のスレのまとめ",
+    code: `<b>【昔のスレ】はじめて自分で作った料理</b><br>
+<font size="2">転載禁止より前の、2011年のスレッドからまとめました。</font><br>
+`,
+    tip: "転載禁止のあと、まとめサイトは昔のスレッドを掘り起こしてまとめることもありました",
+    tipTopic: "matome",
+    era: { kind: "trend", trend: "repost-ban" },
+    category: "navi",
+    kinds: ["matome"],
+  },
 
   {
     label: "マーキー",

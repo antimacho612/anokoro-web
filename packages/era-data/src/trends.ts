@@ -185,6 +185,16 @@ export const TRENDS = {
       },
     ],
   },
+  "repost-ban": {
+    label: "掲示板の転載禁止",
+    from: 2014,
+    sources: [
+      {
+        title: "J-CAST ニュース（2014年3月4日）掲示板の転載禁止の広がり",
+        url: "https://www.j-cast.com/2014/03/04198334.html",
+      },
+    ],
+  },
   "personal-news": {
     label: "個人ニュースサイト",
     from: 2001,
