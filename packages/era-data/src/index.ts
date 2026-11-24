@@ -43,3 +43,10 @@ export {
   type SiteKindId,
 } from "./site-kinds.ts";
 export { TOPIC_IDS, type TopicId } from "./topics.ts";
+export {
+  ASSET_ERAS,
+  assetEraSources,
+  assetEraYears,
+  type AssetEraEntry,
+  type AssetEraId,
+} from "./asset-eras.ts";

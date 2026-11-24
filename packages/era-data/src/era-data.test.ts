@@ -19,6 +19,10 @@ import {
   siteKindYears,
   UI_THEMES,
   uiThemeForYear,
+  ASSET_ERAS,
+  assetEraSources,
+  assetEraYears,
+  type AssetEraId,
   type FeatureEntry,
   type SiteKindEntry,
   type Source,
@@ -221,5 +225,27 @@ describe("サイトの種類", () => {
   it("ディレクトリ型ポータルは 2005 年まで、ほかは 2015 年まで", () => {
     expect(siteKindYears("portal")).toEqual([1996, 2005]);
     expect(siteKindYears("blog")).toEqual([2003, 2015]);
+  });
+});
+
+describe("素材の作風", () => {
+  const ids = Object.keys(ASSET_ERAS) as AssetEraId[];
+
+  it.each(ids)("%s: 年の範囲が対象の年に収まり、根拠がある", (id) => {
+    const years = assetEraYears(id);
+    expect(years).toBeDefined();
+    const [from, to] = years ?? [0, 0];
+    expect(inYears(from)).toBe(true);
+    expect(inYears(to)).toBe(true);
+    expect(from).toBeLessThanOrEqual(to);
+    expectSources(assetEraSources(id));
+  });
+
+  it("機能年表とサイトの種類の年に従う", () => {
+    expect(assetEraYears("gif")).toEqual([1995, 2015]);
+    expect(assetEraYears("gif-animation")).toEqual([1996, 2015]);
+    expect(assetEraYears("png-alpha")).toEqual([FEATURES["css.png-alpha"].availableFrom, 2015]);
+    expect(assetEraYears("portal")).toEqual(siteKindYears("portal"));
+    expect(assetEraYears("retina")).toEqual([2010, 2015]);
   });
 });

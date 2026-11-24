@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="16"><style>.m{animation:m .6s steps(1,end) infinite}@keyframes m{50%{transform:translateX(3px)}}@media (prefers-reduced-motion:reduce){.m{animation:none}}</style><path class="m" d="M1 5h9V1l9 7-9 7v-4H1z" fill="#ff3d3d" stroke="#900" stroke-linejoin="round"/></svg>

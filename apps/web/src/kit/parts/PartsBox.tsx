@@ -6,9 +6,16 @@ import { slotClass } from "../layout/KitLayout.tsx";
 import { useKit } from "../store.ts";
 import styles from "./PartsBox.module.css";
 import { useWorkspace } from "../sites/instance.ts";
-import { assetSnippet, partAvailability, partsForKind, type Part } from "./parts.ts";
+import {
+  assetBytesLabel,
+  assetGroups,
+  assetSnippet,
+  partAvailability,
+  partsForKind,
+  type Part,
+} from "./parts.ts";
 
-const THUMBNAILS = ASSETS.map((asset) => ({ asset, uri: toDataUri(asset.svg) }));
+const THUMBNAIL_URIS = new Map(ASSETS.map((asset) => [asset.name, toDataUri(asset.svg)]));
 
 type PartsBoxProps = {
   onInsert: (text: string) => void;
@@ -46,26 +53,35 @@ export function PartsBox({ onInsert }: PartsBoxProps) {
       </div>
       <div className="group">
         <b>素材集（クリックで挿入）</b>
-        <div className={styles.assets}>
-          {THUMBNAILS.map(({ asset, uri }) => (
-            <button
-              key={asset.name}
-              type="button"
-              className={styles.asset}
-              title="クリックで挿入"
-              onClick={() => onInsert(assetSnippet(asset))}
-            >
-              {asset.kind === "wallpaper" ? (
-                <span className={styles.thumb} style={{ backgroundImage: `url("${uri}")` }} />
-              ) : (
-                <span className={styles.thumb}>
-                  <img src={uri} alt="" />
-                </span>
-              )}
-              <span>{asset.name}</span>
-            </button>
-          ))}
-        </div>
+        {assetGroups(year).map((group) => (
+          <section key={group.category} className={styles.assetGroup}>
+            <h4 className={styles.assetHeading}>{group.label}</h4>
+            <div className={styles.assets}>
+              {group.assets.map((asset) => {
+                const uri = THUMBNAIL_URIS.get(asset.name);
+                return (
+                  <button
+                    key={asset.name}
+                    type="button"
+                    className={styles.asset}
+                    title="クリックで挿入"
+                    onClick={() => onInsert(assetSnippet(asset))}
+                  >
+                    {asset.category === "wallpaper" ? (
+                      <span className={styles.thumb} style={{ backgroundImage: `url("${uri}")` }} />
+                    ) : (
+                      <span className={styles.thumb}>
+                        <img src={uri} alt="" />
+                      </span>
+                    )}
+                    <span>{asset.name}</span>
+                    <span className={styles.bytes}>{assetBytesLabel(asset)}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        ))}
         {lastPart && (
           <p className={`hint ${styles.tip}`}>
             <span>豆知識：{lastPart.tip}</span>
