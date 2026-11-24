@@ -1,16 +1,33 @@
-import { TEMPLATE } from "../kit/notepad/templates.ts";
 import type { SampleSite } from "./types.ts";
 
 /** 見本サイト。種類ごとに作った年の順に並べる */
 export const SAMPLE_SITES: readonly SampleSite[] = [
+  {
+    id: "hogeta",
+    name: "ほげ太のホームページ",
+    years: [1995, 1996],
+    genre: "personal",
+    category: "hobby",
+    description: "灰色の背景に見出しと箇条書き。大学の計算機から公開した、はじまりのころのページ",
+    loadPages: () => import("./personal-1995.ts").then((m) => m.pages),
+  },
+  {
+    id: "masayan",
+    name: "★まさやんのゲーム部屋★",
+    years: [1997, 1998],
+    genre: "personal",
+    category: "game",
+    description: "GIF アニメ、流れる文字、カウンター。黒い壁紙に黄色いリンクのゲームサイト",
+    loadPages: () => import("./personal-1997.ts").then((m) => m.pages),
+  },
   {
     id: "personal",
     name: "☆ねこまるの部屋☆",
     years: [1999, 2002],
     genre: "personal",
     category: "diary",
-    description: "カウンター、キリ番、工事中。テレホーダイ時代の個人ホームページ",
-    loadPages: () => import("./personal.ts").then((m) => m.pages),
+    description: "キリ番、掲示板、100の質問、BGM。テレホーダイ時代の個人ホームページ",
+    loadPages: () => import("./personal-1999.ts").then((m) => m.pages),
   },
   {
     id: "taro",
@@ -18,8 +35,26 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
     years: [2003, 2007],
     genre: "personal",
     category: "diary",
-    description: "流れる文字と点滅、キリ番の報告。作成キットで最初に開くページ",
-    loadPages: () => Promise.resolve([{ path: "index.html", html: TEMPLATE }]),
+    description: "レンタル掲示板、日記ランキング、素材のお礼。作成キットで最初に開くページ",
+    loadPages: () => import("./personal-2003.ts").then((m) => m.pages),
+  },
+  {
+    id: "sorairo",
+    name: "そらいろ工房",
+    years: [2008, 2010],
+    genre: "personal",
+    category: "hobby",
+    description: "CSS のレイアウト、半透明の PNG、バトン。日記はブログに移した手作りのサイト",
+    loadPages: () => import("./personal-2008.ts").then((m) => m.pages),
+  },
+  {
+    id: "koharu",
+    name: "こはるのベランダ菜園",
+    years: [2011, 2015],
+    genre: "personal",
+    category: "life",
+    description: "HTML5 のタグ、角丸と影、小さな画面への対応。SNS でシェアする時代の個人サイト",
+    loadPages: () => import("./personal-2011.ts").then((m) => m.pages),
   },
   {
     id: "corporate",
