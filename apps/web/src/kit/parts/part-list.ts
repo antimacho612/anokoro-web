@@ -569,6 +569,59 @@ Q2. 苦手な食べ物は？<br>A. セロリ<br>
     category: "deco",
     kinds: ["web20"],
   },
+  {
+    label: "足あと",
+    code: `<b>■足あと</b><br>
+<font size="2">{{year}}年06月12日 22:41　さくら<br>
+{{year}}年06月12日 22:03　ほげ太<br>
+{{year}}年06月12日 19:15　ねこ太郎</font><br>
+`,
+    tip: "SNS には、自分のページを見に来た人が新しい順に一覧で出る「足あと」の機能がありました",
+    tipTopic: "sns",
+    era: { kind: "siteKind", siteKind: "sns" },
+    category: "social",
+    kinds: ["sns"],
+  },
+  {
+    label: "コミュニティの一覧",
+    code: `<b>■コミュニティ（3）</b><br>
+<font size="2"><a href="community.html">ねこと暮らす</a><br>
+ほげほげ市に住んでいる人<br>
+駅前の喫茶店が好き</font><br>
+`,
+    tip: "SNS の自分のページには、プロフィール、日記、友だちの一覧、参加しているコミュニティが並びました",
+    tipTopic: "sns",
+    era: { kind: "siteKind", siteKind: "sns" },
+    category: "navi",
+    kinds: ["sns"],
+  },
+  {
+    label: "プロフの質問",
+    code: `<font color="#FF3399">名前</font><br>ゆいな<br>
+<font color="#FF3399">好きな食べ物</font><br>いちご、からあげ<br>
+<font color="#FF3399">一言</font><br>仲良くしてね♪<br>
+`,
+    tip: "ケータイのプロフは、60問ほどの質問への答えと、個人用の掲示板が並ぶだけのページでした",
+    tipTopic: "sns",
+    era: { kind: "siteKind", siteKind: "sns" },
+    category: "layout",
+    kinds: ["sns"],
+  },
+  {
+    label: "招待状",
+    code: `<b>■友だちを招待する</b><br>
+<font size="2">このSNSは招待制です。招待状を送った人だけが登録できます。</font>
+<form>
+メールアドレス：<input type="text" name="mail" size="30">
+<input type="submit" value="招待状を送る">
+</form>
+`,
+    tip: "国内で大きな SNS も、2010年3月までは、招待状がないと登録できない招待制でした",
+    tipTopic: "sns",
+    era: { kind: "trend", trend: "sns-invitation" },
+    category: "social",
+    kinds: ["sns"],
+  },
 
   {
     label: "マーキー",

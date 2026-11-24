@@ -174,6 +174,17 @@ export const TRENDS = {
       },
     ],
   },
+  "sns-invitation": {
+    label: "招待制の SNS",
+    from: 2005,
+    until: 2009,
+    sources: [
+      {
+        title: "INTERNET Watch（2010年3月8日）mixi が招待制から登録制へ",
+        url: "https://internet.watch.impress.co.jp/docs/column/weekly/353437.html",
+      },
+    ],
+  },
   "personal-news": {
     label: "個人ニュースサイト",
     from: 2001,

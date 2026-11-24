@@ -4,7 +4,8 @@
  * js: JavaScript と Flash / image: 画像と素材 / culture: 個人サイト文化 / text: 文字コードと文字化け /
  * timeline: 年表 / corporate: 企業サイトと Flash / portal: ポータルと検索 / bbs: 掲示板文化 /
  * shop: ネット通販 / blog: ブログ / mobile: ケータイとスマホ / media: 音と動画 / tools: 作り方の道具 /
- * textsite: テキストサイト / material: 素材サイト / web20: Web 2.0
+ * textsite: テキストサイト / material: 素材サイト / web20: Web 2.0 /
+ * sns: SNS とプロフ
  */
 export const TOPIC_IDS = [
   "line",
@@ -28,6 +29,7 @@ export const TOPIC_IDS = [
   "textsite",
   "material",
   "web20",
+  "sns",
 ] as const;
 
 export type TopicId = (typeof TOPIC_IDS)[number];

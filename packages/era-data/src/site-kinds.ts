@@ -151,6 +151,25 @@ export const SITE_KINDS = {
       },
     ],
   },
+  sns: {
+    label: "SNS・プロフ",
+    availableFrom: 2005,
+    topic: "sns",
+    sources: [
+      {
+        title: "INTERNET Watch: mixi のユーザー数が 1,000 万人に（2007年5月21日）",
+        url: "https://internet.watch.impress.co.jp/cda/news/2007/05/21/15772.html",
+      },
+      {
+        title: "総務省: 平成18年版 情報通信白書（SNS の登録者数）",
+        url: "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/h18/html/i1510000.html",
+      },
+      {
+        title: "ITmedia: ケータイのプロフ（2007年11月7日）",
+        url: "https://www.itmedia.co.jp/news/article/0711/07/1071107067/",
+      },
+    ],
+  },
 } as const satisfies Record<string, SiteKindEntry>;
 
 export type SiteKindId = keyof typeof SITE_KINDS;
@@ -165,6 +184,7 @@ export const SITE_KIND_IDS: readonly SiteKindId[] = [
   "textsite",
   "material",
   "web20",
+  "sns",
 ];
 
 export function siteKindYears(id: SiteKindId): YearRange {

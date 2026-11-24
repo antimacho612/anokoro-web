@@ -285,6 +285,35 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
       "ベータ版のバッジ、大きなキャッチコピー、つやつやの登録ボタン、細い線で丸めた角。タグと API のメモサービス",
     loadPages: () => import("./web20-2006.ts").then((m) => m.pages),
   },
+  {
+    id: "hogesns",
+    name: "ほげほげSNS",
+    years: [2005, 2006],
+    genre: "sns",
+    category: "pet",
+    description:
+      "招待制の SNS のマイページ。プロフィール、日記とコメント、足あと、友だち、コミュニティ",
+    loadPages: () => import("./sns-2005.ts").then((m) => m.pages),
+  },
+  {
+    id: "yuina",
+    name: "ゆいなのプロフ",
+    years: [2007, 2011],
+    genre: "sns",
+    category: "diary",
+    description:
+      "ケータイのプロフ。質問への答えが 3 ページと、個人用の掲示板。幅 240 ピクセルの文字のページ",
+    loadPages: () => import("./sns-2007.ts").then((m) => m.pages),
+  },
+  {
+    id: "hogelife",
+    name: "ほげらいふ",
+    years: [2012, 2015],
+    genre: "sns",
+    category: "life",
+    description: "スマートフォン時代の SNS。写真つきの投稿、♡ とコメント、フォロー、公開範囲の設定",
+    loadPages: () => import("./sns-2012.ts").then((m) => m.pages),
+  },
 ];
 
 export function findSample(id: string): SampleSite | undefined {
