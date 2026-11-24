@@ -22,6 +22,7 @@
 - 実行時に同梱する依存は、MIT、ISC、BSD、Apache-2.0 など、表記だけで使えるライセンスに限る。表記は `apps/web/config/third-party-licenses.ts` がビルド時にバンドルから集めて `third-party-licenses.txt` に出すので、手で一覧を書かない
 - `localStorage` のキーは `anokoro:` で始め、読み書きは try/catch で囲む
 - UI の文言はすべて日本語
+- `apps/web/src` は Feature-Sliced Design（app / pages / widgets / features / entities / shared）で置く。import は下の層へだけ向け、スライスの外からは `index.ts` を通す。entity 同士は `@x` を使う
 
 ## コマンド（Vite+）
 
@@ -37,8 +38,11 @@ vp build     # 本番ビルド
 ```
 
 - E2E は Playwright、D1 のマイグレーションは Wrangler（どちらも Vite+ には含まれない）
-- 変更を完了とする前に `vp check` と `vp test` を通す
+- 変更を完了とする前に `vp check`、`vp test`、`vp run -r fsd` を通す
 - E2E は `apps/web` で `vp exec playwright test` を実行する。Playwright だけは個別の設定ファイル（`apps/web/playwright.config.ts`）を置く
+- FSD の層の検査は Steiger（`vp run -r fsd`）。oxlint では import の指定文字列でしか層を判定できないため、Steiger だけは個別の設定ファイル（`apps/web/steiger.config.ts`）を置く
+  - `fsd/insignificant-slice` は切る。作成キットの窓（widgets）は `pages/kit` からしか使わないが、ページに統合すると大きくなりすぎるため
+  - `shared/styles` は CSS だけなので `fsd/public-api` を切る
 
 ## Lint で検査しないと決めたもの
 
