@@ -20,7 +20,7 @@ import {
   normalizePagePath,
   pagePathProblem,
 } from "../../site/site-model.ts";
-import { kindTopic, siteTemplate } from "../../site/templates.ts";
+import { kindTopic, loadTemplatePages } from "../../site/templates.ts";
 import { HelpButton } from "../help/HelpButton.tsx";
 import { ConfirmDialog, Dialog, dialogClass } from "../../ui/Dialog.tsx";
 import { Window } from "../../ui/Window/Window.tsx";
@@ -104,7 +104,7 @@ function SamplesFolder() {
           {SAMPLE_SITES.map((sample) => (
             <li key={sample.id}>
               <IconButton
-                label={`${sample.name}（${sample.year}年）`}
+                label={`${sample.name}（${sample.years[0]}年）`}
                 icon={<FolderIcon />}
                 isSelected={selected === sample.id}
                 onSelect={() => setSelected(sample.id)}
@@ -119,13 +119,13 @@ function SamplesFolder() {
   );
 }
 
-function fallbackSite(year: Year): NewSite {
+async function fallbackSite(year: Year): Promise<NewSite> {
   return {
     name: "マイホームページ",
     year,
     genre: "personal",
     category: "diary",
-    pages: [{ path: "index.html", html: siteTemplate("personal", year) }],
+    pages: await loadTemplatePages("personal", year),
   };
 }
 
@@ -227,7 +227,7 @@ export function MyComputer() {
   const confirmDeleteSite = (site: LocalSite): void => {
     close();
     setFolderId(null);
-    void workspace.deleteSite(site.id, fallbackSite(year));
+    void workspace.deleteSite(site.id, () => fallbackSite(year));
   };
 
   return (

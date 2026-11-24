@@ -1,4 +1,4 @@
-import type { SampleSite } from "./types.ts";
+import type { SitePage } from "@anokoro/shared";
 
 const post = (no: number, time: string, body: string): string =>
   `<dt>${no} 名前：<font color="#008000"><b>名無しさん</b></font> 投稿日：${time}
@@ -77,16 +77,8 @@ const rule = `<html>
 </html>
 `;
 
-export const bbsSample: SampleSite = {
-  id: "bbs",
-  name: "ほげほげ掲示板",
-  year: 2001,
-  genre: "bbs",
-  category: "hobby",
-  description: "スレッド、名無しさん、アスキーアート。匿名掲示板の見た目",
-  pages: [
-    { path: "index.html", html: index },
-    { path: "thread.html", html: thread },
-    { path: "rule.html", html: rule },
-  ],
-};
+export const pages: readonly SitePage[] = [
+  { path: "index.html", html: index },
+  { path: "thread.html", html: thread },
+  { path: "rule.html", html: rule },
+];

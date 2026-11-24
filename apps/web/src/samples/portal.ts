@@ -1,4 +1,4 @@
-import type { SampleSite } from "./types.ts";
+import type { SitePage } from "@anokoro/shared";
 
 const index = `<html>
 <head>
@@ -84,16 +84,8 @@ const add = `<html>
 </html>
 `;
 
-export const portalSample: SampleSite = {
-  id: "portal",
-  name: "ほげナビ",
-  year: 1998,
-  genre: "portal",
-  category: "other",
-  description: "カテゴリをたどってサイトを探す、ディレクトリ型のポータル",
-  pages: [
-    { path: "index.html", html: index },
-    { path: "hobby.html", html: hobby },
-    { path: "add.html", html: add },
-  ],
-};
+export const pages: readonly SitePage[] = [
+  { path: "index.html", html: index },
+  { path: "hobby.html", html: hobby },
+  { path: "add.html", html: add },
+];

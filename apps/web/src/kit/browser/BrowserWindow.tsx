@@ -1,4 +1,10 @@
-import { formatResolution, resolutionPeriodForYear } from "@anokoro/era-data";
+import {
+  formatBytes,
+  formatResolution,
+  hostingSpaceForYear,
+  resolutionPeriodForYear,
+  type Year,
+} from "@anokoro/era-data";
 import { useElementWidth } from "../../ui/use-element-width.ts";
 import { Window } from "../../ui/Window/Window.tsx";
 import { HelpMenu } from "../help/HelpMenu.tsx";
@@ -28,13 +34,13 @@ type BrowserWindowProps = {
   navigator: BrowserNavigator;
 };
 
-function AdBanner({ isLoading }: { isLoading: boolean }) {
+function AdBanner({ isLoading, year }: { isLoading: boolean; year: Year }) {
   if (isLoading) return <span className={styles.adLoading}>広告を読み込んでいます...</span>;
   return (
     <>
       <span className={styles.adLogo}>ほげスペース</span>
       <span>
-        無料で<b>50MB</b>！ホームページを作ろう♪
+        無料で<b>{formatBytes(hostingSpaceForYear(year).bytes)}</b>！ホームページを作ろう♪
       </span>
       <span className={styles.adLink}>今すぐ登録</span>
     </>
@@ -178,7 +184,7 @@ export function BrowserWindow({ html, pageTitle, navigator }: BrowserWindowProps
           }}
         >
           <div className={styles.adbar}>
-            <AdBanner isLoading={isAdLoading} />
+            <AdBanner isLoading={isAdLoading} year={year} />
           </div>
           <iframe
             key={isNet ? `net-${netFrameKey}` : "local"}

@@ -30,6 +30,9 @@ import {
   type FeatureEntry,
   type SiteKindEntry,
   type Source,
+  HOSTING_SPACE_PERIODS,
+  formatBytes,
+  hostingSpaceForYear,
 } from "./index.ts";
 
 function expectSources(sources: readonly Source[]): void {
@@ -273,5 +276,29 @@ describe("流行", () => {
     expect(eraRefYears({ kind: "feature", feature: "html5.math" })).toBeUndefined();
     expect(eraRefYears({ kind: "trend", trend: "trackback" })).toEqual([2003, 2010]);
     expect(eraRefYears({ kind: "trend", trend: "rss" })).toEqual([2004, 2015]);
+  });
+});
+
+describe("無料ホームページの容量", () => {
+  it("期間がすき間も重なりもなく全年を覆い、根拠がある", () => {
+    const covered = HOSTING_SPACE_PERIODS.flatMap(({ years: [from, to] }) =>
+      Array.from({ length: to - from + 1 }, (_, i) => from + i),
+    );
+    expect(covered).toEqual(YEARS);
+    for (const period of HOSTING_SPACE_PERIODS) expectSources(period.sources);
+  });
+
+  it("年とともに増える", () => {
+    expect(YEARS.map((year) => formatBytes(hostingSpaceForYear(year).bytes))).toEqual([
+      ...Array<string>(4).fill("2MB"),
+      ...Array<string>(5).fill("12MB"),
+      ...Array<string>(12).fill("50MB"),
+    ]);
+  });
+
+  it("1MB より小さければ KB で表示する", () => {
+    expect(formatBytes(0)).toBe("0.0KB");
+    expect(formatBytes(1536)).toBe("1.5KB");
+    expect(formatBytes(1.5 * 1024 * 1024)).toBe("1.5MB");
   });
 });

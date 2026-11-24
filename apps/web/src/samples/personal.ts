@@ -1,4 +1,4 @@
-import type { SampleSite } from "./types.ts";
+import type { SitePage } from "@anokoro/shared";
 
 const index = `<html>
 <head>
@@ -86,16 +86,8 @@ const diary = `<html>
 </html>
 `;
 
-export const personalSample: SampleSite = {
-  id: "personal",
-  name: "☆ねこまるの部屋☆",
-  year: 1999,
-  genre: "personal",
-  category: "diary",
-  description: "カウンター、キリ番、工事中。テレホーダイ時代の個人ホームページ",
-  pages: [
-    { path: "index.html", html: index },
-    { path: "profile.html", html: profile },
-    { path: "diary.html", html: diary },
-  ],
-};
+export const pages: readonly SitePage[] = [
+  { path: "index.html", html: index },
+  { path: "profile.html", html: profile },
+  { path: "diary.html", html: diary },
+];

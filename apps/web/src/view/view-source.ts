@@ -14,15 +14,17 @@ export type ViewSource =
 
 export const SAMPLE_PARAM = "sample";
 
-export function sampleToShared(sample: SampleSite): SharedSite {
+/** 見本サイトを、作った年のサイトとして読み込む */
+export async function loadSampleSite(sample: SampleSite): Promise<SharedSite> {
+  const pages = await sample.loadPages();
   return {
     kind: "anokoro-site",
     v: 1,
     name: sample.name,
-    year: sample.year,
+    year: sample.years[0],
     genre: sample.genre,
     category: sample.category,
-    pages: sample.pages.map(({ path, html }) => ({ path, html })),
+    pages: pages.map(({ path, html }) => ({ path, html })),
   };
 }
 
@@ -32,7 +34,7 @@ export async function loadViewSource(search: string, hash: string): Promise<View
   if (sampleId !== null) {
     const sample = findSample(sampleId);
     if (!sample) return { kind: "error", message: "その見本サイトは見つかりません。" };
-    return { kind: "sample", sample, site: sampleToShared(sample) };
+    return { kind: "sample", sample, site: await loadSampleSite(sample) };
   }
   const payload = payloadFromHash(hash);
   if (payload === undefined) {

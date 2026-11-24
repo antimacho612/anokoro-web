@@ -1,13 +1,14 @@
-import type { SiteKindId, Year } from "@anokoro/era-data";
+import type { SiteKindId, YearRange } from "@anokoro/era-data";
 import type { SiteCategoryId, SitePage } from "@anokoro/shared";
 
-/** 運営が作る架空の見本サイト。サーバーを使わずアプリに同梱する */
+/** 運営が作る架空のサイト。閲覧画面で見本として見せ、新しいサイトのテンプレートにもする */
 export interface SampleSite {
   id: string;
   name: string;
-  year: Year;
+  /** 作った年から、その種類のテンプレートとして使う最後の年まで */
+  years: YearRange;
   genre: SiteKindId;
   category: SiteCategoryId;
   description: string;
-  pages: readonly SitePage[];
+  loadPages: () => Promise<readonly SitePage[]>;
 }

@@ -1,4 +1,4 @@
-import type { SampleSite } from "./types.ts";
+import type { SitePage } from "@anokoro/shared";
 
 const style = (extra: string): string => `<style type="text/css">
 body { margin: 0; background-color: #FFF6EE; color: #444444; font-size: 12px; }
@@ -93,16 +93,8 @@ ${banner}
 </html>
 `;
 
-export const blogSample: SampleSite = {
-  id: "blog",
-  name: "はなこのおやつ日和",
-  year: 2006,
-  genre: "blog",
-  category: "life",
-  description: "サイドバー、コメント、トラックバック。2000 年代半ばのブログ",
-  pages: [
-    { path: "index.html", html: index },
-    { path: "entry1120.html", html: entry },
-    { path: "profile.html", html: profile },
-  ],
-};
+export const pages: readonly SitePage[] = [
+  { path: "index.html", html: index },
+  { path: "entry1120.html", html: entry },
+  { path: "profile.html", html: profile },
+];

@@ -1,34 +1,55 @@
 import { checkEra } from "@anokoro/era-checker";
-import { SITE_KIND_IDS, SITE_KINDS } from "@anokoro/era-data";
+import { SITE_KIND_IDS, YEARS, inRange, siteKindYears } from "@anokoro/era-data";
 import { sharedSiteSchema } from "@anokoro/share-codec";
 import { describe, expect, test } from "vite-plus/test";
 import { resolveLink } from "../site/link-target.ts";
 import { SAMPLE_SITES } from "./index.ts";
 
-const pages = SAMPLE_SITES.flatMap((site) => site.pages.map((page) => ({ site, page })));
-
 describe("見本サイト", () => {
-  test("第 1 段階の種類ごとに 1 つずつある", () => {
-    expect(SAMPLE_SITES.map((s) => s.genre).sort()).toEqual([...SITE_KIND_IDS].sort());
+  test("どの種類にも 1 つ以上あり、id が重ならない", () => {
+    expect([...new Set(SAMPLE_SITES.map((s) => s.genre))].sort()).toEqual(
+      [...SITE_KIND_IDS].sort(),
+    );
     expect(new Set(SAMPLE_SITES.map((s) => s.id)).size).toBe(SAMPLE_SITES.length);
   });
 
-  test.each(SAMPLE_SITES)("$id はその種類がある年のサイトで、共有データの形式を満たす", (site) => {
-    expect(site.year).toBeGreaterThanOrEqual(SITE_KINDS[site.genre].availableFrom);
-    const shared = { kind: "anokoro-site", v: 1, ...site };
+  test.each(SAMPLE_SITES)("$id の年は、その種類がある年に収まる", (site) => {
+    const [from, to] = site.years;
+    expect(from).toBeLessThanOrEqual(to);
+    expect(inRange(from, siteKindYears(site.genre))).toBe(true);
+    expect(inRange(to, siteKindYears(site.genre))).toBe(true);
+  });
+
+  test.each(SAMPLE_SITES)("$id は共有データの形式を満たす", async (site) => {
+    const shared = {
+      kind: "anokoro-site",
+      v: 1,
+      name: site.name,
+      year: site.years[0],
+      genre: site.genre,
+      category: site.category,
+      pages: await site.loadPages(),
+    };
     expect(sharedSiteSchema.safeParse(shared).success).toBe(true);
   });
 
-  test.each(pages)("$site.id/$page.path はその年で警告がない", ({ site, page }) => {
-    const { warnings, score } = checkEra(page.html, { year: site.year, mode: "local" });
-    expect(warnings.map((w) => w.ruleId)).toEqual([]);
-    expect(score).toBe(100);
+  test.each(SAMPLE_SITES)("$id のページは、年の範囲のどの年でも警告がない", async (site) => {
+    const pages = await site.loadPages();
+    const problems = YEARS.filter((year) => inRange(year, site.years)).flatMap((year) =>
+      pages.flatMap((page) =>
+        checkEra(page.html, { year, mode: "local" }).warnings.map(
+          (w) => `${year} ${page.path} ${w.ruleId}`,
+        ),
+      ),
+    );
+    expect(problems).toEqual([]);
   });
 
-  test.each(SAMPLE_SITES)("$id のページは、ほかのページからリンクでたどれる", (site) => {
-    const paths = new Set(site.pages.map((p) => p.path));
+  test.each(SAMPLE_SITES)("$id のページは、ほかのページからリンクでたどれる", async (site) => {
+    const pages = await site.loadPages();
+    const paths = new Set(pages.map((p) => p.path));
     const linked = new Set<string>(["index.html"]);
-    for (const page of site.pages) {
+    for (const page of pages) {
       for (const [, href] of page.html.matchAll(/<a href="([^"]+)"/g)) {
         const target = resolveLink({
           href: href ?? "",

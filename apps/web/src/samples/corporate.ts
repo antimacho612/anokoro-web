@@ -1,4 +1,4 @@
-import type { SampleSite } from "./types.ts";
+import type { SitePage } from "@anokoro/shared";
 
 const index = `<html>
 <head>
@@ -86,16 +86,8 @@ const products = `<html>
 </html>
 `;
 
-export const corporateSample: SampleSite = {
-  id: "corporate",
-  name: "ほげほげ製菓株式会社",
-  year: 2001,
-  genre: "corporate",
-  category: "life",
-  description: "「ようこそ」、社長あいさつ、推奨環境。地方の会社の公式サイト",
-  pages: [
-    { path: "index.html", html: index },
-    { path: "company.html", html: company },
-    { path: "products.html", html: products },
-  ],
-};
+export const pages: readonly SitePage[] = [
+  { path: "index.html", html: index },
+  { path: "company.html", html: company },
+  { path: "products.html", html: products },
+];

@@ -1,4 +1,4 @@
-import type { SampleSite } from "./types.ts";
+import type { SitePage } from "@anokoro/shared";
 
 const index = `<html>
 <head>
@@ -82,16 +82,8 @@ const law = `<html>
 </html>
 `;
 
-export const shopSample: SampleSite = {
-  id: "shop",
-  name: "ほげほげ屋本舗",
-  year: 2003,
-  genre: "shop",
-  category: "life",
-  description: "赤くて大きな値段と「送料無料」。縦に長いネットショップ",
-  pages: [
-    { path: "index.html", html: index },
-    { path: "item.html", html: item },
-    { path: "law.html", html: law },
-  ],
-};
+export const pages: readonly SitePage[] = [
+  { path: "index.html", html: index },
+  { path: "item.html", html: item },
+  { path: "law.html", html: law },
+];

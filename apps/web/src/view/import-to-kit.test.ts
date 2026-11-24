@@ -1,9 +1,16 @@
 import { createMemorySiteStore, parseSiteId, type SiteId } from "@anokoro/site-store";
 import { describe, expect, test } from "vite-plus/test";
 import type { StorageAccess } from "../kit/notepad/draft-storage.ts";
-import { personalSample } from "../samples/personal.ts";
+import type { SharedSite } from "@anokoro/share-codec";
+import { findSample } from "../samples/index.ts";
 import { importToKit } from "./import-to-kit.ts";
-import { sampleToShared } from "./view-source.ts";
+import { loadSampleSite } from "./view-source.ts";
+
+async function personalSite(): Promise<SharedSite> {
+  const sample = findSample("personal");
+  if (!sample) throw new Error("見本サイトがありません");
+  return loadSampleSite(sample);
+}
 
 const testId = (n: number): SiteId => parseSiteId(`01J${String(n).padStart(23, "0")}`);
 
@@ -15,7 +22,7 @@ describe("importToKit", () => {
       getItem: (k) => data.get(k) ?? null,
       setItem: (k, v) => void data.set(k, v),
     });
-    await importToKit(sampleToShared(personalSample), {
+    await importToKit(await personalSite(), {
       open: async () => store,
       storage,
       now: 5,
