@@ -1,6 +1,6 @@
 import { test as base, expect, type Page } from "@playwright/test";
-import { BOOTED_KEY } from "../src/kit/boot/boot-session.ts";
-import { ONBOARDING_STEPS } from "../src/kit/onboarding/onboarding-steps.ts";
+import { BOOTED_KEY } from "../src/entities/boot/model/boot-session.ts";
+import { ONBOARDING_STEPS } from "../src/features/onboarding/model/onboarding-steps.ts";
 
 const test = base.extend({
   context: async ({ context }, use) => {

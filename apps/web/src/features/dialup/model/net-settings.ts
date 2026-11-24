@@ -1,0 +1,47 @@
+import { isLineKey, type LineKey } from "@anokoro/era-data";
+import type { StorageAccess } from "../../../shared/lib/index.ts";
+import type { KitStore } from "../../../entities/kit-state/index.ts";
+import { isLineSelectable } from "../../../entities/kit-state/index.ts";
+
+const LINE_KEY = "anokoro:line";
+const SOUND_KEY = "anokoro:sound";
+const LEGACY_COUNTER_KEY = "anokoro:counter";
+
+function read(storage: StorageAccess, key: string): string | null {
+  try {
+    return storage().getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function write(storage: StorageAccess, key: string, value: string): void {
+  try {
+    storage().setItem(key, value);
+  } catch {}
+}
+
+export function restoreNetSettings(store: KitStore, storage: StorageAccess): void {
+  const { year } = store.getState();
+  const line = read(storage, LINE_KEY);
+  if (isLineKey(line) && isLineSelectable(year, line)) store.setState({ lineKey: line });
+  const sound = read(storage, SOUND_KEY);
+  if (sound === "on" || sound === "off") store.setState({ sound: sound === "on" });
+  const counter = Number(read(storage, LEGACY_COUNTER_KEY) ?? Number.NaN);
+  if (Number.isSafeInteger(counter) && counter >= 0) store.setState({ counter });
+}
+
+export function restoreSound(store: KitStore, storage: StorageAccess): void {
+  const sound = read(storage, SOUND_KEY);
+  if (sound === "on" || sound === "off") store.setState({ sound: sound === "on" });
+}
+
+export function saveLine(storage: StorageAccess, key: LineKey): void {
+  write(storage, LINE_KEY, key);
+}
+
+export function persistNetSettings(store: KitStore, storage: StorageAccess): () => void {
+  return store.subscribe((state, prev) => {
+    if (state.sound !== prev.sound) write(storage, SOUND_KEY, state.sound ? "on" : "off");
+  });
+}

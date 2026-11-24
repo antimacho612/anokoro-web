@@ -8,7 +8,8 @@
     "dev": "vp dev",
     "preview": "vp preview",
     "test": "vp test",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "fsd": "steiger ./src"
   },
   "dependencies": {
     "@anokoro/assets": "workspace:*",
@@ -27,6 +28,7 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
+    "@feature-sliced/steiger-plugin": "catalog:",
     "@playwright/test": "catalog:",
     "@types/css-tree": "catalog:",
     "@types/node": "catalog:",
@@ -34,6 +36,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "css-tree": "catalog:",
+    "steiger": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"

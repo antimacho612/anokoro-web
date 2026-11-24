@@ -1,0 +1,18 @@
+.kinds {
+  border: 1px solid #808080;
+  margin: 8px 0;
+  padding: 4px 8px 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+}
+
+.kinds label {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.kindNotYet {
+  color: var(--disabled-fg);
+}
