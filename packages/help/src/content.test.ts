@@ -21,6 +21,18 @@ describe("content/help", () => {
     }
   });
 
+  test("年表は 1995〜2015 年の毎年 6 項目以上ある", () => {
+    const timeline = topics.find((t) => t.id === "timeline");
+    expect(timeline?.years).toEqual([1995, 2015]);
+    const itemCount = (html: string): number => html.match(/<li>/g)?.length ?? 0;
+    for (let year = 1995; year <= 2015; year++) {
+      const count = (timeline?.segments ?? [])
+        .filter((s) => !s.reference && s.years[0] === year)
+        .reduce((sum, s) => sum + itemCount(s.html), 0);
+      expect(count, `${year}`).toBeGreaterThanOrEqual(6);
+    }
+  });
+
   test("年表のほかは、範囲のどの年を選んでも 2 節以上が出る", () => {
     const headingCount = (html: string): number => html.match(/<h4[\s>]/g)?.length ?? 0;
     for (const topic of topics.filter((t) => t.id !== "timeline")) {
