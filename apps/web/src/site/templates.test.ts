@@ -71,6 +71,8 @@ describe("templateSample", () => {
     expect(templateSample("blog", 2006)?.id).toBe("blog");
     expect(templateSample("textsite", 2000)?.id).toBe("zakki");
     expect(templateSample("textsite", 2005)?.id).toBe("hogenews");
+    expect(templateSample("material", 2000)?.id).toBe("sozaikan");
+    expect(templateSample("material", 2008)?.id).toBe("sozaikobo");
     expect(templateSample("portal", 2010)).toBeUndefined();
   });
 });

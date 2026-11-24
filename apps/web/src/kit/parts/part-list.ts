@@ -462,6 +462,61 @@ Q2. 苦手な食べ物は？<br>A. セロリ<br>
     category: "social",
     kinds: ["textsite"],
   },
+  {
+    label: "素材の一覧",
+    code: `<table border="0" cellpadding="6" cellspacing="0">
+<tr align="center">
+<td><img src="icon-home.gif"><br><font size="1">No.01 おうち</font></td>
+<td><img src="icon-book.gif"><br><font size="1">No.02 ほん</font></td>
+<td><img src="icon-pen.gif"><br><font size="1">No.03 えんぴつ</font></td>
+</tr>
+</table>
+<font size="2">保存するときは、画像の上で右クリックしてね</font><br>
+`,
+    tip: "素材サイトは、背景やアイコンなど、ページを飾る画像を無料で配っていました",
+    tipTopic: "material",
+    era: { kind: "siteKind", siteKind: "material" },
+    category: "media",
+    kinds: ["material"],
+  },
+  {
+    label: "ご利用のお約束",
+    code: `<b>★ご利用のお約束</b><br>
+<font size="2">・素材はすべて無料です<br>
+・直リンクは禁止です。保存して、ご自分のスペースに上げてから使ってね<br>
+・使うときは、利用報告板でひとこと教えてもらえるとうれしいです</font><br>
+`,
+    tip: "素材サイトの画像をそのまま表示させる直リンクは、サーバーが重くなるので、しないものとされていました",
+    tipTopic: "material",
+    era: { kind: "siteKind", siteKind: "material" },
+    category: "notice",
+    kinds: ["material"],
+  },
+  {
+    label: "利用報告",
+    code: `<table border="1" cellpadding="4" cellspacing="0" width="400">
+<tr><td bgcolor="#FFE8F2"><b>借ります♪</b>　<font size="2">みゆ　{{year}}/08/21</font></td></tr>
+<tr><td><font size="2">ハートのラインを借ります！ とってもかわいいです。<br>
+<font color="#E05090">＞管理人より：ご報告ありがとうございます！</font></font></td></tr>
+</table>
+`,
+    tip: "素材を使う人は「借ります」とひとこと報告しました。人気のサイトには毎日たくさんの報告が届きました",
+    tipTopic: "material",
+    era: { kind: "siteKind", siteKind: "material" },
+    category: "social",
+    kinds: ["material"],
+  },
+  {
+    label: "素材ランキング",
+    code: `<font size="2">素材サイトのランキングに参加しています。</font><br>
+<a href="http://www.example.com/sozai-rank/"><img src="bn-hogespace.gif" border="0"></a><br>
+`,
+    tip: "素材サイトが約300も登録するランキングがあったと、当時の管理人が振り返っています",
+    tipTopic: "material",
+    era: { kind: "trend", trend: "ranking" },
+    category: "social",
+    kinds: ["material"],
+  },
 
   {
     label: "マーキー",

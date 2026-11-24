@@ -255,6 +255,26 @@ export const SAMPLE_SITES: readonly SampleSite[] = [
       "ほかのサイトの更新をひとことつきで紹介する個人ニュースサイト。ネタ募集、ランキング、アンテナ",
     loadPages: () => import("./textsite-2003.ts").then((m) => m.pages),
   },
+  {
+    id: "sozaikan",
+    name: "☆ほげ素材館☆",
+    years: [2000, 2004],
+    genre: "material",
+    category: "illust",
+    description:
+      "パステルの壁紙、ライン、アイコン、動く素材。直リンク禁止のお約束と「借ります」の利用報告板",
+    loadPages: () => import("./material-2000.ts").then((m) => m.pages),
+  },
+  {
+    id: "sozaikobo",
+    name: "ほげほげ素材工房",
+    years: [2005, 2008],
+    genre: "material",
+    category: "illust",
+    description:
+      "つやつやボタン、光るライン、細いストライプの背景。素材ランキングに参加する 2000 年代半ばの素材サイト",
+    loadPages: () => import("./material-2005.ts").then((m) => m.pages),
+  },
 ];
 
 export function findSample(id: string): SampleSite | undefined {

@@ -115,6 +115,18 @@ export const SITE_KINDS = {
       },
     ],
   },
+  material: {
+    label: "素材サイト",
+    availableFrom: 2000,
+    endsAfter: 2008,
+    topic: "material",
+    sources: [
+      {
+        title: "ねとらぼ（2019年9月21日）素材屋の元管理人の回顧",
+        url: "https://nlab.itmedia.co.jp/cont/articles/3295709/",
+      },
+    ],
+  },
 } as const satisfies Record<string, SiteKindEntry>;
 
 export type SiteKindId = keyof typeof SITE_KINDS;
@@ -127,6 +139,7 @@ export const SITE_KIND_IDS: readonly SiteKindId[] = [
   "shop",
   "blog",
   "textsite",
+  "material",
 ];
 
 export function siteKindYears(id: SiteKindId): YearRange {
