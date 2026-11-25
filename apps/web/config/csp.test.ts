@@ -17,9 +17,14 @@ describe("securityMetaTags", () => {
     ]);
   });
 
-  test("スクリプトは同じオリジンのファイルだけを許す", () => {
-    expect(APP_CSP).toContain("script-src 'self';");
+  test("スクリプトは同じオリジンと GoatCounter の配信元のファイルだけを許す", () => {
+    expect(APP_CSP).toContain("script-src 'self' https://gc.zgo.at;");
     expect(APP_CSP).not.toContain("unsafe-eval");
     expect(APP_CSP).toContain("base-uri 'none'");
+  });
+
+  test("計測の送り先は GoatCounter のサイトだけを許す", () => {
+    expect(APP_CSP).toContain("connect-src 'self' https://anokoro.goatcounter.com;");
+    expect(APP_CSP).toContain("img-src 'self' data: blob: https://anokoro.goatcounter.com;");
   });
 });

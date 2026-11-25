@@ -3,6 +3,7 @@ import { siteFavicon } from "@anokoro/assets/vite";
 import { helpContent } from "@anokoro/help/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite-plus";
+import { analytics } from "./config/analytics.ts";
 import { resolveBase } from "./config/base.ts";
 import { bundleBudget } from "./config/bundle-budget.ts";
 import { securityMeta } from "./config/csp.ts";
@@ -16,6 +17,7 @@ export default defineConfig({
     react(),
     siteFavicon(),
     securityMeta(),
+    analytics(),
     thirdPartyLicenses(),
     bundleBudget({ limitBytes: 320 * 1024 }),
     helpContent({ dir: resolve(root, "../../content/help") }),

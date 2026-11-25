@@ -1,16 +1,22 @@
 import type { HtmlTagDescriptor, Plugin } from "vite-plus";
+import { GOATCOUNTER_ENDPOINT, GOATCOUNTER_SCRIPT } from "./analytics.ts";
+
+const ANALYTICS_SCRIPT_ORIGIN = new URL(GOATCOUNTER_SCRIPT).origin;
+const ANALYTICS_ENDPOINT_ORIGIN = new URL(GOATCOUNTER_ENDPOINT).origin;
 
 /**
  * GitHub Pages ではレスポンスヘッダーを付けられないため、`meta` 要素で CSP を指定する。
  * `meta` の CSP では `frame-ancestors` が効かない（https://www.w3.org/TR/CSP3/#meta-element）
+ * GoatCounter はスクリプトの配信元と、計測の送り先（`img` か `sendBeacon`）を許可する必要がある
+ * （https://www.goatcounter.com/help/csp）
  */
 export const APP_CSP = [
   "default-src 'self'",
-  "script-src 'self'",
+  `script-src 'self' ${ANALYTICS_SCRIPT_ORIGIN}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  `img-src 'self' data: blob: ${ANALYTICS_ENDPOINT_ORIGIN}`,
   "media-src 'self' blob:",
-  "connect-src 'self'",
+  `connect-src 'self' ${ANALYTICS_ENDPOINT_ORIGIN}`,
   "frame-src 'self'",
   "base-uri 'none'",
   "form-action 'self'",
