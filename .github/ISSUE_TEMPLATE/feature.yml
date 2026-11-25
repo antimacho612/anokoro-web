@@ -1,0 +1,31 @@
+name: 要望
+description: ほしい機能、パーツ、見本サイト、解説の題材などを提案する
+title: "[要望] "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: year
+    attributes:
+      label: 年
+      description: 特定の年に関わる要望なら、その年
+    validations:
+      required: false
+  - type: input
+    id: screen
+    attributes:
+      label: 画面
+      description: 作成キット、時代まちがいさがし、サイトの表示など
+    validations:
+      required: false
+  - type: textarea
+    id: request
+    attributes:
+      label: ほしいもの
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: 理由や使う場面
+    validations:
+      required: false

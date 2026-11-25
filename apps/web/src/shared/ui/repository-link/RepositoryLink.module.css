@@ -1,0 +1,26 @@
+.link {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: #fff;
+  color: #1f2328;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 40%);
+}
+
+.link svg {
+  fill: currentColor;
+}
+
+.link:hover {
+  background: #f0f0f0;
+}
+
+.link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}

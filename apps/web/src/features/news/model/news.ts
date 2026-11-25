@@ -6,6 +6,14 @@ export interface NewsEntry {
 
 export const NEWS: readonly NewsEntry[] = [
   {
+    date: "2026-11-25",
+    title: "ご意見・不具合報告の窓口を作りました",
+    lines: [
+      "タスクバーの「ご意見・不具合報告」から、考証の指摘、不具合の報告、要望を GitHub の Issue で送れます。",
+      "思い出話や質問は、GitHub のディスカッションでどうぞ。画面右上のマークからソースコードも見られます。",
+    ],
+  },
+  {
     date: "2026-11-22",
     title: "タスクバーを追加しました",
     lines: [

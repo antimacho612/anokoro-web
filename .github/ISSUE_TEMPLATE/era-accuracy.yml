@@ -1,0 +1,45 @@
+name: 考証の指摘
+description: 「この年にこれはなかった」「当時はこうだった」など、年代の再現の誤りを知らせる
+title: "[考証] "
+labels: ["考証"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        考証の指摘をありがとうございます。根拠となる資料（当時のページのアーカイブ、仕様書、雑誌、ニュース記事など）があると、早く直せます。
+  - type: input
+    id: year
+    attributes:
+      label: 年
+      description: 気になったときに選んでいた年
+      placeholder: "1999"
+    validations:
+      required: true
+  - type: input
+    id: screen
+    attributes:
+      label: 画面
+      description: 作成キット、時代まちがいさがし、サイトの表示など
+    validations:
+      required: true
+  - type: textarea
+    id: where
+    attributes:
+      label: どこが違うか
+      description: パーツ、時代チェッカーの警告、回線、見本サイト、解説など、場所と内容を書いてください
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 当時はどうだったか
+      description: 正しいと思う内容。いつから使えた、いつまで使われた、などの時期もわかれば書いてください
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: 根拠
+      description: 資料の URL や書名。記憶による場合はそう書いてください
+    validations:
+      required: false

@@ -18,6 +18,7 @@ import { kindTopic } from "../../../entities/site/index.ts";
 import { Window } from "../../../shared/ui/window/index.ts";
 import { importToKit } from "../lib/import-to-kit.ts";
 import type { ViewSource } from "../model/view-source.ts";
+import { RepositoryLink } from "../../../shared/ui/repository-link/index.ts";
 import styles from "./ViewApp.module.css";
 
 const BASE = import.meta.env.BASE_URL;
@@ -94,6 +95,7 @@ function SiteView({
       <ViewTaskbar />
       <header className={styles.top}>
         <h1 className="dot">{site.name}</h1>
+        <RepositoryLink />
       </header>
       <TimeMachineBar />
       <main className={styles.layout}>
@@ -145,7 +147,7 @@ function SiteView({
         </div>
       </main>
       <HelpWindow />
-      <InfoWindow />
+      <InfoWindow screen="view" />
     </>
   );
 }

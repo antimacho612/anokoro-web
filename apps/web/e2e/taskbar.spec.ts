@@ -94,3 +94,54 @@ test("この年の URL をコピーする", async ({ page, context, browserName 
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   expect(copied).toContain("year=2003");
 });
+
+test("「ご意見・不具合報告」は、年と画面だけを入れた Issue のリンクとディスカッションへのリンクを出す", async ({
+  page,
+}) => {
+  await page.goto("/kit/?year=1998");
+  await taskbarButton(page, "ご意見・不具合報告").click();
+  const feedback = dialog(page, "ご意見・不具合報告");
+
+  const href = await feedback.getByRole("link", { name: "考証の指摘" }).getAttribute("href");
+  const url = new URL(href ?? "");
+  expect(url.origin + url.pathname).toBe("https://github.com/antimacho612/anokoro-web/issues/new");
+  expect(Object.fromEntries(url.searchParams)).toEqual({
+    template: "era-accuracy.yml",
+    year: "1998",
+    screen: "作成キット",
+  });
+  await expect(feedback.getByRole("link", { name: "不具合の報告" })).toHaveAttribute(
+    "href",
+    /template=bug\.yml/,
+  );
+  await expect(feedback.getByRole("link", { name: "要望" })).toHaveAttribute(
+    "href",
+    /template=feature\.yml/,
+  );
+  await expect(feedback.getByRole("link", { name: "ディスカッション" })).toHaveAttribute(
+    "href",
+    "https://github.com/antimacho612/anokoro-web/discussions",
+  );
+});
+
+for (const path of ["/kit/?year=1996", "/quiz/?topic=line&seed=1", "/view/?sample=blog"]) {
+  test(`ヘッダーにリポジトリへのリンクを置く（${path}）`, async ({ page }) => {
+    await page.goto(path);
+    const link = page.getByRole("banner").getByRole("link", { name: "ソースコード（GitHub）" });
+    await expect(link).toHaveAttribute("href", "https://github.com/antimacho612/anokoro-web");
+    await expect(link).toHaveAttribute("target", "_blank");
+  });
+}
+
+test("リポジトリへのリンクは年を切り替えても同じ大きさと色のまま", async ({ page }) => {
+  const link = page.getByRole("banner").getByRole("link", { name: "ソースコード（GitHub）" });
+  const look = () =>
+    link.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return [style.width, style.height, style.color, style.backgroundColor, style.borderRadius];
+    });
+  await page.goto("/kit/?year=1996");
+  const before = await look();
+  await page.goto("/kit/?year=2014");
+  expect(await look()).toEqual(before);
+});

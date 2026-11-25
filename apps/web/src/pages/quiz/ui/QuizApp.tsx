@@ -5,6 +5,7 @@ import { InfoWindow } from "../../../widgets/info-window/index.ts";
 import { useKit } from "../../../entities/kit-state/index.ts";
 import { AnswerWindow } from "./AnswerWindow.tsx";
 import { PageWindow, type ViewMode } from "./PageWindow.tsx";
+import { RepositoryLink } from "../../../shared/ui/repository-link/index.ts";
 import styles from "./QuizApp.module.css";
 import { messageFor } from "../lib/quiz-messages.ts";
 import { quizUrl } from "../../../shared/routes/index.ts";
@@ -60,6 +61,7 @@ export function QuizApp({ initial }: QuizAppProps) {
       <QuizTaskbar />
       <header className={styles.top}>
         <h1 className="dot">時代まちがいさがし</h1>
+        <RepositoryLink />
       </header>
       <main className={styles.layout}>
         <PageWindow
@@ -80,7 +82,7 @@ export function QuizApp({ initial }: QuizAppProps) {
         />
       </main>
       <HelpWindow />
-      <InfoWindow />
+      <InfoWindow screen="quiz" />
     </>
   );
 }
