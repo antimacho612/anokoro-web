@@ -81,6 +81,9 @@ export function Taskbar({
         <button type="button" className={taskbarItemClass} onClick={() => openInfo("about")}>
           このサイトについて
         </button>
+        <button type="button" className={taskbarItemClass} onClick={() => openInfo("feedback")}>
+          ご意見・不具合報告
+        </button>
         {tools}
         <button type="button" className={taskbarItemClass} onClick={() => void handleCopyUrl()}>
           {copyLabel}

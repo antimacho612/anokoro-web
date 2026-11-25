@@ -23,7 +23,7 @@ export type DialupConnection = "offline" | "dialing" | "online";
 
 export type Display = "local" | "net";
 
-export type InfoDialog = "usage" | "news" | "about";
+export type InfoDialog = "usage" | "news" | "about" | "feedback";
 
 export interface LastLoad {
   elapsedMs: number;

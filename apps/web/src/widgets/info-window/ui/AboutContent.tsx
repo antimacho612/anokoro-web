@@ -1,6 +1,6 @@
 import { ASSETS, BROKEN_IMAGE, PENDING_IMAGE, SITE_ICON, type AssetRights } from "@anokoro/assets";
+import { REPOSITORY_URL } from "../../../shared/config/index.ts";
 
-const REPOSITORY_URL = "https://github.com/antimacho612/anokoro-web";
 const THIRD_PARTY_LICENSES_URL = `${import.meta.env.BASE_URL}third-party-licenses.txt`;
 
 const SYSTEM_IMAGES: readonly (AssetRights & { name: string })[] = [
@@ -22,6 +22,10 @@ export function AboutContent() {
       <h4>名前について</h4>
       <p>
         ブラウザ「ネットサーファー」、ホスティング「ほげスペース」、ポータル「ほげほげ」は架空の名前です。実在の製品やサービスとは関係ありません。
+      </p>
+      <p>
+        画面の右上にある GitHub のマークは GitHub, Inc.
+        の商標で、このサイトのソースコードへのリンクとしてだけ使っています。
       </p>
 
       <h4>素材</h4>
@@ -75,6 +79,12 @@ export function AboutContent() {
           ライセンス表記の一覧
         </a>
         にまとめています。
+      </p>
+
+      <h4>ご意見・不具合報告</h4>
+      <p>
+        考証の誤りや不具合の報告、要望は、タスクバーの「ご意見・不具合報告」から GitHub の Issue
+        で受け付けています。
       </p>
 
       <h4>免責</h4>

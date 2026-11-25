@@ -4,6 +4,7 @@ import { BrowserWindow } from "../../../widgets/browser-window/index.ts";
 import { CheckerWindow } from "../../../widgets/checker-window/index.ts";
 import { HelpWindow } from "../../../widgets/help-window/index.ts";
 import { InfoWindow } from "../../../widgets/info-window/index.ts";
+import { RepositoryLink } from "../../../shared/ui/repository-link/index.ts";
 import styles from "./KitApp.module.css";
 import { KitLayout } from "../../../shared/ui/kit-layout/index.ts";
 import { LineWindow } from "../../../widgets/line-window/index.ts";
@@ -52,7 +53,7 @@ export function KitApp() {
       <LineWindow />
       <CheckerWindow score={view.score} warnings={view.warnings} onLocate={handleLocate} />
       <HelpWindow />
-      <InfoWindow />
+      <InfoWindow screen="kit" />
     </>
   );
 
@@ -61,6 +62,7 @@ export function KitApp() {
       <KitTaskbar />
       <header className={styles.top}>
         <h1 className="dot">あのころ Web 作成キット</h1>
+        <RepositoryLink />
       </header>
       <TimeMachineBar />
       <main>
