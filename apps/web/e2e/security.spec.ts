@@ -106,6 +106,7 @@ test("本番ビルドの HTML には CSP が付き、画面は CSP の中で動�
     const html = (await response?.text()) ?? "";
     expect(html).toMatch(/<head>\s*<meta http-equiv="Content-Security-Policy"/);
     expect(html).toContain('<meta name="referrer" content="strict-origin-when-cross-origin">');
+    expect(html).toContain('data-goatcounter="https://anokoro.goatcounter.com/count"');
     await expect(page.getByRole("navigation", { name: "タスクバー" })).toBeVisible();
   }
   await page.goto("/kit/");
